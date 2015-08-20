@@ -7,37 +7,22 @@ import org.simpleframework.xml.Root;
  * Created by truthd on 8/6/2015.
  */
 
-@Root
+@Root(strict=false)
 public class item {
 
     @Element
     private String name;
-    @Element
-    private String website;
+    @Element(name="yearpublished")
+    private String yearPub;
 
-//    public Item (String name, String website) {
-//        this.name = name;
-//        this.website = website;
-//    }
-//
-//    public Item() {
-//        super();
-//    }
-
+    private double rating;
 
     public String getName() {
         return name;
     }
-    //
-//    public void setName(String name) {
-//        this.name = name;
-//    }
-//
-    public String getWebsite() {
-        return website;
+
+    public String getYeapublished() {
+        return yearPub;
     }
-//
-//    public void setWebsite(String website) {
-//        this.website = website;
-//    }
+
 }

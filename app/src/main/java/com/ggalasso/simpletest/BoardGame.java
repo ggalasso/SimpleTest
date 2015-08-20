@@ -9,8 +9,8 @@ import java.util.List;
  * Created by truthd on 8/6/2015.
  */
 
-@Root(name="maintag")
-public class maintag {
+@Root(name="items", strict=false)
+public class BoardGame {
 
     @ElementList(entry="item", inline=true)
     private List<item> items;
