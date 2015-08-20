@@ -16,9 +16,7 @@ import java.net.URL;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-/**
- * Created by truthd on 4/20/2015.
- */
+
 public class FileHandler {
 
     //readMyXML().execute();

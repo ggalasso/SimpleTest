@@ -3,9 +3,6 @@ package com.ggalasso.simpletest;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
-/**
- * Created by truthd on 8/6/2015.
- */
 
 @Root(strict=false)
 public class item {

@@ -5,9 +5,6 @@ import org.simpleframework.xml.Root;
 
 import java.util.List;
 
-/**
- * Created by truthd on 8/6/2015.
- */
 
 @Root(name="items", strict=false)
 public class BoardGame {
