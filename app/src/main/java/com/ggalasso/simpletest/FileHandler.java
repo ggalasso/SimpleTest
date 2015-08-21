@@ -40,9 +40,10 @@ public class FileHandler {
     private class readMyXML extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
+            BoardGameManager bgm = new BoardGameManager();
             Log.i("INFO", "REACHED doInBackground");
             //String downloadURL = "http://www.androidpeople.com/wp-content/uploads/2010/06/example.xml";
-            String downloadURL = "https://boardgamegeek.com/xmlapi2/collection?username=brickedphoneclub";
+            String downloadURL = "https://boardgamegeek.com/xmlapi2/collection?username=brickedphoneclub&own=1";
             try {
                 URL url = new URL(downloadURL);
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -50,52 +51,23 @@ public class FileHandler {
                 try {
                     InputStream is = new BufferedInputStream(con.getInputStream());
                     Serializer serializer = new Persister();
-                    BoardGame bg = serializer.read(BoardGame.class, is);
+                    bgm = serializer.read(BoardGameManager.class, is);
+
                     Log.i("EXCEPTION -- MY ERROR!!", "Passed Test!");
                 } finally {
                     con.disconnect();
                 }
-
-                //BufferedInputStream bis
-                //BufferedInputStream bis = new BufferedInputStream(is);
-
-                //Serializer serializer = new Persister();
-//                //public void saveGson(Context ctx) throws IOException {
-//                    FileOutputStream fOut = ctx.openFileOutput(FILENAME, Context.MODE_PRIVATE);
-//                    OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
-//                    Gson gson = new GsonBuilder().create();
-//                    gson.toJson(getContactList(), myOutWriter);
-//                    myOutWriter.close();
-//                    fOut.close();
-//                //}
-//                GZIPInputStream zis = new GZIPInputStream(new BufferedInputStream(is));
-//                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-//                DocumentBuilder db = dbf.newDocumentBuilder();
-//                Document xmlDoc = db.parse(is);
-                //FileInputStream fis = new FileInputStream(xmlDoc);
-//
-                //File source = ;
-                //maintag bg = serializer.read(maintag.class, zis );
-                //maintag bg = serializer.read(maintag.class, is);
-                //Log.i("Name:", bg.toString());
-//                Element rootEl = xmlDoc.getDocumentElement();
-
-                //maintag bg = serializer.read(maintag.class, is);
+                String idList = "";
+                for(BoardGame bg: bgm.getBoardGames()) {
+                    idList = idList + "," + bg.getObjectid();
+                }
+                Log.i("INFO XML DATA", "Concat List: " + idList);
                 Log.i("INFO XML DATA", "Root Element from file handler:");
 
-                //processXML(is);
             } catch (Exception e) {
                 Log.e("EXCEPTION -- MY ERROR!!", "exception" + e);
             }
             return "Executed from file handler.";
-        }
-
-        public void processXML(InputStream is) throws Exception {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document xmlDoc = db.parse(is);
-            Element rootEl = xmlDoc.getDocumentElement();
-            Log.i("INFO XML DATA", "Root Element from file handler:" + rootEl.getTagName());
         }
 
     }

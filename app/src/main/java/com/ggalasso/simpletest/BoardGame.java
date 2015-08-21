@@ -1,21 +1,37 @@
 package com.ggalasso.simpletest;
 
-import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
-import java.util.List;
 
-
-@Root(name="items", strict=false)
+@Root(strict=false)
 public class BoardGame {
 
-    @ElementList(entry="item", inline=true)
-    private List<item> items;
+    @Element
+    private String name;
+    @Element(name="yearpublished")
+    private String yearPub;
+    @Attribute
+    private String objectid;
 
-//    public maintag() {};
+    private double rating;
 
-    public List<item> getItems() {
-        return items;
+    public String getName() {
+        return name;
     }
+
+    public String getYeapublished() {
+        return yearPub;
+    }
+
+    public String getObjectid() {
+        return objectid;
+    }
+
+    public void setObjectid(String objectid) {
+        this.objectid = objectid;
+    }
+
 
 }
