@@ -14,6 +14,8 @@ public class BoardGame {
     private String yearPub;
     @Attribute
     private String objectid;
+    @Element(required=false)
+    private String description;
 
     private double rating;
 
@@ -28,6 +30,15 @@ public class BoardGame {
     public String getObjectid() {
         return objectid;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
 
     public void setObjectid(String objectid) {
         this.objectid = objectid;

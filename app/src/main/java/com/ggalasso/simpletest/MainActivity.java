@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
         FileHandlerAsync fh = FileHandlerAsync.getInstance();
         fh.getXMLData();
+        //fh.getXMLDetails();
     }
 
 

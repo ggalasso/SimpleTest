@@ -37,12 +37,49 @@ public class FileHandler {
         new readMyXML().execute();
     }
 
+    public void getXMLDetails() {
+        //BoardGameManager bgm = BoardGameManager.getInstance();
+        //new getGameDetails().execute(bgm);
+    }
+
     private class readMyXML extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
             BoardGameManager bgm = new BoardGameManager();
             Log.i("INFO", "REACHED doInBackground");
             //String downloadURL = "http://www.androidpeople.com/wp-content/uploads/2010/06/example.xml";
+            String downloadURL = "https://boardgamegeek.com/xmlapi2/collection?username=brickedphoneclub&own=1";
+            try {
+                URL url = new URL(downloadURL);
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("GET");
+                try {
+                    InputStream is = new BufferedInputStream(con.getInputStream());
+                    Serializer serializer = new Persister();
+                    bgm = serializer.read(BoardGameManager.class, is);
+                } finally {
+                    con.disconnect();
+                }
+
+                //String listOfGames = bgm.getIdListString();
+                //Log.i("INFO XML DATA", "Concat List: " + listOfGames);
+
+
+            } catch (Exception e) {
+                Log.e("EXCEPTION -- MY ERROR!!", "exception" + e);
+            }
+            return "Executed from file handler.";
+        }
+
+    }
+
+
+    private class readMyXML1 extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            BoardGameManager bgm = new BoardGameManager();
+            Log.i("INFO", "REACHED doInBackground");
+//String downloadURL = "http://www.androidpeople.com/wp-content/uploads/2010/06/example.xml";
             String downloadURL = "https://boardgamegeek.com/xmlapi2/collection?username=brickedphoneclub&own=1";
             try {
                 URL url = new URL(downloadURL);
@@ -69,5 +106,9 @@ public class FileHandler {
             }
             return "Executed from file handler.";
         }
+
     }
+
+
+
 }

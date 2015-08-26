@@ -16,4 +16,16 @@ public class BoardGameManager {
         return BoardGames;
     }
 
+    public String getIdListString() {
+        String idList = "";
+        for (BoardGame game : getBoardGames()) {
+            if (idList == "") {
+                idList = game.getObjectid();
+            } else {
+                idList += "," + game.getObjectid();
+            }
+        }
+        return idList;
+    }
+
 }
