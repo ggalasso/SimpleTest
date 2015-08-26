@@ -3,8 +3,11 @@ package com.ggalasso.simpletest;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.concurrent.ExecutionException;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -15,8 +18,30 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         FileHandlerAsync fh = FileHandlerAsync.getInstance();
-        fh.getXMLData();
-        //fh.getXMLDetails();
+        BoardGameManager bgm = BoardGameManager.getInstance();
+        //BoardGameManager bgm1 = BoardGameManager.getInstance();
+
+        try {
+            bgm = fh.getXMLData();
+            //bgm = fh.getDetail("31260,124742,35052");
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            //bgm1 = fh.getDetail(bgm.getIdListString());
+            bgm = fh.getDetail(bgm.getIdListString());
+            Log.i("MY","blah");
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        //Log.i("MY ERROR", "BoardGame: " + bgm.getIdListString());
+        Log.i("My Stuff", "Blah");
     }
 
 

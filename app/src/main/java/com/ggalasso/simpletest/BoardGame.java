@@ -8,11 +8,11 @@ import org.simpleframework.xml.Root;
 @Root(strict=false)
 public class BoardGame {
 
-    @Element
+    @Element(required = false)
     private String name;
-    @Element(name="yearpublished")
+    @Element(name="yearpublished", required = false)
     private String yearPub;
-    @Attribute
+    @Attribute(required=false)
     private String objectid;
     @Element(required=false)
     private String description;
