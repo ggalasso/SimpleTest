@@ -12,8 +12,8 @@ public class BoardGame {
     private String name;
     @Element(name="yearpublished", required=false)
     private String yearPub;
-//    @Attribute(required=false)
-//    private String objectid;
+    @Attribute(required=false)
+    private String id;
     @Element(required=false)
     private String description;
 
@@ -35,5 +35,8 @@ public class BoardGame {
         return rating;
     }
 
+    public String getId() {
+        return id;
+    }
 
 }

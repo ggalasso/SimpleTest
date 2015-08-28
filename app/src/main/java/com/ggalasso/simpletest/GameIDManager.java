@@ -14,10 +14,8 @@ public class GameIDManager {
 
     @ElementList(entry="item", inline=true, required=false)
     private ArrayList<GameID> GameIDs;
-    //@ElementList(entry="item", inline=true, required=false)
-    //private ArrayList<BoardGame> BoardGames;
 
-    private GameIDManager() { Log.i("INFO", "Instantiated GameID"); }
+    private GameIDManager() { Log.i("INFO", "Instantiated GameID Manager"); }
 
     public static GameIDManager getInstance() {
         if (ourInstance == null) {
@@ -26,25 +24,9 @@ public class GameIDManager {
         return ourInstance;
     }
 
-//    public ArrayList<BoardGame> getBoardGames() {
-//        return BoardGames;
-//    }
-
     public ArrayList<GameID> getGameIDs() {
         return GameIDs;
     }
-
-//    public String getIdListString() {
-//        String idList = "";
-//        for (BoardGame game : getBoardGames()) {
-//            if (idList == "") {
-//                idList = game.getObjectid();
-//            } else {
-//                idList += "," + game.getObjectid();
-//            }
-//        }
-//        return idList;
-//    }
 
     public String getIdListString() {
         String idList = "";
