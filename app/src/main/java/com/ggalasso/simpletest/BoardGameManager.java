@@ -7,10 +7,13 @@ import org.simpleframework.xml.Root;
 
 import java.util.ArrayList;
 
-@Root(name="items", strict=false)
+@Root(name="items")
 public class BoardGameManager {
 
     private static BoardGameManager ourInstance = null;
+
+//    @ElementList(entry="item", inline=true, required=false)
+//    private ArrayList<GameID> GameIDs;
     @ElementList(entry="item", inline=true)
     private ArrayList<BoardGame> BoardGames;
 
@@ -27,15 +30,31 @@ public class BoardGameManager {
         return BoardGames;
     }
 
-    public String getIdListString() {
-        String idList = "";
-        for (BoardGame game : getBoardGames()) {
-            if (idList == "") {
-                idList = game.getObjectid();
-            } else {
-                idList += "," + game.getObjectid();
-            }
-        }
-        return idList;
-    }
+//    public ArrayList<GameID> getGameIDs() {
+//        return GameIDs;
+//    }
+
+//    public String getIdListString() {
+//        String idList = "";
+//        for (BoardGame game : getBoardGames()) {
+//            if (idList == "") {
+//                idList = game.getObjectid();
+//            } else {
+//                idList += "," + game.getObjectid();
+//            }
+//        }
+//        return idList;
+//    }
+
+//    public String getIdListString() {
+//        String idList = "";
+//        for (GameID game : getGameIDs()) {
+//            if (idList == "") {
+//                idList = game.getObjectid();
+//            } else {
+//                idList += "," + game.getObjectid();
+//            }
+//        }
+//        return idList;
+//    }
 }

@@ -18,12 +18,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         FileHandlerAsync fh = FileHandlerAsync.getInstance();
+        GameIDManager gim = GameIDManager.getInstance();
         BoardGameManager bgm = BoardGameManager.getInstance();
-        //BoardGameManager bgm1 = BoardGameManager.getInstance();
 
         try {
-            bgm = fh.getXMLData();
-            //bgm = fh.getDetail("31260,124742,35052");
+            gim = fh.getIDList();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -31,8 +30,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         try {
-            //bgm1 = fh.getDetail(bgm.getIdListString());
-            bgm = fh.getDetail(bgm.getIdListString());
+            bgm = fh.getDetail(gim.getIdListString());
             Log.i("MY","blah");
         } catch (ExecutionException e) {
             e.printStackTrace();

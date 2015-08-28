@@ -5,15 +5,15 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
 
-@Root(strict=false)
+@Root
 public class BoardGame {
 
-    @Element(required = false)
+    @Element(required=false)
     private String name;
-    @Element(name="yearpublished", required = false)
+    @Element(name="yearpublished", required=false)
     private String yearPub;
-    @Attribute(required=false)
-    private String objectid;
+//    @Attribute(required=false)
+//    private String objectid;
     @Element(required=false)
     private String description;
 
@@ -27,21 +27,12 @@ public class BoardGame {
         return yearPub;
     }
 
-    public String getObjectid() {
-        return objectid;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public double getRating() {
         return rating;
-    }
-
-
-    public void setObjectid(String objectid) {
-        this.objectid = objectid;
     }
 
 

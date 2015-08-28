@@ -25,11 +25,11 @@ public class FileHandlerAsync {
     }
     private FileHandlerAsync() { Log.i("INFO", "Instantiated File Handler"); }
 
-    public BoardGameManager getXMLData() throws ExecutionException, InterruptedException {
+    public GameIDManager getIDList() throws ExecutionException, InterruptedException {
         String downloadURL = "https://boardgamegeek.com/xmlapi2/collection?username=brickedphoneclub&own=1";
-        AsyncTask<String, Void, BoardGameManager> getXMLTask = new readMyXML().execute(downloadURL);
+        AsyncTask<String, Void, GameIDManager> getGameIDTask = new readGameIDs().execute(downloadURL);
         try {
-            return getXMLTask.get();
+            return getGameIDTask.get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -63,7 +63,7 @@ public class FileHandlerAsync {
                 try {
                     InputStream is = new BufferedInputStream(con.getInputStream());
                     Serializer serializer = new Persister();
-                    bgm = serializer.read(BoardGameManager.class, is);
+                    bgm = serializer.read(BoardGameManager.class, is, false);
 
                     Log.i("EXCEPTION -- MY ERROR!!", "Passed Test!");
                 } finally {
@@ -75,6 +75,33 @@ public class FileHandlerAsync {
                 Log.e("EXCEPTION -- MY ERROR!!", "exception" + e);
             }
             return bgm;
+        }
+    }
+
+    private class readGameIDs extends AsyncTask<String, Void, GameIDManager> {
+        @Override
+        protected GameIDManager doInBackground(String... params) {
+            GameIDManager manager = GameIDManager.getInstance();
+            Log.i("INFO", "REACHED doInBackground");
+            try {
+                URL url = new URL(params[0]);
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("GET");
+                try {
+                    InputStream is = new BufferedInputStream(con.getInputStream());
+                    Serializer serializer = new Persister();
+                    manager = serializer.read(GameIDManager.class, is, false);
+
+                    Log.i("EXCEPTION -- MY ERROR!!", "Passed Test!");
+                } finally {
+                    con.disconnect();
+                }
+                Log.i("INFO XML DATA", "Root Element from file handler:");
+
+            } catch (Exception e) {
+                Log.e("EXCEPTION -- MY ERROR!!", "exception" + e);
+            }
+            return manager;
         }
     }
 }
