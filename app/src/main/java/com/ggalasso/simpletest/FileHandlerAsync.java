@@ -27,6 +27,7 @@ public class FileHandlerAsync {
 
     public GameIDManager getIDList() throws ExecutionException, InterruptedException {
         String downloadURL = "https://boardgamegeek.com/xmlapi2/collection?username=brickedphoneclub&own=1";
+        Log.i("INFO", "Attempting to download data from: " + downloadURL);
         AsyncTask<String, Void, GameIDManager> getGameIDTask = new readGameIDs().execute(downloadURL);
         try {
             return getGameIDTask.get();
@@ -40,6 +41,7 @@ public class FileHandlerAsync {
 
     public BoardGameManager getDetail(String queryString) throws ExecutionException, InterruptedException {
         String downloadURL = "https://boardgamegeek.com/xmlapi2/thing?id=" + queryString + "&stats=1";
+        Log.i("INFO", "Attempting to download data from: " + downloadURL);
         AsyncTask<String, Void, BoardGameManager> getXMLTask = new readMyXML().execute(downloadURL);
         try {
             return getXMLTask.get();
@@ -65,14 +67,14 @@ public class FileHandlerAsync {
                     Serializer serializer = new Persister();
                     bgm = serializer.read(BoardGameManager.class, is, false);
 
-                    Log.i("EXCEPTION -- MY ERROR!!", "Passed Test!");
+                    Log.i("EXCEPTION", "Finished Serializing");
                 } finally {
                     con.disconnect();
                 }
-                Log.i("INFO XML DATA", "Root Element from file handler:");
+                Log.i("INFO", "Reached end of input stream.");
 
             } catch (Exception e) {
-                Log.e("EXCEPTION -- MY ERROR!!", "exception" + e);
+                Log.e("EXCEPTION", "Logging exception: " + e);
             }
             return bgm;
         }
@@ -92,14 +94,14 @@ public class FileHandlerAsync {
                     Serializer serializer = new Persister();
                     manager = serializer.read(GameIDManager.class, is, false);
 
-                    Log.i("EXCEPTION -- MY ERROR!!", "Passed Test!");
+                    Log.i("EXCEPTION", "Finished Serializing");
                 } finally {
                     con.disconnect();
                 }
-                Log.i("INFO XML DATA", "Root Element from file handler:");
+                Log.i("INFO", "Reached end of input stream.");
 
             } catch (Exception e) {
-                Log.e("EXCEPTION -- MY ERROR!!", "exception" + e);
+                Log.e("EXCEPTION", "Logging exception: " + e);
             }
             return manager;
         }
