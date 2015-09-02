@@ -17,12 +17,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FileHandlerAsync fh = FileHandlerAsync.getInstance();
         GameIDManager gim = GameIDManager.getInstance();
         BoardGameManager bgm = BoardGameManager.getInstance();
 
         try {
-            gim = fh.getIDList();
+            gim = gim.getIDList();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -30,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         try {
-            bgm = fh.getDetail(gim.getIdListString());
+            bgm = bgm.getDetail(gim.getIdListString());
             Log.i("MY","blah");
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -41,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         //Log.i("MY ERROR", "BoardGame: " + bgm.getIdListString());
         Log.i("My Stuff", "Blah");
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
