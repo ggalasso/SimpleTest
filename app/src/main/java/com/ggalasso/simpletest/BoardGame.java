@@ -2,8 +2,11 @@ package com.ggalasso.simpletest;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Path;
 import org.simpleframework.xml.Root;
+
+import java.util.ArrayList;
 
 
 @Root
@@ -11,9 +14,23 @@ public class BoardGame {
     //Id of the Game, this is required otherwise we shouldn't be able to find the game.
     @Attribute
     private String id;
-    @Path("name[1]")
-    @Attribute(name="value", required=false)
-    private String name;
+//    @Path("name[1]")
+//    @Attribute(name="value", required=false)
+//    private String name;
+
+    //@Path("name[@type='alternate']")
+    @ElementList(entry="name", inline=true, required=false)
+    private ArrayList<Name> name2;
+
+    @ElementList(entry="link", inline=true, required=false)
+    private ArrayList<Name> name3;
+
+
+
+
+
+
+
     @Path("yearpublished")
     @Attribute(name="value", required=false)
     private String yearPub;
@@ -23,9 +40,12 @@ public class BoardGame {
     private String thumbnail;
     @Element(name="image", required=false)
     private String image;
-    @Path("statistics/ratings/average")
+    @Path("statistics/ratings/bayesaverage")
     @Attribute(name="value", required=false)
     private double rating;
+    @Path("statistics/ratings/ranks/rank[1]")
+    @Attribute(name="value", required=false)
+     private int rank;
     @Path("minplayers")
     @Attribute(name="value", required=false)
     private int minPlayers;
@@ -44,10 +64,14 @@ public class BoardGame {
     @Path("minage")
     @Attribute(name="value", required=false)
     private int minAge;
+//    @Path("link[@type='boardgamecategory'][1]")
+//    @Attribute(name="value", required=false)
+//    private String gameCategory;
 
-    public String getName() {
-        return name;
-    }
+
+//    public String getName() {
+//        return name;
+//    }
 
     public String getYeapublished() {
         return yearPub;
@@ -66,3 +90,16 @@ public class BoardGame {
     }
 
 }
+
+@Root
+
+class Name {
+    //@Path("name[@type='alternate']")
+    @Attribute
+    private String value;
+
+    @Attribute
+    private String type;
+
+}
+
