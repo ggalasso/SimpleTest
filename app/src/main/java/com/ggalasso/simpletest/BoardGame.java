@@ -14,17 +14,10 @@ public class BoardGame {
     //Id of the Game, this is required otherwise we shouldn't be able to find the game.
     @Attribute
     private String id;
-//    @Path("name[1]")
-//    @Attribute(name="value", required=false)
-//    private String name;
-
-    //@Path("name[@type='alternate']")
     @ElementList(entry="name", inline=true, required=false)
-    private ArrayList<Name> name2;
-
+    private ArrayList<Name> names;
     @ElementList(entry="link", inline=true, required=false)
-    private ArrayList<Name> name3;
-
+    private ArrayList<Name> links;
     @Path("yearpublished")
     @Attribute(name="value", required=false)
     private String yearPub;
@@ -39,7 +32,7 @@ public class BoardGame {
     private double rating;
     @Path("statistics/ratings/ranks/rank[1]")
     @Attribute(name="value", required=false)
-     private int rank;
+    private String rank;
     @Path("minplayers")
     @Attribute(name="value", required=false)
     private int minPlayers;
@@ -86,7 +79,6 @@ public class BoardGame {
 }
 
 @Root
-
 class Name {
     //@Path("name[@type='alternate']")
     @Attribute
@@ -94,6 +86,9 @@ class Name {
 
     @Attribute
     private String type;
+
+    @Attribute(required = false)
+    private String id;
 
 }
 
