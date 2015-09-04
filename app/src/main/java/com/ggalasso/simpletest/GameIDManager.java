@@ -50,6 +50,7 @@ public class GameIDManager {
 
     public GameIDManager getIDList() throws ExecutionException, InterruptedException {
         String downloadURL = "https://boardgamegeek.com/xmlapi2/collection?username=brickedphoneclub&own=1";
+        //String downloadURL = "https://boardgamegeek.com/xmlapi2/collection?username=truthd&own=1";
         Log.i("INFO", "Attempting to download data from: " + downloadURL);
         AsyncTask<String, Void, GameIDManager> getGameIDTask = new getGameIDs().execute(downloadURL);
         try {

@@ -17,7 +17,7 @@ public class BoardGame {
     @ElementList(entry="name", inline=true, required=false)
     private ArrayList<Name> names;
     @ElementList(entry="link", inline=true, required=false)
-    private ArrayList<Name> links;
+    private ArrayList<Link> links;
     @Path("yearpublished")
     @Attribute(name="value", required=false)
     private String yearPub;
@@ -77,18 +77,3 @@ public class BoardGame {
     }
 
 }
-
-@Root
-class Name {
-    //@Path("name[@type='alternate']")
-    @Attribute
-    private String value;
-
-    @Attribute
-    private String type;
-
-    @Attribute(required = false)
-    private String id;
-
-}
-
