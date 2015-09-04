@@ -25,12 +25,6 @@ public class BoardGame {
     @ElementList(entry="link", inline=true, required=false)
     private ArrayList<Name> name3;
 
-
-
-
-
-
-
     @Path("yearpublished")
     @Attribute(name="value", required=false)
     private String yearPub;
