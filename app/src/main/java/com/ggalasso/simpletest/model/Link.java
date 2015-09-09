@@ -1,4 +1,4 @@
-package com.ggalasso.simpletest;
+package com.ggalasso.simpletest.model;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Root;

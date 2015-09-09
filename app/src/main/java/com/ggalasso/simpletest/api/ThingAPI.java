@@ -1,10 +1,10 @@
-package com.ggalasso.simpletest;
+package com.ggalasso.simpletest.api;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.simpleframework.xml.ElementList;
-import org.simpleframework.xml.Root;
+import com.ggalasso.simpletest.controller.BoardGameManager;
+
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
@@ -12,41 +12,12 @@ import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-@Root(name="items")
-public class BoardGameManager {
-
-    private static BoardGameManager ourInstance = null;
-    @ElementList(entry="item", inline=true)
-    private ArrayList<BoardGame> BoardGames;
-
-    private BoardGameManager() { Log.i("INFO", "Instantiated BoardGameManager"); }
-
-    public static BoardGameManager getInstance() {
-        if (ourInstance == null) {
-            ourInstance = new BoardGameManager();
-        }
-        return ourInstance;
-    }
-
-    public ArrayList<BoardGame> getBoardGames() {
-        return BoardGames;
-    }
-
-    public String getIdListString() {
-        String idList = "";
-        for (BoardGame game : getBoardGames()) {
-            if (idList == "") {
-                idList = game.getId();
-            } else {
-                idList += "," + game.getId();
-            }
-        }
-        return idList;
-    }
-
+/**
+ * Created by Edward on 9/8/2015.
+ */
+public class ThingAPI {
     public BoardGameManager getDetail(String queryString) throws ExecutionException, InterruptedException {
         String downloadURL = "https://boardgamegeek.com/xmlapi2/thing?id=" + queryString + "&stats=1";
         Log.i("INFO", "Attempting to download data from: " + downloadURL);

@@ -1,4 +1,4 @@
-package com.ggalasso.simpletest;
+package com.ggalasso.simpletest.model;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
@@ -14,6 +14,16 @@ public class BoardGame {
     //Id of the Game, this is required otherwise we shouldn't be able to find the game.
     @Attribute
     private String id;
+
+    public String getPrimaryName() {
+        for (Name name : names){
+            if (name.getType().equals("primary")){
+                return name.getValue();
+            }
+        }
+        return "";
+    }
+
     @ElementList(entry="name", inline=true, required=false)
     private ArrayList<Name> names;
     @ElementList(entry="link", inline=true, required=false)

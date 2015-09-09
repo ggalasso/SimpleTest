@@ -1,27 +1,41 @@
-package com.ggalasso.simpletest;
+package com.ggalasso.simpletest.view;
 
-import android.support.v7.app.ActionBarActivity;
+import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.ggalasso.simpletest.R;
+import com.ggalasso.simpletest.api.CollectionAPI;
+import com.ggalasso.simpletest.api.ThingAPI;
+import com.ggalasso.simpletest.controller.BoardGameManager;
+import com.ggalasso.simpletest.controller.GameIDManager;
+import com.ggalasso.simpletest.db.SQLController;
+import com.ggalasso.simpletest.model.BoardGame;
+
+import java.sql.SQLException;
 import java.util.concurrent.ExecutionException;
 
 
 public class MainActivity extends AppCompatActivity {
+    Context ctx = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        CollectionAPI capi = new CollectionAPI();
+        ThingAPI tapi = new ThingAPI();
+
         GameIDManager gim = GameIDManager.getInstance();
         BoardGameManager bgm = BoardGameManager.getInstance();
 
         try {
-            gim = gim.getIDList();
+            gim = capi.getIDList();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -29,13 +43,31 @@ public class MainActivity extends AppCompatActivity {
         }
 
         try {
-            bgm = bgm.getDetail(gim.getIdListString());
-            Log.i("MY","blah");
+            bgm = tapi.getDetail(gim.getIdListString());
+            Log.i("MY", "blah");
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        SQLController dbCon = new SQLController(ctx);
+        try {
+            dbCon.open();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        dbCon.insert(bgm.getBoardGameById("124742"));
+
+        Cursor cr = dbCon.fetch();
+
+        if (cr != null && cr.moveToFirst()){
+            cr.moveToFirst();
+            Log.d("MY", "ID: " + cr.getString(0));
+            Log.d("MY", "Name: " + cr.getString(1));
+        }
+
+        dbCon.close();
 
         //Log.i("MY ERROR", "BoardGame: " + bgm.getIdListString());
         Log.i("My Stuff", "Blah");

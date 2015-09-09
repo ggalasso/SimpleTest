@@ -1,4 +1,4 @@
-package com.ggalasso.simpletest;
+package com.ggalasso.simpletest.model;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Root;
@@ -20,4 +20,11 @@ public class Name {
         @Attribute
         private String type;
 
+        public String getValue() {
+                return value;
+        }
+
+        public String getType() {
+                return type;
+        }
 }

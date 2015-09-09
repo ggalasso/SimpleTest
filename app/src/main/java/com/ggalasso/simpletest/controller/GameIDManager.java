@@ -1,19 +1,13 @@
-package com.ggalasso.simpletest;
+package com.ggalasso.simpletest.controller;
 
-import android.os.AsyncTask;
 import android.util.Log;
+
+import com.ggalasso.simpletest.model.GameID;
 
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 @Root(name="items")
 public class GameIDManager {
@@ -47,7 +41,7 @@ public class GameIDManager {
         }
         return idList;
     }
-
+ /*
     public GameIDManager getIDList() throws ExecutionException, InterruptedException {
         String downloadURL = "https://boardgamegeek.com/xmlapi2/collection?username=brickedphoneclub&own=1";
         //String downloadURL = "https://boardgamegeek.com/xmlapi2/collection?username=truthd&own=1";
@@ -63,7 +57,7 @@ public class GameIDManager {
         return null;
     }
 
-    private class getGameIDs extends AsyncTask<String, Void, GameIDManager> {
+  private class getGameIDs extends AsyncTask<String, Void, GameIDManager> {
         @Override
         protected GameIDManager doInBackground(String... params) {
             GameIDManager manager = GameIDManager.getInstance();
@@ -88,6 +82,6 @@ public class GameIDManager {
             }
             return manager;
         }
-    }
+    }*/
 
 }
