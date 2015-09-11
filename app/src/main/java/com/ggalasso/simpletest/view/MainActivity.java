@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        SQLController dbCon = new SQLController(ctx);
+
         CollectionAPI capi = new CollectionAPI();
         ThingAPI tapi = new ThingAPI();
 
@@ -51,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        SQLController dbCon = new SQLController(ctx);
         try {
             dbCon.open();
         } catch (SQLException e) {
