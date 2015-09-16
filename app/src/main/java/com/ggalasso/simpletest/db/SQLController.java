@@ -36,10 +36,26 @@ public class SQLController{
         ContentValues cv = new ContentValues();
         cv.put(DBhelper._Id, bg.getId());
         cv.put(DBhelper.Name, bg.getPrimaryName());
-        database.insert(DBhelper.Table_Name,null,cv);
+        database.insert(DBhelper.Table_Name, null, cv);
     }
 
     public Cursor fetch() {
+        return fetch_impl(null);
+    }
+
+    public Cursor fetch(BoardGame bg) {
+        return fetch_impl(bg);
+    }
+
+    public Cursor fetch_impl(BoardGame bg) {
+
+        String filter;
+
+        if (bg == null)
+            filter = null;
+        else
+            filter = new String(DBhelper._Id + " = " + bg.getId());
+
         String[] columns = new String[]{
                 DBhelper._Id,
                 DBhelper.Name,
@@ -48,7 +64,7 @@ public class SQLController{
         Cursor cursor = database.query(
                 DBhelper.Table_Name,
                 columns,
-                null,
+                filter,
                 null,
                 null,
                 null,
@@ -61,22 +77,41 @@ public class SQLController{
         return cursor;
     }
 
+    public boolean check(BoardGame bg) {
+
+        String ID = bg.getId();
+        String name = bg.getPrimaryName();
+
+        Cursor C = this.fetch(bg);
+
+        if (C == null)      /* This means that the BoardGame was not in the database */
+            return false;
+
+        return C.moveToFirst();
+    }
+
     // this is more of an example at this point
     // since we haven't defined what an update looks like yet
-    public int update(String _id, BoardGame bg){
+    public int update(BoardGame bg){
         ContentValues cv = new ContentValues();
+        //cv.put(DBhelper._Id, bg.getId());     /* Not necessary to include the _Id. Everything else is necessary though */
         cv.put(DBhelper.Name, bg.getPrimaryName());
 
         int i = database.update(
                 DBhelper.Table_Name,
                 cv,
-                DBhelper._Id + " = " + _id,
+                DBhelper._Id + " = " + bg.getId(),
                 null);
 
         return i;
     }
 
+
     public void delete(String _id){
         database.delete(DBhelper.Table_Name, DBhelper._Id + " = " + _id, null);
+    }
+
+    public void delete(BoardGame bg){
+        database.delete(DBhelper.Table_Name, DBhelper._Id + " = " + bg.getId(), null);
     }
 }

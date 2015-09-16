@@ -2,6 +2,7 @@ package com.ggalasso.simpletest.view;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -15,8 +16,10 @@ import com.ggalasso.simpletest.controller.BoardGameManager;
 import com.ggalasso.simpletest.controller.GameIDManager;
 import com.ggalasso.simpletest.db.SQLController;
 import com.ggalasso.simpletest.model.BoardGame;
+import com.ggalasso.simpletest.model.GameID;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 
@@ -27,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        boolean result = false;
 
         SQLController dbCon = new SQLController(ctx);
 
@@ -58,7 +63,43 @@ public class MainActivity extends AppCompatActivity {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        dbCon.insert(bgm.getBoardGameById("124742"));
+
+        ArrayList<GameID> list = gim.getGameIDs();
+        String ID;
+
+        for (GameID gi : list)
+        {
+            ID = gi.getObjectid();
+
+            Log.d("MY", "ID: " + bgm.getBoardGameById(ID).getId());
+            Log.d("MY", "Name: " + bgm.getBoardGameById(ID).getPrimaryName());
+
+            try {
+
+                result = dbCon.check(bgm.getBoardGameById(ID));
+
+                if (result) {
+                    Log.i("MY", "found the boardgame to already exist");
+                    dbCon.update(bgm.getBoardGameById(ID));
+                } else {
+                    Log.i("MY", "found new boardgame to insert in the database");
+                    dbCon.insert(bgm.getBoardGameById(ID));
+                }
+
+                //dbCon.delete(bgm.getBoardGameById("35052").getId());
+                //dbCon.delete(bgm.getBoardGameById("35052"));
+
+            } catch (SQLiteConstraintException e) {
+                //e.printStackTrace();
+            } catch (NullPointerException e) {
+                //e.printStackTrace();
+            }
+
+        }
+        //Iterate over database
+
+
+
 
         Cursor cr = dbCon.fetch();
 
