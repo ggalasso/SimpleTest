@@ -51,10 +51,8 @@ public class SQLController{
 
         String filter;
 
-        if (bg == null)
-            filter = null;
-        else
-            filter = new String(DBhelper._Id + " = " + bg.getId());
+        if (bg == null)     { filter = null; }
+        else                { filter = new String(DBhelper._Id + " = " + bg.getId()); }
 
         String[] columns = new String[]{
                 DBhelper._Id,
@@ -70,9 +68,8 @@ public class SQLController{
                 null,
                 null);
 
-        if (cursor != null){
-            cursor.moveToFirst();
-        }
+        if (cursor != null) { cursor.moveToFirst(); }
+
 
         return cursor;
     }
