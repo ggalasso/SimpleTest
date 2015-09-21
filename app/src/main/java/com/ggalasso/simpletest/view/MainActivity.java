@@ -14,6 +14,7 @@ import com.ggalasso.simpletest.api.CollectionAPI;
 import com.ggalasso.simpletest.api.ThingAPI;
 import com.ggalasso.simpletest.controller.BoardGameManager;
 import com.ggalasso.simpletest.controller.GameIDManager;
+import com.ggalasso.simpletest.db.BoardGameTable;
 import com.ggalasso.simpletest.db.SQLController;
 import com.ggalasso.simpletest.model.BoardGame;
 import com.ggalasso.simpletest.model.GameID;
@@ -33,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
         boolean result = false;
 
-        SQLController dbCon = new SQLController(ctx);
+        //SQLController dbCon = new SQLController(ctx);
+        BoardGameTable bgtCon = new BoardGameTable(ctx);
 
         CollectionAPI capi = new CollectionAPI();
         ThingAPI tapi = new ThingAPI();
@@ -58,17 +60,14 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        try {
-            dbCon.open();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        bgtCon.open();
+        // 09/20/15 - GAG - To remove everything from the board_game table use the deleteAll
+        //bgtCon.deleteAll();
 
-        ArrayList<GameID> list = gim.getGameIDs();
+        ArrayList<GameID> apiList = gim.getGameIDs();
         String ID;
 
-        for (GameID gi : list)
-        {
+        for (GameID gi : apiList) {
             ID = gi.getObjectid();
 
             Log.d("MY", "ID: " + bgm.getBoardGameById(ID).getId());
@@ -76,14 +75,14 @@ public class MainActivity extends AppCompatActivity {
 
             try {
 
-                result = dbCon.check(bgm.getBoardGameById(ID));
+                result = bgtCon.check(bgm.getBoardGameById(ID));
 
                 if (result) {
                     Log.i("MY", "found the boardgame to already exist");
-                    dbCon.update(bgm.getBoardGameById(ID));
+                    bgtCon.update(bgm.getBoardGameById(ID));
                 } else {
                     Log.i("MY", "found new boardgame to insert in the database");
-                    dbCon.insert(bgm.getBoardGameById(ID));
+                    bgtCon.insert(bgm.getBoardGameById(ID));
                 }
 
                 //dbCon.delete(bgm.getBoardGameById("35052").getId());
@@ -98,21 +97,34 @@ public class MainActivity extends AppCompatActivity {
         }
         //Iterate over database
 
+        Cursor cr = bgtCon.fetch();
 
-
-
-        Cursor cr = dbCon.fetch();
-
-        if (cr != null && cr.moveToFirst()){
-            cr.moveToFirst();
-            Log.d("MY", "ID: " + cr.getString(0));
-            Log.d("MY", "Name: " + cr.getString(1));
+        if (cr != null) {
+            int counter = 0;
+            while (cr.moveToNext()) {
+                counter++;
+                Log.d("BGCM", "ID: " + cr.getString(0));
+                Log.d("BGCM", "Name: " + cr.getString(1));
+            }
+            Log.d("BGCM", "TOTAL: " + counter);
         }
 
-        dbCon.close();
+        bgtCon.close();
+
+        //09-20-15 GAG - Fetch all game ID's and print them out.
+        cr = bgtCon.fetchAllGameIDs();
+        if (cr != null) {
+            int counter = 0;
+            while (cr.moveToNext()) {
+                counter++;
+                Log.d("BGCM", "ID: " + cr.getString(0));
+            }
+            Log.d("BGCM", "TOTAL: " + counter);
+        }
+        bgtCon.close();
 
         //Log.i("MY ERROR", "BoardGame: " + bgm.getIdListString());
-        Log.i("My Stuff", "Blah");
+        //Log.i("My Stuff", "Blah");
     }
 
     @Override

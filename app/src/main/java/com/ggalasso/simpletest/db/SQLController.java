@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.ggalasso.simpletest.controller.BoardGameManager;
 import com.ggalasso.simpletest.model.BoardGame;
 
 import java.sql.SQLException;
@@ -15,28 +14,29 @@ import java.sql.SQLException;
  */
 public class SQLController{
     private DBhelper dbHelper;
-    private Context outContext;
-    private SQLiteDatabase database;
+    Context context;
+    SQLiteDatabase database;
 
     public SQLController(Context c){
-        outContext = c;
+        context = c;
     }
 
-    public SQLController open() throws SQLException {
-        dbHelper = new DBhelper(outContext);
+    private SQLController openConnection() throws SQLException {
+        dbHelper = new DBhelper(context);
         database = dbHelper.getWritableDatabase();
         return this;
     }
 
-    public void close() {
-        dbHelper.close();
+    public void open()  {
+        try {
+            openConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void insert(BoardGame bg) {
-        ContentValues cv = new ContentValues();
-        cv.put(DBhelper._Id, bg.getId());
-        cv.put(DBhelper.Name, bg.getPrimaryName());
-        database.insert(DBhelper.Table_Name, null, cv);
+    public void close() {
+        dbHelper.close();
     }
 
     public Cursor fetch() {
@@ -68,41 +68,11 @@ public class SQLController{
                 null,
                 null);
 
-        if (cursor != null) { cursor.moveToFirst(); }
+        //if (cursor != null) { cursor.moveToFirst(); }
 
 
         return cursor;
     }
-
-    public boolean check(BoardGame bg) {
-
-        String ID = bg.getId();
-        String name = bg.getPrimaryName();
-
-        Cursor C = this.fetch(bg);
-
-        if (C == null)      /* This means that the BoardGame was not in the database */
-            return false;
-
-        return C.moveToFirst();
-    }
-
-    // this is more of an example at this point
-    // since we haven't defined what an update looks like yet
-    public int update(BoardGame bg){
-        ContentValues cv = new ContentValues();
-        //cv.put(DBhelper._Id, bg.getId());     /* Not necessary to include the _Id. Everything else is necessary though */
-        cv.put(DBhelper.Name, bg.getPrimaryName());
-
-        int i = database.update(
-                DBhelper.Table_Name,
-                cv,
-                DBhelper._Id + " = " + bg.getId(),
-                null);
-
-        return i;
-    }
-
 
     public void delete(String _id){
         database.delete(DBhelper.Table_Name, DBhelper._Id + " = " + _id, null);
@@ -111,4 +81,21 @@ public class SQLController{
     public void delete(BoardGame bg){
         database.delete(DBhelper.Table_Name, DBhelper._Id + " = " + bg.getId(), null);
     }
+
+    public Cursor fetchFromDB(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
+        Cursor cursor = database.query(
+                table,
+                columns,
+                selection,
+                selectionArgs,
+                groupBy,
+                having,
+                orderBy,
+                limit
+        );
+        if (cursor != null) {cursor.moveToFirst();}
+        return cursor;
+    }
+
+
 }
