@@ -15,6 +15,7 @@ import com.ggalasso.simpletest.api.ThingAPI;
 import com.ggalasso.simpletest.controller.BoardGameManager;
 import com.ggalasso.simpletest.controller.GameIDManager;
 import com.ggalasso.simpletest.db.BoardGameTable;
+import com.ggalasso.simpletest.db.DBhelper;
 import com.ggalasso.simpletest.db.SQLController;
 import com.ggalasso.simpletest.model.BoardGame;
 import com.ggalasso.simpletest.model.GameID;
@@ -60,7 +61,12 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        bgtCon.open();
+        //bgtCon.open();
+        bgtCon.dropAllTables();
+        bgtCon.testTables();
+        bgtCon.createAllTables();
+        //bgtCon.testTables();
+
         // 09/20/15 - GAG - To remove everything from the board_game table use the deleteAll
         //bgtCon.deleteAll();
 
@@ -101,13 +107,13 @@ public class MainActivity extends AppCompatActivity {
 
         if (bgList.size() > 0) {
             for (BoardGame bg : bgList) {
-                Log.d("BGCM", "ID: " + bg.getId());
-                Log.d("BGCM", "Name: " + bg.getPrimaryName());
+                Log.d("BGCM-MA", "ID: " + bg.getId());
+                Log.d("BGCM-MA", "Name: " + bg.getPrimaryName());
             }
-            Log.d("BGCM", "TOTAL: " + bgList.size());
+            Log.d("BGCM-MA", "TOTAL: " + bgList.size());
         }
 
-        bgtCon.close();
+        //bgtCon.close();
 
         // Delete Board Game from Table by ID as a string
         bgtCon.delete(bgm.getBoardGameById("35052").getId());
@@ -117,12 +123,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         //09-20-15 GAG - Fetch all game ID's and print them out.
-        ArrayList<String> gameIDList = bgtCon.fetchAllGameIDs();
+        ArrayList<String> gameIDList = bgtCon.fetchAllGameIds();
         if (gameIDList.size() > 0) {
             for ( String id : gameIDList) {
-                Log.d("BGCM", "Array ID: " + id); }
+                Log.d("BGCM-MA", "Array ID: " + id); }
         }
-        bgtCon.close();
+
 
         //Log.i("MY ERROR", "BoardGame: " + bgm.getIdListString());
         //Log.i("My Stuff", "Blah");

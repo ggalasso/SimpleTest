@@ -10,7 +10,6 @@ import org.simpleframework.xml.Root;
 @Root
 public class Name {
 
-        //@Path("name[@type='alternate']")
         @Attribute
         private String value;
 

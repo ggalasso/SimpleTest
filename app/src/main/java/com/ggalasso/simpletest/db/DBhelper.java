@@ -3,29 +3,42 @@ package com.ggalasso.simpletest.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import java.util.ArrayList;
 
 /**
  * Created by Edward on 9/8/2015.
  */
 public class DBhelper extends SQLiteOpenHelper{
-    // Table name
-    public static final String Table_Name = "board_game";
 
-    // Table Columns
-    public static final String _Id = "_id";
-    public static final String Name = "Name";
-    // other columns here
+   private BoardGameHelper _bgh = new BoardGameHelper();
 
     // Database Information
-    public static final String DB_Name = "bgm_db";
+    private static final String DB_Name = "bgm_db";
 
     // Database Version
-    static final int DB_Version = 1;
+    private static final int DB_Version = 1;
 
     // Create Table Query
-    public String CREATE_QUERY = "CREATE TABLE " + Table_Name + " ("
-            + _Id + " TEXT primary key, "
-            + Name + " TEXT );";
+    public String createTable(ArrayList<String> columns, String tableName) {
+        StringBuilder results = new StringBuilder();
+        int colSize = columns.size();
+
+        results.append("CREATE TABLE " + tableName + " (");
+        //Prepend the first column to the results query
+        results.append(columns.get(0));
+        //Loop through starting at the second column
+        for (int i = 1; i < colSize; i++) {
+            results.append(", " + columns.get(i));
+        }
+        results.append(");");
+        Log.d("BGCM-DBH", "Create table query string is: " + results.toString());
+
+        return results.toString();
+    }
+
+
 
     public DBhelper(Context context){
         super(context, DB_Name, null, DB_Version);
@@ -33,12 +46,22 @@ public class DBhelper extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_QUERY);
+        db.execSQL(createTable(_bgh.getColumns(), _bgh.getTableName()));
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + Table_Name);
+        db.execSQL("DROP TABLE IF EXISTS " + _bgh.getTableName());
         onCreate(db);
+    }
+
+
+    public void dropAllTables(SQLiteDatabase db) {
+        db.execSQL("DROP TABLE IF EXISTS " + _bgh.getTableName());
+    }
+
+    public void testTables() {
+        ArrayList<String> test = _bgh.getColumns();
+
     }
 }

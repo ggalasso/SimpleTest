@@ -53,27 +53,16 @@ public class BoardGame {
     @Path("minage")
     @Attribute(name = "value", required = false)
     private int minAge;
-//    @Path("link[@type='boardgamecategory'][1]")
-//    @Attribute(name="value", required=false)
-//    private String gameCategory;
-
 
     public BoardGame() {
-//        this.id = id;
-//        this.names.add(name);
-    }
-    public BoardGame(String id, String name) {
-        this.id = id;
-        Log.d("BGCM-BGConst", "Name value: " + name);
-        Name item = new Name(name);
-        this.names = new ArrayList<Name>();
-        this.names.add(item);
-        Log.d("BGCM-BGConst", "Name value: " + this.names.get(0).getValue());
     }
 
-    //    public String getName() {
-//        return name;
-//    }
+    public BoardGame(String id, String name) {
+        this.id = id;
+        this.names = new ArrayList<Name>();
+        this.names.add(new Name(name));
+    }
+
     public String getPrimaryName() {
         for (Name name : names) {
             if (name.getType().equals("primary")) {

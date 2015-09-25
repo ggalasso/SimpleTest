@@ -19,9 +19,11 @@ public class SQLController{
 
     public SQLController(Context c){
         context = c;
+        //dbHelper = new DBhelper(context);
     }
 
     private SQLController openConnection() throws SQLException {
+        //TODO: Learn more about passing the context and whether we instantiate multiple DB Helpers and by default multiple Board Game Helpers.
         dbHelper = new DBhelper(context);
         database = dbHelper.getWritableDatabase();
         return this;
@@ -37,6 +39,24 @@ public class SQLController{
 
     public void close() {
         dbHelper.close();
+    }
+
+    public void dropAllTables() {
+        open();
+        dbHelper.dropAllTables(database);
+        close();
+    }
+
+    public void createAllTables() {
+        open();
+        dbHelper.onCreate(database);
+        close();
+    }
+
+    public void testTables() {
+        open();
+        dbHelper.testTables();
+        close();
     }
 
 //    public Cursor fetch() {
@@ -74,8 +94,8 @@ public class SQLController{
 //        return cursor;
 //    }
 //    TODO: Make this generic by passing table and primary key of specified table
-//    public void delete(String _id){
-//        database.delete(DBhelper.Table_Name, DBhelper._Id + " = " + _id, null);
+//    public void delete(String id){
+//        database.delete(DBhelper.Table_Name, DBhelper._Id + " = " + id, null);
 //    }
 //
 

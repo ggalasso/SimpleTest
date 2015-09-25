@@ -21,23 +21,22 @@ public class BoardGameTable extends SQLController {
     }
 
     public boolean isBoardGameInTable(String id) {
-        String ID = "Filler";//bg.getId();
-//        String name = bg.getPrimaryName();
-
         BoardGame boardGame = this.fetchBoardGame(id);
         if (boardGame == null) {
-            return true;
-        } else {
             return false;
+        } else {
+            return true;
         }
     }
 
     public void insert(BoardGame bg) {
+        super.open();
         ContentValues cv = new ContentValues();
-        cv.put(DBhelper._Id, bg.getId());
-        cv.put(DBhelper.Name, bg.getPrimaryName());
-        database.insert(DBhelper.Table_Name, null, cv);
-        Log.d("BGCM", "Successfully added " + bg.getId());
+        cv.put(BoardGameHelper.Id, bg.getId());
+        cv.put(BoardGameHelper.Name, bg.getPrimaryName());
+        database.insert(BoardGameHelper.getTableName(), null, cv);
+        Log.d("BGCM-BGT", "Successfully added " + bg.getId());
+        super.close();
     }
 
     public ArrayList<BoardGame> fetchAllBoardGames() {
@@ -45,7 +44,6 @@ public class BoardGameTable extends SQLController {
     }
 
     public BoardGame fetchBoardGame(String id) {
-        String blah = "filler";
         ArrayList<BoardGame> item = fetch_impl(id);
         if (item.size() > 0) {
             BoardGame result = item.get(0);
@@ -55,93 +53,82 @@ public class BoardGameTable extends SQLController {
     }
 
     public ArrayList<BoardGame> fetch_impl(String id) {
-
         ArrayList<BoardGame> results = new ArrayList<BoardGame>();
-
         String filter;
 
-        if (id == null) {
-            filter = null;
-        } else {
-            filter = new String(DBhelper._Id + " = " + id);
-        }
+        if (id == null) { filter = null;}
+        else {filter = new String(BoardGameHelper.Id + " = " + id);}
 
         String[] columns = new String[]{
-                DBhelper._Id,
-                DBhelper.Name,
+                BoardGameHelper.Id,
+                BoardGameHelper.Name,
         };
-
+        super.open();
         Cursor cursor = database.query(
-                DBhelper.Table_Name,
+                BoardGameHelper.getTableName(),
                 columns,
                 filter,
                 null,
                 null,
                 null,
-                null);
-        boolean test = false;
+                null
+        );
+
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                Log.d("BGCM-BGT", "Cursor 0: " + cursor.getString(0));
-                Log.d("BGCM-BGT", "Cursor 1: " + cursor.getString(1));
                 BoardGame bg = new BoardGame(cursor.getString(0), cursor.getString(1));
-                Log.d("BGCM-BGT", "BG is now: " + bg.getId() + ";" + bg.getPrimaryName());
-                //
-                //  STOPPED HERE
-                //  Figure out why it crashes when constructing the name in the
-                //         BoardGame Constructor
-                //         It was the null ArrayList in BG object.
-                //
-                test = results.add(bg);
-                Log.d("BGCM-BGT", "Array List size: " + results.size());
+                results.add(bg);
             }
+            Log.d("BGCM-BGT", "Board game list size: " + results.size());
         }
-
+        super.close();
         return results;
     }
 
     public int update(BoardGame bg) {
+        super.open();
         ContentValues cv = new ContentValues();
-        //cv.put(DBhelper._Id, bg.getId());     /* Not necessary to include the _Id. Everything else is necessary though */
-        cv.put(DBhelper.Name, bg.getPrimaryName());
+        //cv.put(BoardGameHelper.Id, bg.getId());     /* Not necessary to include the Id. Everything else is necessary though */
+        cv.put(BoardGameHelper.Name, bg.getPrimaryName());
 
         int i = database.update(
-                DBhelper.Table_Name,
+                BoardGameHelper.getTableName(),
                 cv,
-                DBhelper._Id + " = " + bg.getId(),
-                null);
-
+                BoardGameHelper.Id + " = " + bg.getId(),
+                null
+        );
+        super.close();
         return i;
     }
 
     public void deleteAll() {
-        database.delete(DBhelper.Table_Name, null, null);
-        Log.d("BGCM", "Successfully deleted all items from Board Game Table");
+        database.delete(BoardGameHelper.getTableName(), null, null);
+        Log.d("BGCM-BGT", "Successfully deleted all items from Board Game Table");
     }
 
-    public void delete(String _id) {
+    public void delete(String id) {
         super.open();
-        database.delete(DBhelper.Table_Name, DBhelper._Id + " = " + _id, null);
-        Log.d("BGCM", "Successfully deleted " + _id + " as STRING");
+        database.delete(BoardGameHelper.getTableName(), BoardGameHelper.Id + " = " + id, null);
+        Log.d("BGCM-BGT", "Successfully deleted " + id + " as STRING");
         super.close();
     }
 
     public void delete(BoardGame bg) {
         super.open();
-        database.delete(DBhelper.Table_Name, DBhelper._Id + " = " + bg.getId(), null);
-        Log.d("BGCM", "Successfully deleted " + bg.getId() + " as OBJECT");
+        database.delete(BoardGameHelper.getTableName(), BoardGameHelper.Id + " = " + bg.getId(), null);
+        Log.d("BGCM-BGT", "Successfully deleted " + bg.getId() + " as OBJECT");
         super.close();
     }
 
-    public ArrayList<String> fetchAllGameIDs() {
+    public ArrayList<String> fetchAllGameIds() {
         super.open();
         ArrayList<String> results = new ArrayList<String>();
         String[] columns = new String[]{
-                DBhelper._Id,
+                BoardGameHelper.Id,
         };
 
         Cursor cursor = database.query(
-                DBhelper.Table_Name,
+                BoardGameHelper.getTableName(),
                 columns,
                 null,
                 null,
@@ -154,7 +141,7 @@ public class BoardGameTable extends SQLController {
             while (cursor.moveToNext()) {
                 results.add(cursor.getString(0));
             }
-            Log.d("BGCM", "TOTAL: " + results.size());
+            Log.d("BGCM-BGT", "All game Id list size: " + results.size());
         }
         super.close();
         return results;
