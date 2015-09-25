@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             bgm = tapi.getDetail(gim.getIdListString());
-            Log.i("MY", "blah");
+            //Log.i("MY", "blah");
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -70,23 +70,23 @@ public class MainActivity extends AppCompatActivity {
         for (GameID gi : apiList) {
             ID = gi.getObjectid();
 
-            Log.d("MY", "ID: " + bgm.getBoardGameById(ID).getId());
-            Log.d("MY", "Name: " + bgm.getBoardGameById(ID).getPrimaryName());
+            Log.d("BGCM-MA", "ID: " + bgm.getBoardGameById(ID).getId());
+            Log.d("BGCM-MA", "Name: " + bgm.getBoardGameById(ID).getPrimaryName());
 
             try {
 
-                result = bgtCon.check(bgm.getBoardGameById(ID));
+                result = bgtCon.isBoardGameInTable(ID);
 
                 if (result) {
-                    Log.i("MY", "found the boardgame to already exist");
+                    Log.i("BGCM-MA", "found the boardgame to already exist");
                     bgtCon.update(bgm.getBoardGameById(ID));
                 } else {
-                    Log.i("MY", "found new boardgame to insert in the database");
+                    Log.i("BGCM-MA", "found new boardgame to insert in the database");
                     bgtCon.insert(bgm.getBoardGameById(ID));
                 }
 
-                //dbCon.delete(bgm.getBoardGameById("35052").getId());
-                //dbCon.delete(bgm.getBoardGameById("35052"));
+                //bgtCon.delete(bgm.getBoardGameById("35052").getId());
+                //bgtCon.delete(bgm.getBoardGameById("35052"));
 
             } catch (SQLiteConstraintException e) {
                 //e.printStackTrace();
@@ -97,29 +97,30 @@ public class MainActivity extends AppCompatActivity {
         }
         //Iterate over database
 
-        Cursor cr = bgtCon.fetch();
+        ArrayList<BoardGame> bgList = bgtCon.fetchAllBoardGames();
 
-        if (cr != null) {
-            int counter = 0;
-            while (cr.moveToNext()) {
-                counter++;
-                Log.d("BGCM", "ID: " + cr.getString(0));
-                Log.d("BGCM", "Name: " + cr.getString(1));
+        if (bgList.size() > 0) {
+            for (BoardGame bg : bgList) {
+                Log.d("BGCM", "ID: " + bg.getId());
+                Log.d("BGCM", "Name: " + bg.getPrimaryName());
             }
-            Log.d("BGCM", "TOTAL: " + counter);
+            Log.d("BGCM", "TOTAL: " + bgList.size());
         }
 
         bgtCon.close();
 
+        // Delete Board Game from Table by ID as a string
+        bgtCon.delete(bgm.getBoardGameById("35052").getId());
+
+        // Delete Board Game from Table by passing Board Game object
+        bgtCon.delete(bgm.getBoardGameById("153938"));
+
+
         //09-20-15 GAG - Fetch all game ID's and print them out.
-        cr = bgtCon.fetchAllGameIDs();
-        if (cr != null) {
-            int counter = 0;
-            while (cr.moveToNext()) {
-                counter++;
-                Log.d("BGCM", "ID: " + cr.getString(0));
-            }
-            Log.d("BGCM", "TOTAL: " + counter);
+        ArrayList<String> gameIDList = bgtCon.fetchAllGameIDs();
+        if (gameIDList.size() > 0) {
+            for ( String id : gameIDList) {
+                Log.d("BGCM", "Array ID: " + id); }
         }
         bgtCon.close();
 

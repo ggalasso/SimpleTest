@@ -20,6 +20,15 @@ public class Name {
         @Attribute
         private String type;
 
+        public Name() {
+        }
+
+        public Name(String value) {
+                this.value = value;
+                this.sortindex = "1";
+                this.type = "primary";
+        }
+
         public String getValue() {
                 return value;
         }

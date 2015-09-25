@@ -39,48 +39,45 @@ public class SQLController{
         dbHelper.close();
     }
 
-    public Cursor fetch() {
-        return fetch_impl(null);
-    }
-
-    public Cursor fetch(BoardGame bg) {
-        return fetch_impl(bg);
-    }
-
-    public Cursor fetch_impl(BoardGame bg) {
-
-        String filter;
-
-        if (bg == null)     { filter = null; }
-        else                { filter = new String(DBhelper._Id + " = " + bg.getId()); }
-
-        String[] columns = new String[]{
-                DBhelper._Id,
-                DBhelper.Name,
-        };
-
-        Cursor cursor = database.query(
-                DBhelper.Table_Name,
-                columns,
-                filter,
-                null,
-                null,
-                null,
-                null);
-
-        //if (cursor != null) { cursor.moveToFirst(); }
-
-
-        return cursor;
-    }
-
-    public void delete(String _id){
-        database.delete(DBhelper.Table_Name, DBhelper._Id + " = " + _id, null);
-    }
-
-    public void delete(BoardGame bg){
-        database.delete(DBhelper.Table_Name, DBhelper._Id + " = " + bg.getId(), null);
-    }
+//    public Cursor fetch() {
+//        return fetch_impl(null);
+//    }
+//
+//    public Cursor fetch(BoardGame bg) {
+//        return fetch_impl(bg);
+//    }
+//
+//    public Cursor fetch_impl(BoardGame bg) {
+//
+//        String filter;
+//
+//        if (bg == null)     { filter = null; }
+//        else                { filter = new String(DBhelper._Id + " = " + bg.getId()); }
+//
+//        String[] columns = new String[]{
+//                DBhelper._Id,
+//                DBhelper.Name,
+//        };
+//
+//        Cursor cursor = database.query(
+//                DBhelper.Table_Name,
+//                columns,
+//                filter,
+//                null,
+//                null,
+//                null,
+//                null);
+//
+//        //if (cursor != null) { cursor.moveToFirst(); }
+//
+//
+//        return cursor;
+//    }
+//    TODO: Make this generic by passing table and primary key of specified table
+//    public void delete(String _id){
+//        database.delete(DBhelper.Table_Name, DBhelper._Id + " = " + _id, null);
+//    }
+//
 
     public Cursor fetchFromDB(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
         Cursor cursor = database.query(
@@ -96,6 +93,4 @@ public class SQLController{
         if (cursor != null) {cursor.moveToFirst();}
         return cursor;
     }
-
-
 }
