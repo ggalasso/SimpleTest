@@ -12,13 +12,29 @@ import java.util.ArrayList;
  */
 public class DBhelper extends SQLiteOpenHelper{
 
-   private BoardGameHelper _bgh = new BoardGameHelper();
-
     // Database Information
     private static final String DB_Name = "bgm_db";
-
     // Database Version
     private static final int DB_Version = 1;
+    private static DBhelper ourInstance = null;
+   private BoardGameHelper _bgh = BoardGameHelper.getInstance();
+
+    private DBhelper(Context context) {
+        super(context, DB_Name, null, DB_Version);
+        Log.i("BGCM-DBH", "Instantiated DBhelper");
+    }
+
+    public static DBhelper getInstance(Context context) {
+        if (ourInstance == null) {
+            synchronized (DBhelper.class) {
+                if (ourInstance == null) {
+                    ourInstance = new DBhelper(context);
+                }
+            }
+        }
+        return ourInstance;
+    }
+
 
     // Create Table Query
     public String createTable(ArrayList<String> columns, String tableName) {
@@ -39,9 +55,18 @@ public class DBhelper extends SQLiteOpenHelper{
     }
 
 
-
+/*
     public DBhelper(Context context){
         super(context, DB_Name, null, DB_Version);
+    }
+*/
+
+    public void deleteDatabase(Context ctx) {
+        ctx.deleteDatabase(DB_Name);
+    }
+
+    public void deleteDatabase(SQLiteDatabase db, Context ctx) {
+        ctx.deleteDatabase(DB_Name);
     }
 
     @Override
@@ -53,15 +78,5 @@ public class DBhelper extends SQLiteOpenHelper{
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + _bgh.getTableName());
         onCreate(db);
-    }
-
-
-    public void dropAllTables(SQLiteDatabase db) {
-        db.execSQL("DROP TABLE IF EXISTS " + _bgh.getTableName());
-    }
-
-    public void testTables() {
-        ArrayList<String> test = _bgh.getColumns();
-
     }
 }

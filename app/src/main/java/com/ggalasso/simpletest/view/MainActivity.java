@@ -62,13 +62,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //bgtCon.open();
-        bgtCon.dropAllTables();
-        bgtCon.testTables();
-        bgtCon.createAllTables();
+        //bgtCon.dropAllTables();
+        //bgtCon.testTables();
+        //bgtCon.createAllTables();
         //bgtCon.testTables();
 
         // 09/20/15 - GAG - To remove everything from the board_game table use the deleteAll
         //bgtCon.deleteAll();
+
+
 
         ArrayList<GameID> apiList = gim.getGameIDs();
         String ID;
@@ -129,6 +131,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("BGCM-MA", "Array ID: " + id); }
         }
 
+        Log.d("BGCM-MA", "Deleting Database");
+        bgtCon.destroyEverything();
 
         //Log.i("MY ERROR", "BoardGame: " + bgm.getIdListString());
         //Log.i("My Stuff", "Blah");
