@@ -20,7 +20,11 @@ public class BoardGameManager {
 
     public static BoardGameManager getInstance() {
         if (ourInstance == null) {
-            ourInstance = new BoardGameManager();
+            synchronized (BoardGameManager.class) {
+                if (ourInstance == null) {
+                    ourInstance = new BoardGameManager();
+                }
+            }
         }
         return ourInstance;
     }

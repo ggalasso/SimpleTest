@@ -21,7 +21,11 @@ public class GameIDManager {
 
     public static GameIDManager getInstance() {
         if (ourInstance == null) {
-            ourInstance = new GameIDManager();
+            synchronized (GameIDManager.class) {
+                if (ourInstance == null) {
+                    ourInstance = new GameIDManager();
+                }
+            }
         }
         return ourInstance;
     }
