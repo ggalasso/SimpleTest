@@ -1,7 +1,6 @@
 package com.ggalasso.simpletest.view;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,14 +12,11 @@ import com.ggalasso.simpletest.R;
 import com.ggalasso.simpletest.api.CollectionAPI;
 import com.ggalasso.simpletest.api.ThingAPI;
 import com.ggalasso.simpletest.controller.BoardGameManager;
-import com.ggalasso.simpletest.controller.GameIDManager;
+import com.ggalasso.simpletest.controller.GameIdManager;
 import com.ggalasso.simpletest.db.BoardGameTable;
-import com.ggalasso.simpletest.db.DBhelper;
-import com.ggalasso.simpletest.db.SQLController;
 import com.ggalasso.simpletest.model.BoardGame;
-import com.ggalasso.simpletest.model.GameID;
+import com.ggalasso.simpletest.model.GameId;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -41,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         CollectionAPI capi = new CollectionAPI();
         ThingAPI tapi = new ThingAPI();
 
-        GameIDManager gim = GameIDManager.getInstance();
+        GameIdManager gim = GameIdManager.getInstance();
         BoardGameManager bgm = BoardGameManager.getInstance();
 
         try {
@@ -72,10 +68,10 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        ArrayList<GameID> apiList = gim.getGameIDs();
+        ArrayList<GameId> apiList = gim.getGameIds();
         String ID;
 
-        for (GameID gi : apiList) {
+        for (GameId gi : apiList) {
             ID = gi.getObjectid();
 
             Log.d("BGCM-MA", "ID: " + bgm.getBoardGameById(ID).getId());

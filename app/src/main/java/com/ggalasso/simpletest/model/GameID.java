@@ -7,7 +7,7 @@ import org.simpleframework.xml.Root;
  * Created by truthd on 8/27/2015.
  */
 @Root
-public class GameID {
+public class GameId {
     @Attribute(required=false)
     private String objectid;
 

@@ -3,7 +3,7 @@ package com.ggalasso.simpletest.api;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.ggalasso.simpletest.controller.GameIDManager;
+import com.ggalasso.simpletest.controller.GameIdManager;
 
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
@@ -19,11 +19,11 @@ import java.util.concurrent.ExecutionException;
  */
 public class CollectionAPI {
 
-    public GameIDManager getIDList() throws ExecutionException, InterruptedException {
+    public GameIdManager getIDList() throws ExecutionException, InterruptedException {
         String downloadURL = "https://boardgamegeek.com/xmlapi2/collection?username=brickedphoneclub&own=1";
         //String downloadURL = "https://boardgamegeek.com/xmlapi2/collection?username=truthd&own=1";
         Log.i("INFO", "Attempting to download data from: " + downloadURL);
-        AsyncTask<String, Void, GameIDManager> getGameIDTask = new getGameIDs().execute(downloadURL);
+        AsyncTask<String, Void, GameIdManager> getGameIDTask = new getGameIDs().execute(downloadURL);
         try {
             return getGameIDTask.get();
         } catch (InterruptedException e) {
@@ -34,10 +34,10 @@ public class CollectionAPI {
         return null;
     }
 
-    private class getGameIDs extends AsyncTask<String, Void, GameIDManager> {
+    private class getGameIDs extends AsyncTask<String, Void, GameIdManager> {
         @Override
-        protected GameIDManager doInBackground(String... params) {
-            GameIDManager manager = GameIDManager.getInstance();
+        protected GameIdManager doInBackground(String... params) {
+            GameIdManager manager = GameIdManager.getInstance();
             Log.i("INFO", "REACHED doInBackground");
             try {
                 URL url = new URL(params[0]);
@@ -46,7 +46,7 @@ public class CollectionAPI {
                 try {
                     InputStream is = new BufferedInputStream(con.getInputStream());
                     Serializer serializer = new Persister();
-                    manager = serializer.read(GameIDManager.class, is, false);
+                    manager = serializer.read(GameIdManager.class, is, false);
 
                     Log.i("EXCEPTION", "Finished Serializing");
                 } finally {
