@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
             for (BoardGame bg : bgList) {
                 Log.d("BGCM-MA", "ID: " + bg.getId());
                 Log.d("BGCM-MA", "Name: " + bg.getPrimaryName());
+                Log.d("BGCM-MA", "Year Published: " + bg.getYearPublished());
             }
             Log.d("BGCM-MA", "TOTAL: " + bgList.size());
         }
@@ -127,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("BGCM-MA", "Array ID: " + id); }
         }
 
-        Log.d("BGCM-MA", "Deleting Database");
         bgtCon.destroyEverything();
 
         //Log.i("MY ERROR", "BoardGame: " + bgm.getIdListString());

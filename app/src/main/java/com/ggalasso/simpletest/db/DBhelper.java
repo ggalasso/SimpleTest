@@ -62,11 +62,9 @@ public class DBhelper extends SQLiteOpenHelper{
 */
 
     public void deleteDatabase(Context ctx) {
+        Log.d("BGCM-DBH","Attempting to Delete Database");
         ctx.deleteDatabase(DB_Name);
-    }
-
-    public void deleteDatabase(SQLiteDatabase db, Context ctx) {
-        ctx.deleteDatabase(DB_Name);
+        Log.d("BGCM-DBH","Database Deleted");
     }
 
     @Override

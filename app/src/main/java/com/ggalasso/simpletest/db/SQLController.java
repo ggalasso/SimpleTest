@@ -43,9 +43,9 @@ public class SQLController{
 
 
     public void destroyEverything() {
-        //open();
+        open();
         dbHelper.deleteDatabase(context);
-        //close();
+        close();
     }
 
     public Cursor fetchFromDB(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {

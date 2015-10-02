@@ -3,8 +3,10 @@ package com.ggalasso.simpletest.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.util.Log;
 
+import com.ggalasso.simpletest.controller.BoardGameManager;
 import com.ggalasso.simpletest.model.BoardGame;
 import com.ggalasso.simpletest.model.Name;
 
@@ -29,11 +31,35 @@ public class BoardGameTable extends SQLController {
         }
     }
 
+    public void syncBoardGameCollection(ArrayList<BoardGame> games){
+        boolean result = false;
+
+         for (BoardGame game : games){
+             try {
+
+                 result = isBoardGameInTable(game.getId());
+
+                 if (result) {
+                     Log.i("BGCM-BGT", "found the boardgame to already exist");
+                     update(game);
+                 } else {
+                     Log.i("BGCM-BGT", "found NEW boardgame to insert in the database");
+                     insert(game);
+                 }
+             } catch (SQLiteConstraintException e) {
+                 e.printStackTrace();
+             } catch (NullPointerException e) {
+                 e.printStackTrace();
+             }
+         }
+    }
+
     public void insert(BoardGame bg) {
         super.open();
         ContentValues cv = new ContentValues();
-        cv.put(BoardGameHelper.Id, bg.getId());
-        cv.put(BoardGameHelper.Name, bg.getPrimaryName());
+        cv.put(BoardGameHelper.bg_Id, bg.getId());
+        cv.put(BoardGameHelper.bg_PrimaryName, bg.getPrimaryName());
+        cv.put(BoardGameHelper.bg_YearPub, bg.getYearPublished());
         database.insert(BoardGameHelper.getTableName(), null, cv);
         Log.d("BGCM-BGT", "Successfully added " + bg.getId());
         super.close();
@@ -57,11 +83,23 @@ public class BoardGameTable extends SQLController {
         String filter;
 
         if (id == null) { filter = null;}
-        else {filter = new String(BoardGameHelper.Id + " = " + id);}
+        else {filter = new String(BoardGameHelper.bg_Id + " = " + id);}
 
         String[] columns = new String[]{
-                BoardGameHelper.Id,
-                BoardGameHelper.Name,
+                BoardGameHelper.bg_Id,
+                BoardGameHelper.bg_PrimaryName,
+                BoardGameHelper.bg_YearPub,
+                BoardGameHelper.bg_Description,
+                BoardGameHelper.bg_Thumbnail,
+                BoardGameHelper.bg_Image,
+                BoardGameHelper.bg_Rating,
+                BoardGameHelper.bg_Rank,
+                BoardGameHelper.bg_MinPlayers,
+                BoardGameHelper.bg_MaxPlayers,
+                BoardGameHelper.bg_PlayTime,
+                BoardGameHelper.bg_MinTime,
+                BoardGameHelper.bg_MaxTime,
+                BoardGameHelper.bg_MinAge
         };
         super.open();
         Cursor cursor = database.query(
@@ -76,7 +114,22 @@ public class BoardGameTable extends SQLController {
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                BoardGame bg = new BoardGame(cursor.getString(0), cursor.getString(1));
+                BoardGame bg = new BoardGame(
+                        cursor.getString(0)
+                        , cursor.getString(1)
+                        , cursor.getString(2)
+                        , cursor.getString(3)
+                        , cursor.getString(4)
+                        , cursor.getString(5)
+                        , cursor.getDouble(6)
+                        , cursor.getString(7)
+                        , cursor.getInt(8)
+                        , cursor.getInt(9)
+                        , cursor.getInt(10)
+                        , cursor.getInt(11)
+                        , cursor.getInt(12)
+                        , cursor.getInt(13)
+                );
                 results.add(bg);
             }
             Log.d("BGCM-BGT", "Board game list size: " + results.size());
@@ -89,12 +142,12 @@ public class BoardGameTable extends SQLController {
         super.open();
         ContentValues cv = new ContentValues();
         //cv.put(BoardGameHelper.Id, bg.getId());     /* Not necessary to include the Id. Everything else is necessary though */
-        cv.put(BoardGameHelper.Name, bg.getPrimaryName());
+        cv.put(BoardGameHelper.bg_PrimaryName, bg.getPrimaryName());
 
         int i = database.update(
                 BoardGameHelper.getTableName(),
                 cv,
-                BoardGameHelper.Id + " = " + bg.getId(),
+                BoardGameHelper.bg_Id + " = " + bg.getId(),
                 null
         );
         super.close();
@@ -108,14 +161,14 @@ public class BoardGameTable extends SQLController {
 
     public void delete(String id) {
         super.open();
-        database.delete(BoardGameHelper.getTableName(), BoardGameHelper.Id + " = " + id, null);
+        database.delete(BoardGameHelper.getTableName(), BoardGameHelper.bg_Id + " = " + id, null);
         Log.d("BGCM-BGT", "Successfully deleted " + id + " as STRING");
         super.close();
     }
 
     public void delete(BoardGame bg) {
         super.open();
-        database.delete(BoardGameHelper.getTableName(), BoardGameHelper.Id + " = " + bg.getId(), null);
+        database.delete(BoardGameHelper.getTableName(), BoardGameHelper.bg_Id + " = " + bg.getId(), null);
         Log.d("BGCM-BGT", "Successfully deleted " + bg.getId() + " as OBJECT");
         super.close();
     }
@@ -124,7 +177,7 @@ public class BoardGameTable extends SQLController {
         super.open();
         ArrayList<String> results = new ArrayList<String>();
         String[] columns = new String[]{
-                BoardGameHelper.Id,
+                BoardGameHelper.bg_Id,
         };
 
         Cursor cursor = database.query(

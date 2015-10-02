@@ -18,6 +18,7 @@ public class BoardGame {
     private String id;
     @ElementList(entry = "name", inline = true, required = false)
     private ArrayList<Name> names;
+    private String primaryName;
     @ElementList(entry = "link", inline = true, required = false)
     private ArrayList<Link> links;
     @Path("yearpublished")
@@ -57,22 +58,50 @@ public class BoardGame {
     public BoardGame() {
     }
 
-    public BoardGame(String id, String name) {
+    public BoardGame(
+            String id
+            , String primaryName
+            , String yearPub
+            , String description
+            , String thumbnail
+            , String image
+            , double rating
+            , String rank
+            , int minPlayers
+            , int maxPlayers
+            , int playTime
+            , int minTime
+            , int maxTime
+            , int minAge
+    ) {
         this.id = id;
-        this.names = new ArrayList<Name>();
-        this.names.add(new Name(name));
+        this.primaryName = primaryName;
+        this.yearPub = yearPub;
+        this.description = description;
+        this.thumbnail = thumbnail;
+        this.image = image;
+        this.rating = rating;
+        this.rank = rank;
+        this.minPlayers = minPlayers;
+        this.maxPlayers = maxPlayers;
+        this.playTime = playTime;
+        this.minTime = minTime;
+        this.maxTime = maxTime;
+        this.minAge = minAge;
     }
 
     public String getPrimaryName() {
-        for (Name name : names) {
-            if (name.getType().equals("primary")) {
-                return name.getValue();
+        if ((primaryName == null) || primaryName.isEmpty()) {
+            for (Name name : names) {
+                if (name.getType().equals("primary")) {
+                    return name.getValue();
+                }
             }
         }
-        return "";
+        return primaryName;
     }
 
-    public String getYeapublished() {
+    public String getYearPublished() {
         return yearPub;
     }
 

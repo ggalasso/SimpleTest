@@ -16,7 +16,7 @@ public class BoardGameManager {
     @ElementList(entry="item", inline=true)
     private ArrayList<BoardGame> BoardGames;
 
-    private BoardGameManager() { Log.i("INFO", "Instantiated BoardGameManager"); }
+    private BoardGameManager() { Log.i("BGCM-BGM", "Instantiated BoardGameManager"); }
 
     public static BoardGameManager getInstance() {
         if (ourInstance == null) {
