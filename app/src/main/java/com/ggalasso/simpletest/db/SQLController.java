@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+import android.widget.TableLayout;
 
 import com.ggalasso.simpletest.model.BoardGame;
 
@@ -61,5 +63,20 @@ public class SQLController{
         );
         if (cursor != null) {cursor.moveToFirst();}
         return cursor;
+    }
+
+    public Integer fetchTableCount(String tableName){
+        open();
+        Integer count = 0;
+        String query = "SELECT COUNT(*) FROM " + tableName;
+
+        Cursor cursor = database.rawQuery(query, null);
+        if (cursor != null) {
+            cursor.moveToNext();
+            count = cursor.getInt(0);
+        }
+        Log.d("BGCM-SQL", "Fetch Table Count = " + count);
+        close();
+        return count;
     }
 }

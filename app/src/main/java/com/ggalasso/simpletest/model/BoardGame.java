@@ -10,7 +10,6 @@ import org.simpleframework.xml.Root;
 
 import java.util.ArrayList;
 
-
 @Root
 public class BoardGame {
     //Id of the Game, this is required otherwise we shouldn't be able to find the game.
@@ -90,6 +89,10 @@ public class BoardGame {
         this.minAge = minAge;
     }
 
+    public String getId() {
+        return id;
+    }
+
     public String getPrimaryName() {
         if ((primaryName == null) || primaryName.isEmpty()) {
             for (Name name : names) {
@@ -101,7 +104,7 @@ public class BoardGame {
         return primaryName;
     }
 
-    public String getYearPublished() {
+    public String getYearPub() {
         return yearPub;
     }
 
@@ -113,8 +116,39 @@ public class BoardGame {
         return rating;
     }
 
-    public String getId() {
-        return id;
+    public int getMinAge() {
+        return minAge;
     }
 
+    public int getMaxTime() {
+        return maxTime;
+    }
+
+    public int getMinTime() {
+        return minTime;
+    }
+
+    public int getPlayTime() {
+        return playTime;
+    }
+
+    public int getMaxPlayers() {
+        return maxPlayers;
+    }
+
+    public int getMinPlayers() {
+        return minPlayers;
+    }
+
+    public String getRank() {
+        return rank;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
 }

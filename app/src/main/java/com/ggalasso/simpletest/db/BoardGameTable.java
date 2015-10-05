@@ -22,6 +22,11 @@ public class BoardGameTable extends SQLController {
         super(c);
     }
 
+    public Integer getTableRowCount() {
+
+        return 0;
+    }
+
     public boolean isBoardGameInTable(String id) {
         BoardGame boardGame = this.fetchBoardGame(id);
         if (boardGame == null) {
@@ -31,27 +36,44 @@ public class BoardGameTable extends SQLController {
         }
     }
 
-    public void syncBoardGameCollection(ArrayList<BoardGame> games){
+    public void syncBoardGameCollection(ArrayList<BoardGame> boardGames){
+
+        Integer testCount = fetchTableCount(BoardGameHelper.getTableName());
+
+        if (testCount > 0){
+            syncShallow(boardGames);
+        } else {
+            //syncDeep(boardGames); put this back after testing the shallow
+            syncShallow(boardGames);
+        }
+
+        testCount = fetchTableCount(BoardGameHelper.getTableName());
+    }
+
+    private void syncDeep(ArrayList<BoardGame> boardGames) {
+        // TODO : Fill this in syncDeep
+    }
+
+
+    private void syncShallow(ArrayList<BoardGame> boardGames) {
         boolean result = false;
 
-         for (BoardGame game : games){
-             try {
-
-                 result = isBoardGameInTable(game.getId());
-
-                 if (result) {
-                     Log.i("BGCM-BGT", "found the boardgame to already exist");
-                     update(game);
-                 } else {
-                     Log.i("BGCM-BGT", "found NEW boardgame to insert in the database");
-                     insert(game);
-                 }
-             } catch (SQLiteConstraintException e) {
-                 e.printStackTrace();
-             } catch (NullPointerException e) {
-                 e.printStackTrace();
-             }
-         }
+        for (BoardGame game : boardGames){
+            try {
+                result = isBoardGameInTable(game.getId());
+                if (result) {
+                    Log.i("BGCM-BGT", "found the boardgame to already exist");
+                    //update(game);
+                } else {
+                    Log.i("BGCM-BGT", "found NEW boardgame to insert in the database");
+                    insert(game);
+                }
+            } catch (SQLiteConstraintException e) {
+                e.printStackTrace();
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void insert(BoardGame bg) {
@@ -59,7 +81,18 @@ public class BoardGameTable extends SQLController {
         ContentValues cv = new ContentValues();
         cv.put(BoardGameHelper.bg_Id, bg.getId());
         cv.put(BoardGameHelper.bg_PrimaryName, bg.getPrimaryName());
-        cv.put(BoardGameHelper.bg_YearPub, bg.getYearPublished());
+        cv.put(BoardGameHelper.bg_YearPub, bg.getYearPub());
+        cv.put(BoardGameHelper.bg_Description, bg.getDescription());
+        cv.put(BoardGameHelper.bg_Rating, bg.getRating());
+        cv.put(BoardGameHelper.bg_MinAge, bg.getMinAge());
+        cv.put(BoardGameHelper.bg_MaxTime, bg.getMaxTime());
+        cv.put(BoardGameHelper.bg_MinTime, bg.getMinTime());
+        cv.put(BoardGameHelper.bg_PlayTime, bg.getPlayTime());
+        cv.put(BoardGameHelper.bg_MaxPlayers, bg.getMaxPlayers());
+        cv.put(BoardGameHelper.bg_MinPlayers, bg.getMinPlayers());
+        cv.put(BoardGameHelper.bg_Rank, bg.getRank());
+        cv.put(BoardGameHelper.bg_Image, bg.getImage());
+        cv.put(BoardGameHelper.bg_Thumbnail, bg.getThumbnail());
         database.insert(BoardGameHelper.getTableName(), null, cv);
         Log.d("BGCM-BGT", "Successfully added " + bg.getId());
         super.close();

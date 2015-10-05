@@ -29,8 +29,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        boolean result = false;
-
         //SQLController dbCon = new SQLController(ctx);
         BoardGameTable bgtCon = new BoardGameTable(ctx);
 
@@ -67,39 +65,7 @@ public class MainActivity extends AppCompatActivity {
         //bgtCon.deleteAll();
 
 
-
-        ArrayList<GameId> apiList = gim.getGameIds();
-        String ID;
-
-        for (GameId gi : apiList) {
-            ID = gi.getObjectid();
-
-            Log.d("BGCM-MA", "ID: " + bgm.getBoardGameById(ID).getId());
-            Log.d("BGCM-MA", "Name: " + bgm.getBoardGameById(ID).getPrimaryName());
-
-            try {
-
-                result = bgtCon.isBoardGameInTable(ID);
-
-                if (result) {
-                    Log.i("BGCM-MA", "found the boardgame to already exist");
-                    bgtCon.update(bgm.getBoardGameById(ID));
-                } else {
-                    Log.i("BGCM-MA", "found new boardgame to insert in the database");
-                    bgtCon.insert(bgm.getBoardGameById(ID));
-                }
-
-                //bgtCon.delete(bgm.getBoardGameById("35052").getId());
-                //bgtCon.delete(bgm.getBoardGameById("35052"));
-
-            } catch (SQLiteConstraintException e) {
-                //e.printStackTrace();
-            } catch (NullPointerException e) {
-                //e.printStackTrace();
-            }
-
-        }
-        //Iterate over database
+        bgtCon.syncBoardGameCollection(bgm.getBoardGames());
 
         ArrayList<BoardGame> bgList = bgtCon.fetchAllBoardGames();
 
@@ -107,7 +73,9 @@ public class MainActivity extends AppCompatActivity {
             for (BoardGame bg : bgList) {
                 Log.d("BGCM-MA", "ID: " + bg.getId());
                 Log.d("BGCM-MA", "Name: " + bg.getPrimaryName());
-                Log.d("BGCM-MA", "Year Published: " + bg.getYearPublished());
+                Log.d("BGCM-MA", "Year Published: " + bg.getYearPub());
+                Log.d("BGCM-MA", "Description: " + bg.getDescription().substring(0,75));
+                Log.d("BGCM-MA", "Rating: " + bg.getRating());
             }
             Log.d("BGCM-MA", "TOTAL: " + bgList.size());
         }
