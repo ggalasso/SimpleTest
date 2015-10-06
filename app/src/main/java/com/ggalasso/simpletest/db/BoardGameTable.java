@@ -36,29 +36,41 @@ public class BoardGameTable extends SQLController {
         }
     }
 
-    public void syncBoardGameCollection(ArrayList<BoardGame> boardGames){
+    public void syncBoardGameCollection(ArrayList<BoardGame> boardGames) {
 
-        Integer testCount = fetchTableCount(BoardGameHelper.getTableName());
+        Integer rowCount = fetchTableCount(BoardGameHelper.getTableName());
 
-        if (testCount > 0){
+        if (rowCount > 0) {
             syncShallow(boardGames);
         } else {
-            //syncDeep(boardGames); put this back after testing the shallow
-            syncShallow(boardGames);
+            syncDeep(boardGames); //put this back after testing the shallow
+            //syncShallow(boardGames);
         }
 
-        testCount = fetchTableCount(BoardGameHelper.getTableName());
+        fetchTableCount(BoardGameHelper.getTableName());
     }
 
     private void syncDeep(ArrayList<BoardGame> boardGames) {
         // TODO : Fill this in syncDeep
+        fetchTableCount(BoardGameHelper.getTableName());
+        deleteAllRowsFromTable(BoardGameHelper.getTableName());
+        fetchTableCount(BoardGameHelper.getTableName());
+
+        open();
+        for(BoardGame game : boardGames) {
+            insert(game);
+        }
+        close();
+        fetchTableCount(BoardGameHelper.getTableName());
+
     }
 
 
     private void syncShallow(ArrayList<BoardGame> boardGames) {
         boolean result = false;
 
-        for (BoardGame game : boardGames){
+        open();
+        for (BoardGame game : boardGames) {
             try {
                 result = isBoardGameInTable(game.getId());
                 if (result) {
@@ -74,10 +86,10 @@ public class BoardGameTable extends SQLController {
                 e.printStackTrace();
             }
         }
+        close();
     }
 
-    public void insert(BoardGame bg) {
-        super.open();
+    private void insert(BoardGame bg) {
         ContentValues cv = new ContentValues();
         cv.put(BoardGameHelper.bg_Id, bg.getId());
         cv.put(BoardGameHelper.bg_PrimaryName, bg.getPrimaryName());
@@ -95,7 +107,6 @@ public class BoardGameTable extends SQLController {
         cv.put(BoardGameHelper.bg_Thumbnail, bg.getThumbnail());
         database.insert(BoardGameHelper.getTableName(), null, cv);
         Log.d("BGCM-BGT", "Successfully added " + bg.getId());
-        super.close();
     }
 
     public ArrayList<BoardGame> fetchAllBoardGames() {
@@ -115,8 +126,11 @@ public class BoardGameTable extends SQLController {
         ArrayList<BoardGame> results = new ArrayList<BoardGame>();
         String filter;
 
-        if (id == null) { filter = null;}
-        else {filter = new String(BoardGameHelper.bg_Id + " = " + id);}
+        if (id == null) {
+            filter = null;
+        } else {
+            filter = new String(BoardGameHelper.bg_Id + " = " + id);
+        }
 
         String[] columns = new String[]{
                 BoardGameHelper.bg_Id,
@@ -187,22 +201,25 @@ public class BoardGameTable extends SQLController {
         return i;
     }
 
-    public void deleteAll() {
-        database.delete(BoardGameHelper.getTableName(), null, null);
-        Log.d("BGCM-BGT", "Successfully deleted all items from Board Game Table");
-    }
-
     public void delete(String id) {
         super.open();
-        database.delete(BoardGameHelper.getTableName(), BoardGameHelper.bg_Id + " = " + id, null);
-        Log.d("BGCM-BGT", "Successfully deleted " + id + " as STRING");
+        Integer result = database.delete(BoardGameHelper.getTableName(), BoardGameHelper.bg_Id + " = " + id, null);
+        if (result > 0) {
+            Log.d("BGCM-BGT", "Successfully deleted " + id + " as STRING");
+        } else {
+            Log.d("BGCM-BGT", "Unable to delete, STRING id: " + id);
+        }
         super.close();
     }
 
     public void delete(BoardGame bg) {
         super.open();
-        database.delete(BoardGameHelper.getTableName(), BoardGameHelper.bg_Id + " = " + bg.getId(), null);
-        Log.d("BGCM-BGT", "Successfully deleted " + bg.getId() + " as OBJECT");
+        Integer result = database.delete(BoardGameHelper.getTableName(), BoardGameHelper.bg_Id + " = " + bg.getId(), null);
+        if (result > 0) {
+            Log.d("BGCM-BGT", "Successfully deleted " + bg.getId() + " as OBJECT");
+        } else {
+            Log.d("BGCM-BGT", "Unable to delete, OBJECT id: " + bg.getId());
+        }
         super.close();
     }
 

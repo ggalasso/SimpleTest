@@ -10,14 +10,14 @@ import java.util.ArrayList;
 /**
  * Created by Edward on 9/8/2015.
  */
-public class DBhelper extends SQLiteOpenHelper{
+public class DBhelper extends SQLiteOpenHelper {
 
     // Database Information
     private static final String DB_Name = "bgm_db";
     // Database Version
     private static final int DB_Version = 1;
     private static DBhelper ourInstance = null;
-   private BoardGameHelper _bgh = BoardGameHelper.getInstance();
+    private BoardGameHelper _bgh = BoardGameHelper.getInstance();
 
     private DBhelper(Context context) {
         super(context, DB_Name, null, DB_Version);
@@ -34,7 +34,6 @@ public class DBhelper extends SQLiteOpenHelper{
         }
         return ourInstance;
     }
-
 
     // Create Table Query
     public String createTable(ArrayList<String> columns, String tableName) {
@@ -54,27 +53,28 @@ public class DBhelper extends SQLiteOpenHelper{
         return results.toString();
     }
 
-
-/*
-    public DBhelper(Context context){
-        super(context, DB_Name, null, DB_Version);
-    }
-*/
-
     public void deleteDatabase(Context ctx) {
-        Log.d("BGCM-DBH","Attempting to Delete Database");
+        Log.d("BGCM-DBH", "Attempting to Delete Database");
         ctx.deleteDatabase(DB_Name);
-        Log.d("BGCM-DBH","Database Deleted");
+        Log.d("BGCM-DBH", "Database Deleted");
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(createTable(_bgh.getColumns(), _bgh.getTableName()));
+        Log.d("BGCM-DBH", "Table " + _bgh.getTableName() + " was created.");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + _bgh.getTableName());
         onCreate(db);
+        Log.d("BGCM-DBH", "Table " + _bgh.getTableName() + " was upgraded, from " + oldVersion + " to " + newVersion);
     }
+
+    public void dropTable(SQLiteDatabase db, String tableName) {
+        db.execSQL("DROP TABLE IF EXISTS " + tableName);
+        Log.d("BGCM-DBH", "Table " + tableName + " was dropped.");
+    }
+
 }

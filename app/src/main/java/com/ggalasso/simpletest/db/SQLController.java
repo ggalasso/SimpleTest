@@ -79,4 +79,18 @@ public class SQLController{
         close();
         return count;
     }
+
+    public void dropTable(String tableName) {
+        open();
+        dbHelper.dropTable(database, tableName);
+        close();
+    }
+
+    public void deleteAllRowsFromTable(String tableName) {
+        open();
+        database.delete(tableName, null, null);
+        Log.d("BGCM-SQL", "Deleted all rows from " + tableName);
+        close();
+    }
+
 }
