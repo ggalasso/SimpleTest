@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
         //SQLController dbCon = new SQLController(ctx);
         BoardGameTable bgtCon = new BoardGameTable(ctx);
+        //bgtCon.destroyEverything();
+
 
         CollectionAPI capi = new CollectionAPI();
         ThingAPI tapi = new ThingAPI();
@@ -96,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("BGCM-MA", "Array ID: " + id); }
         }
 
-        bgtCon.destroyEverything();
+        //bgtCon.destroyEverything();
 
         //Log.i("MY ERROR", "BoardGame: " + bgm.getIdListString());
         //Log.i("My Stuff", "Blah");

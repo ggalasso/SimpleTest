@@ -12,6 +12,10 @@ import com.ggalasso.simpletest.model.Name;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Created by truthd on 9/20/2015.
@@ -56,40 +60,82 @@ public class BoardGameTable extends SQLController {
         deleteAllRowsFromTable(BoardGameHelper.getTableName());
         fetchTableCount(BoardGameHelper.getTableName());
 
-        open();
         for(BoardGame game : boardGames) {
             insert(game);
         }
-        close();
         fetchTableCount(BoardGameHelper.getTableName());
 
     }
 
-
     private void syncShallow(ArrayList<BoardGame> boardGames) {
         boolean result = false;
 
-        open();
-        for (BoardGame game : boardGames) {
-            try {
-                result = isBoardGameInTable(game.getId());
-                if (result) {
-                    Log.i("BGCM-BGT", "found the boardgame to already exist");
-                    //update(game);
-                } else {
-                    Log.i("BGCM-BGT", "found NEW boardgame to insert in the database");
-                    insert(game);
-                }
-            } catch (SQLiteConstraintException e) {
-                e.printStackTrace();
-            } catch (NullPointerException e) {
-                e.printStackTrace();
+        // Dummy Data
+        BoardGame game1 = fetchBoardGame("171");
+        BoardGame game2 = fetchBoardGame("1927");
+
+        game1.setId("172");
+        game1.setPrimaryName("Dummy" + game1.getPrimaryName());
+        game2.setId("1928");
+        game2.setPrimaryName("Dummy"+game2.getPrimaryName());
+
+        insert(game1);
+        insert(game2);
+        // END
+
+        ArrayList<BoardGame> existingGames = fetchAllBoardGames();
+
+        Map<String,BoardGame> gameMap = new HashMap<String,BoardGame>();
+        for (BoardGame game : existingGames){
+            game.setSyncValue("DBOnly");
+            gameMap.put(game.getId(),game);
+        }
+
+        for (BoardGame game : boardGames){
+            String id = game.getId();
+            if (gameMap.containsKey(id)){
+                gameMap.remove(id);
+            } else {
+                game.setSyncValue("APIOnly");
+                gameMap.put(id,game);
             }
         }
-        close();
+
+        Iterator itr = gameMap.entrySet().iterator();
+        while (itr.hasNext()){
+            Map.Entry pair = (Map.Entry)itr.next();
+            String id = (String)pair.getKey();
+            BoardGame game = (BoardGame)pair.getValue();
+            String value = game.getSyncValue();
+            Log.d("BGCM-BGT","Id: " + game.getId() + " Val: " + value);
+            if (value.equals("DBOnly")){
+                delete(game);
+            } else {
+                insert(game);
+            }
+            itr.remove();
+        }
+
+//        for (BoardGame game : boardGames) {
+//            try {
+//                result = isBoardGameInTable(game.getId());
+//                if (result) {
+//                    Log.i("BGCM-BGT", "found the boardgame to already exist");
+//                    //update(game);
+//                } else {
+//                    Log.i("BGCM-BGT", "found NEW boardgame to insert in the database");
+//                    insert(game);
+//                }
+//            } catch (SQLiteConstraintException e) {
+//                e.printStackTrace();
+//            } catch (NullPointerException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     private void insert(BoardGame bg) {
+        open();
         ContentValues cv = new ContentValues();
         cv.put(BoardGameHelper.bg_Id, bg.getId());
         cv.put(BoardGameHelper.bg_PrimaryName, bg.getPrimaryName());
@@ -107,6 +153,7 @@ public class BoardGameTable extends SQLController {
         cv.put(BoardGameHelper.bg_Thumbnail, bg.getThumbnail());
         database.insert(BoardGameHelper.getTableName(), null, cv);
         Log.d("BGCM-BGT", "Successfully added " + bg.getId());
+        close();
     }
 
     public ArrayList<BoardGame> fetchAllBoardGames() {
@@ -123,6 +170,7 @@ public class BoardGameTable extends SQLController {
     }
 
     public ArrayList<BoardGame> fetch_impl(String id) {
+        open();
         ArrayList<BoardGame> results = new ArrayList<BoardGame>();
         String filter;
 
@@ -148,7 +196,7 @@ public class BoardGameTable extends SQLController {
                 BoardGameHelper.bg_MaxTime,
                 BoardGameHelper.bg_MinAge
         };
-        super.open();
+
         Cursor cursor = database.query(
                 BoardGameHelper.getTableName(),
                 columns,
@@ -181,7 +229,7 @@ public class BoardGameTable extends SQLController {
             }
             Log.d("BGCM-BGT", "Board game list size: " + results.size());
         }
-        super.close();
+        close();
         return results;
     }
 
@@ -224,7 +272,7 @@ public class BoardGameTable extends SQLController {
     }
 
     public ArrayList<String> fetchAllGameIds() {
-        super.open();
+        open();
         ArrayList<String> results = new ArrayList<String>();
         String[] columns = new String[]{
                 BoardGameHelper.bg_Id,
@@ -246,7 +294,7 @@ public class BoardGameTable extends SQLController {
             }
             Log.d("BGCM-BGT", "All game Id list size: " + results.size());
         }
-        super.close();
+        close();
         return results;
     }
 }

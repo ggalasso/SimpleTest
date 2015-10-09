@@ -93,6 +93,10 @@ public class BoardGame {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getPrimaryName() {
         if ((primaryName == null) || primaryName.isEmpty()) {
             for (Name name : names) {
@@ -102,6 +106,10 @@ public class BoardGame {
             }
         }
         return primaryName;
+    }
+
+    public void setPrimaryName(String primaryName) {
+        this.primaryName = primaryName;
     }
 
     public String getYearPub() {
@@ -150,5 +158,15 @@ public class BoardGame {
 
     public String getThumbnail() {
         return thumbnail;
+    }
+
+    private String syncValue;
+
+    public String getSyncValue() {
+        return syncValue;
+    }
+
+    public void setSyncValue(String syncValue) {
+        this.syncValue = syncValue;
     }
 }
