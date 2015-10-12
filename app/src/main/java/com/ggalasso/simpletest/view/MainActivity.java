@@ -29,42 +29,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //SQLController dbCon = new SQLController(ctx);
         BoardGameTable bgtCon = new BoardGameTable(ctx);
         //bgtCon.destroyEverything();
 
-
         CollectionAPI capi = new CollectionAPI();
+        GameIdManager gim = capi.getIDManager();
+
         ThingAPI tapi = new ThingAPI();
-
-        GameIdManager gim = GameIdManager.getInstance();
-        BoardGameManager bgm = BoardGameManager.getInstance();
-
-        try {
-            gim = capi.getIDList();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            bgm = tapi.getDetail(gim.getIdListString());
-            //Log.i("MY", "blah");
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        //bgtCon.open();
-        //bgtCon.dropAllTables();
-        //bgtCon.testTables();
-        //bgtCon.createAllTables();
-        //bgtCon.testTables();
-
-        // 09/20/15 - GAG - To remove everything from the board_game table use the deleteAll
-        //bgtCon.deleteAll();
+        BoardGameManager bgm = tapi.getGameManager(gim.getIdListString());
 
 
         bgtCon.syncBoardGameCollection(bgm.getBoardGames());
@@ -73,35 +45,26 @@ public class MainActivity extends AppCompatActivity {
 
         if (bgList.size() > 0) {
             for (BoardGame bg : bgList) {
+                Log.d("BGCM-MA", "---------------------------------");
                 Log.d("BGCM-MA", "ID: " + bg.getId());
                 Log.d("BGCM-MA", "Name: " + bg.getPrimaryName());
                 Log.d("BGCM-MA", "Year Published: " + bg.getYearPub());
-                Log.d("BGCM-MA", "Description: " + bg.getDescription().substring(0,75));
+                Log.d("BGCM-MA", "Description: " + bg.getDescription().substring(0, 75));
+                Log.d("BGCM-MA", "Thumbnail: " + bg.getThumbnail());
+                Log.d("BGCM-MA", "Image: " + bg.getImage());
                 Log.d("BGCM-MA", "Rating: " + bg.getRating());
+                Log.d("BGCM-MA", "Rank: " + bg.getRank());
+                Log.d("BGCM-MA", "Min Players: " + bg.getMinPlayers());
+                Log.d("BGCM-MA", "Max Players: " + bg.getMaxPlayers());
+                Log.d("BGCM-MA", "Play Time: " + bg.getPlayTime());
+                Log.d("BGCM-MA", "Min Time: " + bg.getMinTime());
+                Log.d("BGCM-MA", "Max Time: " + bg.getMaxTime());
+                Log.d("BGCM-MA", "Min Age: " + bg.getMinAge());
             }
-            Log.d("BGCM-MA", "TOTAL: " + bgList.size());
-        }
-
-        //bgtCon.close();
-
-        // Delete Board Game from Table by ID as a string
-        bgtCon.delete(bgm.getBoardGameById("35052").getId());
-
-        // Delete Board Game from Table by passing Board Game object
-        bgtCon.delete(bgm.getBoardGameById("153938"));
-
-
-        //09-20-15 GAG - Fetch all game ID's and print them out.
-        ArrayList<String> gameIDList = bgtCon.fetchAllGameIds();
-        if (gameIDList.size() > 0) {
-            for ( String id : gameIDList) {
-                Log.d("BGCM-MA", "Array ID: " + id); }
+            Log.d("BGCM-MA", "TOTAL Board Games in DB: " + bgList.size());
         }
 
         //bgtCon.destroyEverything();
-
-        //Log.i("MY ERROR", "BoardGame: " + bgm.getIdListString());
-        //Log.i("My Stuff", "Blah");
     }
 
     @Override

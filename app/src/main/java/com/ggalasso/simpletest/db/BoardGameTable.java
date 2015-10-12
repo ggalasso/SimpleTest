@@ -26,11 +26,7 @@ public class BoardGameTable extends SQLController {
         super(c);
     }
 
-    public Integer getTableRowCount() {
-
-        return 0;
-    }
-
+    //10-11-15 - GAG - Not using this method currently but may come in handy later
     public boolean isBoardGameInTable(String id) {
         BoardGame boardGame = this.fetchBoardGame(id);
         if (boardGame == null) {
@@ -47,41 +43,19 @@ public class BoardGameTable extends SQLController {
         if (rowCount > 0) {
             syncShallow(boardGames);
         } else {
-            syncDeep(boardGames); //put this back after testing the shallow
-            //syncShallow(boardGames);
+            syncDeep(boardGames);
         }
-
         fetchTableCount(BoardGameHelper.getTableName());
     }
 
     private void syncDeep(ArrayList<BoardGame> boardGames) {
-        // TODO : Fill this in syncDeep
-        fetchTableCount(BoardGameHelper.getTableName());
         deleteAllRowsFromTable(BoardGameHelper.getTableName());
-        fetchTableCount(BoardGameHelper.getTableName());
-
         for(BoardGame game : boardGames) {
             insert(game);
         }
-        fetchTableCount(BoardGameHelper.getTableName());
-
     }
 
     private void syncShallow(ArrayList<BoardGame> boardGames) {
-        boolean result = false;
-
-        // Dummy Data
-        BoardGame game1 = fetchBoardGame("171");
-        BoardGame game2 = fetchBoardGame("1927");
-
-        game1.setId("172");
-        game1.setPrimaryName("Dummy" + game1.getPrimaryName());
-        game2.setId("1928");
-        game2.setPrimaryName("Dummy"+game2.getPrimaryName());
-
-        insert(game1);
-        insert(game2);
-        // END
 
         ArrayList<BoardGame> existingGames = fetchAllBoardGames();
 
@@ -102,6 +76,7 @@ public class BoardGameTable extends SQLController {
         }
 
         Iterator itr = gameMap.entrySet().iterator();
+        Integer countDeleted = 0, countInserted = 0;
         while (itr.hasNext()){
             Map.Entry pair = (Map.Entry)itr.next();
             String id = (String)pair.getKey();
@@ -110,28 +85,14 @@ public class BoardGameTable extends SQLController {
             Log.d("BGCM-BGT","Id: " + game.getId() + " Val: " + value);
             if (value.equals("DBOnly")){
                 delete(game);
+                countDeleted++;
             } else {
                 insert(game);
+                countInserted++;
             }
             itr.remove();
         }
-
-//        for (BoardGame game : boardGames) {
-//            try {
-//                result = isBoardGameInTable(game.getId());
-//                if (result) {
-//                    Log.i("BGCM-BGT", "found the boardgame to already exist");
-//                    //update(game);
-//                } else {
-//                    Log.i("BGCM-BGT", "found NEW boardgame to insert in the database");
-//                    insert(game);
-//                }
-//            } catch (SQLiteConstraintException e) {
-//                e.printStackTrace();
-//            } catch (NullPointerException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        Log.d("BGCM-BGT","Deleted: " + countDeleted + " Inserted New: " + countInserted);
     }
 
     private void insert(BoardGame bg) {

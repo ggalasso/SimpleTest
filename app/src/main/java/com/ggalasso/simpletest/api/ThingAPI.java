@@ -18,6 +18,20 @@ import java.util.concurrent.ExecutionException;
  * Created by Edward on 9/8/2015.
  */
 public class ThingAPI {
+
+    public BoardGameManager getGameManager(String idList) {
+        BoardGameManager bgm = BoardGameManager.getInstance();
+        try {
+            bgm = getDetail(idList);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return bgm;
+    }
+
+
     public BoardGameManager getDetail(String queryString) throws ExecutionException, InterruptedException {
         String downloadURL = "https://boardgamegeek.com/xmlapi2/thing?id=" + queryString + "&stats=1";
         Log.i("INFO", "Attempting to download data from: " + downloadURL);

@@ -19,7 +19,19 @@ import java.util.concurrent.ExecutionException;
  */
 public class CollectionAPI {
 
-    public GameIdManager getIDList() throws ExecutionException, InterruptedException {
+    public GameIdManager getIDManager() {
+        GameIdManager gim = GameIdManager.getInstance();
+        try {
+            gim = getIDList();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return gim;
+    }
+
+    private GameIdManager getIDList() throws ExecutionException, InterruptedException {
         String downloadURL = "https://boardgamegeek.com/xmlapi2/collection?username=brickedphoneclub&own=1";
         //String downloadURL = "https://boardgamegeek.com/xmlapi2/collection?username=truthd&own=1";
         Log.i("INFO", "Attempting to download data from: " + downloadURL);
