@@ -169,4 +169,5 @@ public class BoardGame {
     public void setSyncValue(String syncValue) {
         this.syncValue = syncValue;
     }
+
 }

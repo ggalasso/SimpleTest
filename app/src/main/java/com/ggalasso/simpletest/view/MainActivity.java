@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
         ThingAPI tapi = new ThingAPI();
         BoardGameManager bgm = tapi.getGameManager(gim.getIdListString());
 
-
         bgtCon.syncBoardGameCollection(bgm.getBoardGames());
 
         ArrayList<BoardGame> bgList = bgtCon.fetchAllBoardGames();
