@@ -3,8 +3,6 @@ package com.ggalasso.simpletest.model;
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Root;
 
-import java.util.ArrayList;
-
 /**
  * Created by Chris on 9/3/2015.
  */

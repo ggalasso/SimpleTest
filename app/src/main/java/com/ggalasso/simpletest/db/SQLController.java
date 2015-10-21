@@ -1,13 +1,9 @@
 package com.ggalasso.simpletest.db;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import android.widget.TableLayout;
-
-import com.ggalasso.simpletest.model.BoardGame;
 
 import java.sql.SQLException;
 

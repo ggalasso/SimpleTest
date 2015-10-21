@@ -1,7 +1,6 @@
 package com.ggalasso.simpletest.view;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -15,10 +14,8 @@ import com.ggalasso.simpletest.controller.BoardGameManager;
 import com.ggalasso.simpletest.controller.GameIdManager;
 import com.ggalasso.simpletest.db.BoardGameTable;
 import com.ggalasso.simpletest.model.BoardGame;
-import com.ggalasso.simpletest.model.GameId;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 
 public class MainActivity extends AppCompatActivity {

@@ -3,16 +3,11 @@ package com.ggalasso.simpletest.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteConstraintException;
 import android.util.Log;
 
-import com.ggalasso.simpletest.controller.BoardGameManager;
 import com.ggalasso.simpletest.model.BoardGame;
-import com.ggalasso.simpletest.model.Name;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
