@@ -209,9 +209,9 @@ public class BoardGameTable extends SQLController {
         super.open();
         Integer result = database.delete(BoardGameHelper.getTableName(), BoardGameHelper.bg_Id + " = " + id, null);
         if (result > 0) {
-            Log.d("BGCM-BGT", "Successfully deleted " + id + " as STRING");
+            Log.d("BGCM-BGT", "Successfully deleted boardgame " + id + " as STRING");
         } else {
-            Log.d("BGCM-BGT", "Unable to delete, STRING id: " + id);
+            Log.d("BGCM-BGT", "Unable to delete boardgame, STRING id: " + id);
         }
         super.close();
     }
@@ -220,9 +220,9 @@ public class BoardGameTable extends SQLController {
         super.open();
         Integer result = database.delete(BoardGameHelper.getTableName(), BoardGameHelper.bg_Id + " = " + bg.getId(), null);
         if (result > 0) {
-            Log.d("BGCM-BGT", "Successfully deleted " + bg.getId() + " as OBJECT");
+            Log.d("BGCM-BGT", "Successfully deleted boardgame " + bg.getId() + " as OBJECT");
         } else {
-            Log.d("BGCM-BGT", "Unable to delete, OBJECT id: " + bg.getId());
+            Log.d("BGCM-BGT", "Unable to delete boardgame, OBJECT id: " + bg.getId());
         }
         super.close();
     }
