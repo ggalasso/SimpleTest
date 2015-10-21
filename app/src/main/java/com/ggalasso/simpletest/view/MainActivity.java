@@ -15,6 +15,7 @@ import com.ggalasso.simpletest.controller.GameIdManager;
 import com.ggalasso.simpletest.db.BoardGameTable;
 import com.ggalasso.simpletest.model.BoardGame;
 
+
 import java.util.ArrayList;
 
 
@@ -34,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
         ThingAPI tapi = new ThingAPI();
         BoardGameManager bgm = tapi.getGameManager(gim.getIdListString());
-
 
         bgtCon.syncBoardGameCollection(bgm.getBoardGames());
 
