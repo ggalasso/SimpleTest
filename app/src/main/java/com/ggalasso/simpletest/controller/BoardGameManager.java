@@ -3,6 +3,7 @@ package com.ggalasso.simpletest.controller;
 import android.util.Log;
 
 import com.ggalasso.simpletest.model.BoardGame;
+import com.ggalasso.simpletest.model.Link;
 
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
@@ -53,4 +54,13 @@ public class BoardGameManager {
         }
         return idList;
     }
+
+    public ArrayList<Link> getCategoryLinks() {
+        ArrayList<Link> categoryLinks = new ArrayList<>();
+        for (BoardGame bg : getBoardGames()) {
+            categoryLinks.addAll(bg.getCategoryLinks());
+        }
+        return categoryLinks;
+    }
+
 }

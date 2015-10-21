@@ -14,6 +14,7 @@ import com.ggalasso.simpletest.controller.BoardGameManager;
 import com.ggalasso.simpletest.controller.GameIdManager;
 import com.ggalasso.simpletest.db.BoardGameTable;
 import com.ggalasso.simpletest.model.BoardGame;
+import com.ggalasso.simpletest.model.Link;
 
 
 import java.util.ArrayList;
@@ -40,6 +41,12 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<BoardGame> bgList = bgtCon.fetchAllBoardGames();
 
+        ArrayList<Link> caLinks = bgm.getCategoryLinks();
+        for (Link link : caLinks) {
+            Log.d("BCGM-MA", "Category link is: " + link.getValue() + " id: " + link.getId() + " and type: " + link.getType());
+        }
+
+
         if (bgList.size() > 0) {
             for (BoardGame bg : bgList) {
                 Log.d("BGCM-MA", "---------------------------------");
@@ -61,7 +68,8 @@ public class MainActivity extends AppCompatActivity {
             Log.d("BGCM-MA", "TOTAL Board Games in DB: " + bgList.size());
         }
 
-        //bgtCon.destroyEverything();
+
+        bgtCon.destroyEverything();
     }
 
     @Override

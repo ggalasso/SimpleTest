@@ -168,4 +168,31 @@ public class BoardGame {
         this.syncValue = syncValue;
     }
 
+    public ArrayList<Link> getLinks() {
+        return links;
+    }
+
+    public void setLinks(ArrayList<Link> links) {
+        this.links = links;
+    }
+
+    public ArrayList<Link> getCategoryLinks() {
+        ArrayList<Link> results = new ArrayList<>();
+        for(Link link : getLinks()) {
+            if(link.getType().equals("boardgamecategory")){
+                results.add(link);
+            }
+        }
+        return results;
+    }
+
+    public ArrayList<Link> getMechanicLinks() {
+        ArrayList<Link> results = new ArrayList<>();
+        for(Link link : getLinks()) {
+            if(link.getType().equals("boardgamemechanic")){
+                results.add(link);
+            }
+        }
+        return results;
+    }
 }

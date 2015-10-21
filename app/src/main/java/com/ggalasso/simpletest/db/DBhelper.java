@@ -18,6 +18,7 @@ public class DBhelper extends SQLiteOpenHelper {
     private static final int DB_Version = 1;
     private static DBhelper ourInstance = null;
     private BoardGameHelper _bgh = BoardGameHelper.getInstance();
+    private CategoryHelper _cah = CategoryHelper.getInstance();
 
     private DBhelper(Context context) {
         super(context, DB_Name, null, DB_Version);
@@ -63,11 +64,14 @@ public class DBhelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(createTable(_bgh.getColumns(), _bgh.getTableName()));
         Log.d("BGCM-DBH", "Table " + _bgh.getTableName() + " was created.");
+        db.execSQL(createTable(_cah.getColumns(), _cah.getTableName()));
+        Log.d("BGCM-DBH", "Table " + _cah.getTableName() + " was created.");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + _bgh.getTableName());
+        db.execSQL("DROP TABLE IF EXISTS " + _cah.getTableName());
         onCreate(db);
         Log.d("BGCM-DBH", "Table " + _bgh.getTableName() + " was upgraded, from " + oldVersion + " to " + newVersion);
     }
