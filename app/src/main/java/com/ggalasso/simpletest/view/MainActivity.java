@@ -49,36 +49,42 @@ public class MainActivity extends AppCompatActivity {
             Log.d("BCGM-MA", "Category link is: " + link.getValue() + " id: " + link.getId() + " and type: " + link.getType());
         }
 
-        Map<String,Map<String,Integer>> categoryMap = new HashMap<String,Map<String,Integer>>();
-        for (Link link : caLinks){
-            String id = link.getId();
-            String categoryType = link.getValue();
-            Map<String,Integer> innerMap = new HashMap<>();
 
-            if (categoryMap.containsKey(id)) {
-                innerMap = categoryMap.get(id);
-                Integer numOf =  innerMap.get(categoryType);
-                innerMap.put(categoryType, ++numOf);
-                categoryMap.put(id, innerMap);
-            } else {
-                innerMap.put(categoryType, 1);
-                categoryMap.put(id, innerMap);
-            }
-        }
+//        Map<String, String> categoryMap = new HashMap<>();
+//        for (Link link : caLinks) {
+//            categoryMap.put(link.getId(), link.getValue());
+//        }
 
-        Iterator itr = categoryMap.entrySet().iterator();
-        while (itr.hasNext()){
-            Map.Entry pair = (Map.Entry)itr.next();
-            String id = (String)pair.getKey();
-            Map<String,Integer> innerMap = (Map)pair.getValue();
-
-            Iterator itr2 = innerMap.entrySet().iterator();
-            Map.Entry pair2 = (Map.Entry)itr2.next();
-            String categoryType = (String)pair2.getKey();
-            Integer numOf = (Integer)pair2.getValue();
-            Log.d("BGCM-MA", "Id: " + id + " Name: " + categoryType + " Number Of: " + numOf);
-            itr.remove();
-        }
+//        Map<String,Map<String,Integer>> categoryMap = new HashMap<String,Map<String,Integer>>();
+//        for (Link link : caLinks){
+//            String id = link.getId();
+//            String categoryType = link.getValue();
+//            Map<String,Integer> innerMap = new HashMap<>();
+//
+//            if (categoryMap.containsKey(id)) {
+//                innerMap = categoryMap.get(id);
+//                Integer numOf =  innerMap.get(categoryType);
+//                innerMap.put(categoryType, ++numOf);
+//                categoryMap.put(id, innerMap);
+//            } else {
+//                innerMap.put(categoryType, 1);
+//                categoryMap.put(id, innerMap);
+//            }
+//        }
+//
+//        Iterator itr = categoryMap.entrySet().iterator();
+//        while (itr.hasNext()){
+//            Map.Entry pair = (Map.Entry)itr.next();
+//            String id = (String)pair.getKey();
+//            Map<String,Integer> innerMap = (Map)pair.getValue();
+//
+//            Iterator itr2 = innerMap.entrySet().iterator();
+//            Map.Entry pair2 = (Map.Entry)itr2.next();
+//            String categoryType = (String)pair2.getKey();
+//            Integer numOf = (Integer)pair2.getValue();
+//            Log.d("BGCM-MA", "Id: " + id + " Name: " + categoryType + " Number Of: " + numOf);
+//            itr.remove();
+//        }
 
 
         if (bgList.size() > 0) {

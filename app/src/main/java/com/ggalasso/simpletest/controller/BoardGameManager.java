@@ -9,6 +9,8 @@ import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @Root(name="items")
 public class BoardGameManager {
@@ -61,6 +63,14 @@ public class BoardGameManager {
             categoryLinks.addAll(bg.getCategoryLinks());
         }
         return categoryLinks;
+    }
+
+    public Map<String, String> getUniqueCategories() {
+        Map<String, String> categoryMap = new HashMap<>();
+        for (Link link : getCategoryLinks()) {
+            categoryMap.put(link.getId(), link.getValue());
+        }
+        return categoryMap;
     }
 
 }
