@@ -20,21 +20,21 @@ import java.util.concurrent.ExecutionException;
 public class CollectionAPI {
 
     public GameIdManager getIDManager() {
-        GameIdManager gim = GameIdManager.getInstance();
+        // GameIdManager gim = GameIdManager.getInstance();
         try {
-            gim = getIDList();
+            return getIDList();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return gim;
+        return null;
     }
 
     private GameIdManager getIDList() throws ExecutionException, InterruptedException {
         String downloadURL = "https://boardgamegeek.com/xmlapi2/collection?username=brickedphoneclub&own=1";
         //String downloadURL = "https://boardgamegeek.com/xmlapi2/collection?username=truthd&own=1";
-        Log.i("INFO", "Attempting to download data from: " + downloadURL);
+        Log.i("BGCM-CAPI", "Attempting to download data from: " + downloadURL);
         AsyncTask<String, Void, GameIdManager> getGameIDTask = new getGameIDs().execute(downloadURL);
         try {
             return getGameIDTask.get();
@@ -50,7 +50,7 @@ public class CollectionAPI {
         @Override
         protected GameIdManager doInBackground(String... params) {
             GameIdManager manager = GameIdManager.getInstance();
-            Log.i("INFO", "REACHED doInBackground");
+            Log.i("BGCM-CAPI", "REACHED doInBackground");
             try {
                 URL url = new URL(params[0]);
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -60,14 +60,14 @@ public class CollectionAPI {
                     Serializer serializer = new Persister();
                     manager = serializer.read(GameIdManager.class, is, false);
 
-                    Log.i("EXCEPTION", "Finished Serializing");
+                    Log.i("BGCM-CAPI", "Finished Serializing");
                 } finally {
                     con.disconnect();
                 }
-                Log.i("INFO", "Reached end of input stream.");
+                Log.i("BGCM-CAPI", "Reached end of input stream.");
 
             } catch (Exception e) {
-                Log.e("EXCEPTION", "Logging exception: " + e);
+                Log.e("BGCM-CAPI", "Logging exception: " + e);
             }
             return manager;
         }

@@ -20,21 +20,21 @@ import java.util.concurrent.ExecutionException;
 public class ThingAPI {
 
     public BoardGameManager getGameManager(String idList) {
-        BoardGameManager bgm = BoardGameManager.getInstance();
+        // BoardGameManager bgm = BoardGameManager.getInstance();
         try {
-            bgm = getDetail(idList);
+            return getDetail(idList);
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return bgm;
+        return null;
     }
 
 
     public BoardGameManager getDetail(String queryString) throws ExecutionException, InterruptedException {
         String downloadURL = "https://boardgamegeek.com/xmlapi2/thing?id=" + queryString + "&stats=1";
-        Log.i("INFO", "Attempting to download data from: " + downloadURL);
+        Log.i("BGCM-TAPI", "Attempting to download data from: " + downloadURL);
         AsyncTask<String, Void, BoardGameManager> getXMLTask = new getBoardGameDetails().execute(downloadURL);
         try {
             return getXMLTask.get();
@@ -50,7 +50,7 @@ public class ThingAPI {
         @Override
         protected BoardGameManager doInBackground(String... params) {
             BoardGameManager bgm = BoardGameManager.getInstance();
-            Log.i("INFO", "REACHED doInBackground");
+            Log.i("BGCM-TAPI", "REACHED doInBackground");
             try {
                 URL url = new URL(params[0]);
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -60,14 +60,14 @@ public class ThingAPI {
                     Serializer serializer = new Persister();
                     bgm = serializer.read(BoardGameManager.class, is, false);
 
-                    Log.i("EXCEPTION", "Finished Serializing");
+                    Log.i("BGCM-TAPI", "Finished Serializing");
                 } finally {
                     con.disconnect();
                 }
-                Log.i("INFO", "Reached end of input stream.");
+                Log.i("BGCM-TAPI", "Reached end of input stream.");
 
             } catch (Exception e) {
-                Log.e("EXCEPTION", "Logging exception: " + e);
+                Log.e("BGCM-TAPI", "Logging exception: " + e);
             }
             return bgm;
         }

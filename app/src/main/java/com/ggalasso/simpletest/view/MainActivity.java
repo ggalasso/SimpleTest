@@ -13,6 +13,7 @@ import com.ggalasso.simpletest.api.ThingAPI;
 import com.ggalasso.simpletest.controller.BoardGameManager;
 import com.ggalasso.simpletest.controller.GameIdManager;
 import com.ggalasso.simpletest.db.BoardGameTable;
+import com.ggalasso.simpletest.db.CategoryTable;
 import com.ggalasso.simpletest.model.BoardGame;
 import com.ggalasso.simpletest.model.Link;
 
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         BoardGameTable bgtCon = new BoardGameTable(ctx);
+        CategoryTable catCon = new CategoryTable(ctx);
         //bgtCon.destroyEverything();
 
         CollectionAPI capi = new CollectionAPI();
@@ -48,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
         for (Link link : caLinks) {
             Log.d("BCGM-MA", "Category link is: " + link.getValue() + " id: " + link.getId() + " and type: " + link.getType());
         }
+
+        Map<String, String> uniqueCategoriesMap = bgm.getUniqueCategories();
+        /////////////////////////catCon.syncCategories(uniqueCategoriesMap);
 
 
 //        Map<String, String> categoryMap = new HashMap<>();
@@ -87,26 +92,26 @@ public class MainActivity extends AppCompatActivity {
 //        }
 
 
-        if (bgList.size() > 0) {
-            for (BoardGame bg : bgList) {
-                Log.d("BGCM-MA", "---------------------------------");
-                Log.d("BGCM-MA", "ID: " + bg.getId());
-                Log.d("BGCM-MA", "Name: " + bg.getPrimaryName());
-                Log.d("BGCM-MA", "Year Published: " + bg.getYearPub());
-                Log.d("BGCM-MA", "Description: " + bg.getDescription().substring(0, 75));
-                Log.d("BGCM-MA", "Thumbnail: " + bg.getThumbnail());
-                Log.d("BGCM-MA", "Image: " + bg.getImage());
-                Log.d("BGCM-MA", "Rating: " + bg.getRating());
-                Log.d("BGCM-MA", "Rank: " + bg.getRank());
-                Log.d("BGCM-MA", "Min Players: " + bg.getMinPlayers());
-                Log.d("BGCM-MA", "Max Players: " + bg.getMaxPlayers());
-                Log.d("BGCM-MA", "Play Time: " + bg.getPlayTime());
-                Log.d("BGCM-MA", "Min Time: " + bg.getMinTime());
-                Log.d("BGCM-MA", "Max Time: " + bg.getMaxTime());
-                Log.d("BGCM-MA", "Min Age: " + bg.getMinAge());
-            }
-            Log.d("BGCM-MA", "TOTAL Board Games in DB: " + bgList.size());
-        }
+//        if (bgList.size() > 0) {
+//            for (BoardGame bg : bgList) {
+//                Log.d("BGCM-MA", "---------------------------------");
+//                Log.d("BGCM-MA", "ID: " + bg.getId());
+//                Log.d("BGCM-MA", "Name: " + bg.getPrimaryName());
+//                Log.d("BGCM-MA", "Year Published: " + bg.getYearPub());
+//                Log.d("BGCM-MA", "Description: " + bg.getDescription().substring(0, 75));
+//                Log.d("BGCM-MA", "Thumbnail: " + bg.getThumbnail());
+//                Log.d("BGCM-MA", "Image: " + bg.getImage());
+//                Log.d("BGCM-MA", "Rating: " + bg.getRating());
+//                Log.d("BGCM-MA", "Rank: " + bg.getRank());
+//                Log.d("BGCM-MA", "Min Players: " + bg.getMinPlayers());
+//                Log.d("BGCM-MA", "Max Players: " + bg.getMaxPlayers());
+//                Log.d("BGCM-MA", "Play Time: " + bg.getPlayTime());
+//                Log.d("BGCM-MA", "Min Time: " + bg.getMinTime());
+//                Log.d("BGCM-MA", "Max Time: " + bg.getMaxTime());
+//                Log.d("BGCM-MA", "Min Age: " + bg.getMinAge());
+//            }
+//            Log.d("BGCM-MA", "TOTAL Board Games in DB: " + bgList.size());
+//        }
 
 
         bgtCon.destroyEverything();
