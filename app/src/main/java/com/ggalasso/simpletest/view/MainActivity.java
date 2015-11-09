@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
         CollectionAPI capi = new CollectionAPI();
         GameIdManager gim = capi.getIDManager();
+        BoardGameManager bgm2 = BoardGameManager.getInstance();
 
         ThingAPI tapi = new ThingAPI();
         BoardGameManager bgm = tapi.getGameManager(gim.getIdListString());
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Map<String, String> uniqueCategoriesMap = bgm.getUniqueCategories();
+        catCon.syncCategories(uniqueCategoriesMap);
         /////////////////////////catCon.syncCategories(uniqueCategoriesMap);
 
 

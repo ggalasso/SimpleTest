@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by truthd on 9/20/2015.
@@ -30,6 +31,34 @@ public class CategoryTable extends SQLController {
         } else {
             return true;
         }
+    }
+
+    public void syncCategories(Map<String, String> categoryMap) {
+        String tableName = CategoryHelper.getTableName();
+        Integer rowCount = fetchTableCount(tableName);
+        String colId = CategoryHelper.ca_Id;
+        String colName = CategoryHelper.ca_Name;
+
+        if (rowCount > 0) {
+            //(boardGames);
+        } else {
+            String insertSQL = "INSERT INTO " + tableName + " (" + colId + ", " + colName + ") VALUES";
+
+            for (Map.Entry<String, String> category : categoryMap.entrySet()) {
+                String id = category.getKey();
+                String name = category.getValue();
+                insertSQL += "('" + id + "', '" + name + "'),";
+            }
+            insertSQL = insertSQL.substring(0, insertSQL.length()-1);
+            insertSQL += ";";
+
+            Log.d("BGCM-CT", "Bulk insert into " + tableName + "\nSQL statement: " + insertSQL);
+            //Do the insert
+            open();
+            database.execSQL(insertSQL);
+            close();
+        }
+        fetchTableCount(tableName);
     }
 
     private void insert(Link ca) {
@@ -83,7 +112,7 @@ public class CategoryTable extends SQLController {
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                Link ca = new Link( cursor.getString(0), cursor.getString(1), "Category" );
+                Link ca = new Link(cursor.getString(0), cursor.getString(1), "Category");
                 results.add(ca);
             }
             Log.d("BGCM-CAT", "Category list size: " + results.size());
