@@ -52,6 +52,10 @@ public class MainActivity extends AppCompatActivity {
             Log.d("BCGM-MA", "Category link is: " + link.getValue() + " id: " + link.getId() + " and type: " + link.getType());
         }
 
+        catCon.delete("1002");
+        catCon.delete("1001");
+        catCon.delete("2145");
+
         Map<String, String> uniqueCategoriesMap = bgm.getUniqueCategories();
         catCon.syncCategories(uniqueCategoriesMap);
         /////////////////////////catCon.syncCategories(uniqueCategoriesMap);
@@ -114,9 +118,7 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //            Log.d("BGCM-MA", "TOTAL Board Games in DB: " + bgList.size());
 //        }
-
-
-        bgtCon.destroyEverything();
+        //bgtCon.destroyEverything();
     }
 
     @Override

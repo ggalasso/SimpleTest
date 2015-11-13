@@ -34,17 +34,48 @@ public class CategoryTable extends SQLController {
     }
 
     public void syncCategories(Map<String, String> categoryMap) {
-        String tableName = CategoryHelper.getTableName();
-        Integer rowCount = fetchTableCount(tableName);
+        String categoryTable = CategoryHelper.getTableName();
+        Integer rowCount = fetchTableCount(categoryTable);
         String colId = CategoryHelper.ca_Id;
         String colName = CategoryHelper.ca_Name;
 
-        if (rowCount > 0) {
-            //(boardGames);
-        } else {
-            String insertSQL = "INSERT INTO " + tableName + " (" + colId + ", " + colName + ") VALUES";
+
+//        INSERT INTO EVENTTYPE (EventTypeName)
+//        SELECT 'ANI Received'
+//        WHERE NOT EXISTS (SELECT 1 FROM EVENTTYPE WHERE EventTypeName = 'ANI Received');
+
+
+//        String insertSQL = ""; // = "INSERT INTO " + categoryTable + " (" + colId + ", " + colName + ") VALUES";
+//        Integer loopCnt = 0;
+
+//        for (Map.Entry<String, String> category : categoryMap.entrySet()) {
+//            String id = category.getKey();
+//            String name1 = category.getValue();
+//            String name = name1.replace("&", "a");
+//            loopCnt++;
+//            Log.d("BGCM-CT", loopCnt + "out of " + categoryMap.size() + " : " + id + " | " + name);
+//           // if (loopCnt < 25) {
+//                insertSQL = "INSERT OR IGNORE INTO " + categoryTable+ " (" + colId + ", " + colName + ") VALUES ('"+ id + "', '" + name + "'); ";
+//            open();
+//            database.execSQL(insertSQL);
+//            close();
+////                insertSQL += "INSERT INTO " + categoryTable + " (" + colId + ", " + colName + ") ";
+////                insertSQL += "SELECT '" + id + "', '" + name + "' ";
+////                insertSQL += "WHERE NOT EXISTS (SELECT 1 FROM " + categoryTable + " WHERE " + colId + " = " + id + ");\n";
+//            //}
+//        }
+
+        //Do the insert
+
+
+//        if (rowCount > 0) {
+//            //(boardGames);
+//        } else {
+            String insertSQL = "INSERT OR IGNORE INTO " + categoryTable + " (" + colId + ", " + colName + ") VALUES";
 
             for (Map.Entry<String, String> category : categoryMap.entrySet()) {
+
+
                 String id = category.getKey();
                 String name = category.getValue();
                 insertSQL += "('" + id + "', '" + name + "'),";
@@ -52,13 +83,14 @@ public class CategoryTable extends SQLController {
             insertSQL = insertSQL.substring(0, insertSQL.length()-1);
             insertSQL += ";";
 
-            Log.d("BGCM-CT", "Bulk insert into " + tableName + "\nSQL statement: " + insertSQL);
+            Log.d("BGCM-CT", "Bulk insert into " + categoryTable + "\nSQL statement: " + insertSQL);
             //Do the insert
             open();
             database.execSQL(insertSQL);
             close();
-        }
-        fetchTableCount(tableName);
+            Log.d("BGCM-CT", "Bulk insert into " + categoryTable + "\nSQL statement: \n" + insertSQL);
+//        }
+       fetchTableCount(categoryTable);
     }
 
     private void insert(Link ca) {

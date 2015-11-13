@@ -37,7 +37,6 @@ public class CategoryHelper {
         return ourInstance;
     }
 
-
     public static String getTableName() {
         return tableName;
     }
