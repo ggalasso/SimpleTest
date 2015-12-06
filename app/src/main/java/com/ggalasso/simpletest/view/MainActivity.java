@@ -13,6 +13,7 @@ import com.ggalasso.simpletest.api.ThingAPI;
 import com.ggalasso.simpletest.controller.BoardGameManager;
 import com.ggalasso.simpletest.controller.GameIdManager;
 import com.ggalasso.simpletest.db.BoardGameTable;
+import com.ggalasso.simpletest.db.CategoryInGameTable;
 import com.ggalasso.simpletest.db.CategoryTable;
 import com.ggalasso.simpletest.model.BoardGame;
 import com.ggalasso.simpletest.model.Link;
@@ -34,7 +35,9 @@ public class MainActivity extends AppCompatActivity {
 
         BoardGameTable bgtCon = new BoardGameTable(ctx);
         CategoryTable catCon = new CategoryTable(ctx);
-        //bgtCon.destroyEverything();
+        CategoryInGameTable cigtCon = new CategoryInGameTable(ctx);
+
+        bgtCon.destroyEverything();
 
         CollectionAPI capi = new CollectionAPI();
         GameIdManager gim = capi.getIDManager();
@@ -58,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
 
         Map<String, String> uniqueCategoriesMap = bgm.getUniqueCategories();
         catCon.syncCategories(uniqueCategoriesMap);
+
+        Map<String, ArrayList<String>> categoriesInGame = bgm.getAllBoardGameCategories();
+        cigtCon.insertAllCatergoriesInGame(categoriesInGame);
         /////////////////////////catCon.syncCategories(uniqueCategoriesMap);
 
 

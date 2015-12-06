@@ -8,6 +8,7 @@ import com.ggalasso.simpletest.model.Link;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,12 +66,29 @@ public class BoardGameManager {
         return categoryLinks;
     }
 
+
     public Map<String, String> getUniqueCategories() {
         Map<String, String> categoryMap = new HashMap<>();
         for (Link link : getCategoryLinks()) {
             categoryMap.put(link.getId(), link.getValue());
         }
         return categoryMap;
+    }
+
+    public Map<String, ArrayList<String>> getAllBoardGameCategories() {
+        Map<String, ArrayList<String>> bg_categories = new HashMap<>();
+
+        for (BoardGame bg: getBoardGames()) {
+            String id = bg.getId();
+            ArrayList<Link> categories = bg.getCategoryLinks();
+            ArrayList<String> categoryIds = new ArrayList<>();
+            for(Link link: categories) {
+                categoryIds.add(link.getId());
+            }
+            bg_categories.put(id, categoryIds);
+        }
+
+       return bg_categories;
     }
 
 }

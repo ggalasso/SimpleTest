@@ -19,6 +19,7 @@ public class DBhelper extends SQLiteOpenHelper {
     private static DBhelper ourInstance = null;
     private BoardGameHelper _bgh = BoardGameHelper.getInstance();
     private CategoryHelper _cah = CategoryHelper.getInstance();
+    private CategoryInGameHelper _cigh = CategoryInGameHelper.getInstance();
 
     private DBhelper(Context context) {
         super(context, DB_Name, null, DB_Version);
@@ -62,16 +63,23 @@ public class DBhelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        //Create Board Game Table
         db.execSQL(createTable(_bgh.getColumns(), _bgh.getTableName()));
         Log.d("BGCM-DBH", "Table " + _bgh.getTableName() + " was created.");
+        //Create Category Table
         db.execSQL(createTable(_cah.getColumns(), _cah.getTableName()));
         Log.d("BGCM-DBH", "Table " + _cah.getTableName() + " was created.");
+        //Create Category In Game Table
+        db.execSQL(createTable(_cigh.getColumns(), _cigh.getTableName()));
+        Log.d("BGCM-DBH", "Table " + _cigh.getTableName() + " was created.");
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + _bgh.getTableName());
         db.execSQL("DROP TABLE IF EXISTS " + _cah.getTableName());
+        db.execSQL("DROP TABLE IF EXISTS " + _cigh.getTableName());
         onCreate(db);
         Log.d("BGCM-DBH", "Table " + _bgh.getTableName() + " was upgraded, from " + oldVersion + " to " + newVersion);
     }
