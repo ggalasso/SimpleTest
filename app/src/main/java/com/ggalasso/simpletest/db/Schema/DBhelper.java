@@ -1,4 +1,4 @@
-package com.ggalasso.simpletest.db;
+package com.ggalasso.simpletest.db.Schema;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

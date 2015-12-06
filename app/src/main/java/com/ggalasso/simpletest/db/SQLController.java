@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.ggalasso.simpletest.db.Schema.DBhelper;
+
 import java.sql.SQLException;
 
 /**

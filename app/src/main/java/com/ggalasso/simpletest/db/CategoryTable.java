@@ -5,14 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
-import com.ggalasso.simpletest.model.BoardGame;
+import com.ggalasso.simpletest.db.Schema.CategoryHelper;
 import com.ggalasso.simpletest.model.Link;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by truthd on 9/20/2015.

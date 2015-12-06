@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
+import com.ggalasso.simpletest.db.Schema.BoardGameHelper;
 import com.ggalasso.simpletest.model.BoardGame;
 
 import java.util.ArrayList;
