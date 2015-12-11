@@ -20,6 +20,8 @@ public class DBhelper extends SQLiteOpenHelper {
     private BoardGameHelper _bgh = BoardGameHelper.getInstance();
     private CategoryHelper _cah = CategoryHelper.getInstance();
     private CategoryInGameHelper _cigh = CategoryInGameHelper.getInstance();
+    private MechanicHelper _meh = MechanicHelper.getInstance();
+    private MechanicInGameHelper _migh = MechanicInGameHelper.getInstance();
 
     private DBhelper(Context context) {
         super(context, DB_Name, null, DB_Version);
@@ -72,6 +74,12 @@ public class DBhelper extends SQLiteOpenHelper {
         //Create Category In Game Table
         db.execSQL(createTable(_cigh.getColumns(), _cigh.getTableName()));
         Log.d("BGCM-DBH", "Table " + _cigh.getTableName() + " was created.");
+        //Create Mechanic Table
+        db.execSQL(createTable(_meh.getColumns(), _meh.getTableName()));
+        Log.d("BGCM-DBH", "Table " + _meh.getTableName() + " was created.");
+        //Create Mechanic In Game Table
+        db.execSQL(createTable(_migh.getColumns(), _migh.getTableName()));
+        Log.d("BGCM-DBH", "Table " + _migh.getTableName() + " was created.");
 
     }
 
@@ -80,6 +88,8 @@ public class DBhelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + _bgh.getTableName());
         db.execSQL("DROP TABLE IF EXISTS " + _cah.getTableName());
         db.execSQL("DROP TABLE IF EXISTS " + _cigh.getTableName());
+        db.execSQL("DROP TABLE IF EXISTS " + _meh.getTableName());
+        db.execSQL("DROP TABLE IF EXISTS " + _migh.getTableName());
         onCreate(db);
         Log.d("BGCM-DBH", "Table " + _bgh.getTableName() + " was upgraded, from " + oldVersion + " to " + newVersion);
     }

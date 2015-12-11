@@ -15,6 +15,8 @@ import com.ggalasso.simpletest.controller.GameIdManager;
 import com.ggalasso.simpletest.db.BoardGameTable;
 import com.ggalasso.simpletest.db.CategoryInGameTable;
 import com.ggalasso.simpletest.db.CategoryTable;
+import com.ggalasso.simpletest.db.MechanicInGameTable;
+import com.ggalasso.simpletest.db.MechanicTable;
 import com.ggalasso.simpletest.model.BoardGame;
 import com.ggalasso.simpletest.model.Link;
 
@@ -36,8 +38,10 @@ public class MainActivity extends AppCompatActivity {
         BoardGameTable bgtCon = new BoardGameTable(ctx);
         CategoryTable catCon = new CategoryTable(ctx);
         CategoryInGameTable cigtCon = new CategoryInGameTable(ctx);
+        MechanicTable metCon = new MechanicTable(ctx);
+        MechanicInGameTable migtCon = new MechanicInGameTable(ctx);
 
-        bgtCon.destroyEverything();
+//        bgtCon.destroyEverything();
 
         CollectionAPI capi = new CollectionAPI();
         GameIdManager gim = capi.getIDManager();
@@ -64,6 +68,12 @@ public class MainActivity extends AppCompatActivity {
 
         Map<String, ArrayList<String>> categoriesInGame = bgm.getAllBoardGameCategories();
         cigtCon.insertAllCatergoriesInGame(categoriesInGame);
+
+        Map<String, String> uniqueMechanicMap = bgm.getUniqueMechanics();
+        metCon.syncMechanics(uniqueMechanicMap);
+
+        Map<String, ArrayList<String>> mechanicsInGame = bgm.getAllBoardGameMechanics();
+        migtCon.insertAllMechanicsInGame(mechanicsInGame);
         /////////////////////////catCon.syncCategories(uniqueCategoriesMap);
 
 
@@ -124,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //            Log.d("BGCM-MA", "TOTAL Board Games in DB: " + bgList.size());
 //        }
-        //bgtCon.destroyEverything();
+        bgtCon.destroyEverything();
     }
 
     @Override

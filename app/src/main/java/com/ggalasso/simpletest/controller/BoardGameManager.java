@@ -66,6 +66,13 @@ public class BoardGameManager {
         return categoryLinks;
     }
 
+    public ArrayList<Link> getMechanicLinks() {
+        ArrayList<Link> mechanicLinks = new ArrayList<>();
+        for (BoardGame bg : getBoardGames()) {
+            mechanicLinks.addAll(bg.getMechanicLinks());
+        }
+        return mechanicLinks;
+    }
 
     public Map<String, String> getUniqueCategories() {
         Map<String, String> categoryMap = new HashMap<>();
@@ -73,6 +80,14 @@ public class BoardGameManager {
             categoryMap.put(link.getId(), link.getValue());
         }
         return categoryMap;
+    }
+
+    public Map<String, String> getUniqueMechanics() {
+        Map<String, String> mechanicMap = new HashMap<>();
+        for (Link link : getMechanicLinks()) {
+            mechanicMap.put(link.getId(), link.getValue());
+        }
+        return mechanicMap;
     }
 
     public Map<String, ArrayList<String>> getAllBoardGameCategories() {
@@ -88,7 +103,22 @@ public class BoardGameManager {
             bg_categories.put(id, categoryIds);
         }
 
-       return bg_categories;
+        return bg_categories;
+    }
+    public Map<String, ArrayList<String>> getAllBoardGameMechanics() {
+        Map<String, ArrayList<String>> bg_mechanics = new HashMap<>();
+
+        for (BoardGame bg: getBoardGames()) {
+            String id = bg.getId();
+            ArrayList<Link> mechanics = bg.getMechanicLinks();
+            ArrayList<String> mechanicsIds = new ArrayList<>();
+            for(Link link: mechanics) {
+                mechanicsIds.add(link.getId());
+            }
+            bg_mechanics.put(id, mechanicsIds);
+        }
+
+        return bg_mechanics;
     }
 
 }
