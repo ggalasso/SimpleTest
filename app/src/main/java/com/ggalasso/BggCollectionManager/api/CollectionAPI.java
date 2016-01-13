@@ -14,7 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
 
-/**
+/***
  * Created by Edward on 9/8/2015.
  */
 public class CollectionAPI {
