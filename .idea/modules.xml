@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SimpleTest.iml" filepath="$PROJECT_DIR$/SimpleTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bgg-collection-manager.iml" filepath="$PROJECT_DIR$/bgg-collection-manager.iml" />
     </modules>
   </component>
 </project>
