@@ -18,28 +18,34 @@ import java.util.Map;
  */
 public class BoardGameTable extends SQLController {
 
+    public BoardGameTable(){
+        
+    }
+
     public BoardGameTable(Context c) {
         super(c);
     }
 
     //10-11-15 - GAG - Not using this method currently but may come in handy later
     public boolean isBoardGameInTable(String id) {
-        BoardGame boardGame = this.fetchBoardGame(id);
-        if (boardGame == null) {
+        //BoardGame boardGame = this.fetchBoardGame(id);
+        if (this.fetchBoardGame(id) == null) {
             return false;
         } else {
             return true;
         }
     }
 
-    public void syncBoardGameCollection(ArrayList<BoardGame> boardGames) {
+    public void syncBoardGameCollection(ArrayList<BoardGame> apiGames) {
 
         Integer rowCount = fetchTableCount(BoardGameHelper.getTableName());
 
         if (rowCount > 0) {
-            syncShallow(boardGames);
+            ArrayList<BoardGame> dbGames = fetchAllBoardGames();
+            Map<String,BoardGame> bgMap = markAPIvsDB(apiGames, dbGames);
+            syncShallowIteratorComparison(bgMap);
         } else {
-            syncDeep(boardGames);
+            syncDeep(apiGames);
         }
         fetchTableCount(BoardGameHelper.getTableName());
     }
@@ -51,17 +57,13 @@ public class BoardGameTable extends SQLController {
         }
     }
 
-    private void syncShallow(ArrayList<BoardGame> boardGames) {
-
-        ArrayList<BoardGame> existingGames = fetchAllBoardGames();
-
+    protected Map<String,BoardGame> markAPIvsDB(ArrayList<BoardGame> apiGames, ArrayList<BoardGame> dbGames) {
         Map<String,BoardGame> gameMap = new HashMap<String,BoardGame>();
-        for (BoardGame game : existingGames){
+        for (BoardGame game : dbGames){
             game.setSyncValue("DBOnly");
             gameMap.put(game.getId(),game);
         }
-
-        for (BoardGame game : boardGames){
+        for (BoardGame game : apiGames){
             String id = game.getId();
             if (gameMap.containsKey(id)){
                 gameMap.remove(id);
@@ -70,24 +72,25 @@ public class BoardGameTable extends SQLController {
                 gameMap.put(id,game);
             }
         }
+        return gameMap;
+    }
 
-        Iterator itr = gameMap.entrySet().iterator();
+    private void syncShallowIteratorComparison(Map<String,BoardGame> bgMap) {
         Integer countDeleted = 0, countInserted = 0;
-        while (itr.hasNext()){
-            Map.Entry pair = (Map.Entry)itr.next();
-            String id = (String)pair.getKey();
-            BoardGame game = (BoardGame)pair.getValue();
-            String value = game.getSyncValue();
-            Log.d("BGCM-BGT","Id: " + game.getId() + " Val: " + value);
-            if (value.equals("DBOnly")){
-                delete(game);
+
+        for (Map.Entry<String,BoardGame> game : bgMap.entrySet()){
+            BoardGame bg = game.getValue();
+            String syncVal = bg.getSyncValue();
+            Log.d("BGCM-BGT", "Id: " + bg.getId() + " Val: " + syncVal);
+            if (syncVal.equals("DBOnly")){
+                delete(bg);
                 countDeleted++;
             } else {
-                insert(game);
+                insert(bg);
                 countInserted++;
             }
-            itr.remove();
         }
+
         Log.d("BGCM-BGT","Deleted: " + countDeleted + " Inserted New: " + countInserted);
     }
 

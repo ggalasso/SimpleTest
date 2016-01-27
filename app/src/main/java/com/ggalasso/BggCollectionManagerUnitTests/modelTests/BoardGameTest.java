@@ -1,4 +1,4 @@
-package com.ggalasso.BggCollectionManager.modelTests;
+package com.ggalasso.BggCollectionManagerUnitTests.modelTests;
 
 import com.ggalasso.BggCollectionManager.model.BoardGame;
 
@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.*;
 

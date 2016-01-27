@@ -17,6 +17,10 @@ public class SQLController{
     SQLiteDatabase database;
     private DBhelper dbHelper;
 
+    public SQLController(){
+
+    }
+
     public SQLController(Context ctx){
         context = ctx;
         //dbHelper = new DBhelper(context);
