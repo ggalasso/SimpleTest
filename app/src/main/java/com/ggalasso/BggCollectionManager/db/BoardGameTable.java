@@ -69,10 +69,51 @@ public class BoardGameTable extends SQLController {
                 gameMap.remove(id);
             } else {
                 game.setSyncValue("APIOnly");
-                gameMap.put(id,game);
+                gameMap.put(id, game);
             }
         }
         return gameMap;
+    }
+
+    protected ArrayList<BoardGame> findArraylistValuesNotInSecondArraylist(ArrayList<BoardGame> arrayListLeft, ArrayList<BoardGame> arrayListRight){
+        ArrayList<BoardGame> resultList = new ArrayList<>();
+        for (BoardGame lgame: arrayListLeft) {
+            if(idInArrayList(arrayListRight, lgame.getId()) == false){
+                resultList.add(lgame);
+            }
+        }
+        return resultList;
+    }
+
+//    protected ArrayList<BoardGame> getListOfGamesToDelete(ArrayList<BoardGame> apiGames, ArrayList<BoardGame> dbGames) {
+//        ArrayList<BoardGame> gamesToDelete = new ArrayList<>();
+//        for (BoardGame dbGame : dbGames) {
+//            if(idInArrayList(apiGames, dbGame.getId()) == false) {
+//                gamesToDelete.add(dbGame);
+//            }
+//        }
+//        return gamesToDelete;
+//    }
+//
+//    protected ArrayList<BoardGame> getListOfGamesToInsert(ArrayList<BoardGame> apiGames, ArrayList<BoardGame> dbGames) {
+//        ArrayList<BoardGame> gamesToInsert = new ArrayList<>();
+//        for (BoardGame apiGame : apiGames) {
+//            if(idInArrayList(dbGames, apiGame.getId()) == false) {
+//                gamesToInsert.add(apiGame);
+//            }
+//        }
+//        return gamesToInsert;
+//    }
+
+    //Check the listToCheck to see if it contains the same id for the idToCheck
+    private boolean idInArrayList(ArrayList<BoardGame> listToCheck, String idToCheck) {
+        for (BoardGame bg : listToCheck) {
+            String gameId = bg.getId();
+            if (gameId.equals(idToCheck)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void syncShallowIteratorComparison(Map<String,BoardGame> bgMap) {
