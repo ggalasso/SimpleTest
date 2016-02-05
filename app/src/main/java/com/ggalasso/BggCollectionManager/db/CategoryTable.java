@@ -11,23 +11,10 @@ import com.ggalasso.BggCollectionManager.model.Link;
 import java.util.ArrayList;
 import java.util.Map;
 
-/**
- * Created by truthd on 9/20/2015.
- */
 public class CategoryTable extends SQLController {
 
     public CategoryTable(Context c) {
         super(c);
-    }
-
-    //10-11-15 - GAG - Not using this method currently but may come in handy later
-    public boolean isCategoryInTable(String id) {
-        Link category = this.fetchCategory(id);
-        if (category == null) {
-            return false;
-        } else {
-            return true;
-        }
     }
 
     public void syncCategories(Map<String, String> categoryMap) {
@@ -36,58 +23,24 @@ public class CategoryTable extends SQLController {
         String colId = CategoryHelper.ca_Id;
         String colName = CategoryHelper.ca_Name;
 
+        String insertSQL = "INSERT OR IGNORE INTO " + categoryTable + " (" + colId + ", " + colName + ") VALUES";
 
-//        INSERT INTO EVENTTYPE (EventTypeName)
-//        SELECT 'ANI Received'
-//        WHERE NOT EXISTS (SELECT 1 FROM EVENTTYPE WHERE EventTypeName = 'ANI Received');
+        for (Map.Entry<String, String> category : categoryMap.entrySet()) {
+            String id = category.getKey();
+            String name = category.getValue();
+            insertSQL += "('" + id + "', '" + name + "'),";
+        }
+        insertSQL = insertSQL.substring(0, insertSQL.length()-1);
+        insertSQL += ";";
 
-
-//        String insertSQL = ""; // = "INSERT INTO " + categoryTable + " (" + colId + ", " + colName + ") VALUES";
-//        Integer loopCnt = 0;
-
-//        for (Map.Entry<String, String> category : categoryMap.entrySet()) {
-//            String id = category.getKey();
-//            String name1 = category.getValue();
-//            String name = name1.replace("&", "a");
-//            loopCnt++;
-//            Log.d("BGCM-CT", loopCnt + "out of " + categoryMap.size() + " : " + id + " | " + name);
-//           // if (loopCnt < 25) {
-//                insertSQL = "INSERT OR IGNORE INTO " + categoryTable+ " (" + colId + ", " + colName + ") VALUES ('"+ id + "', '" + name + "'); ";
-//            open();
-//            database.execSQL(insertSQL);
-//            close();
-////                insertSQL += "INSERT INTO " + categoryTable + " (" + colId + ", " + colName + ") ";
-////                insertSQL += "SELECT '" + id + "', '" + name + "' ";
-////                insertSQL += "WHERE NOT EXISTS (SELECT 1 FROM " + categoryTable + " WHERE " + colId + " = " + id + ");\n";
-//            //}
-//        }
-
+        Log.d("BGCM-CT", "Bulk insert into " + categoryTable + "\nSQL statement: " + insertSQL);
         //Do the insert
+        open();
+        database.execSQL(insertSQL);
+        close();
+        Log.d("BGCM-CT", "Bulk insert into " + categoryTable + "\nSQL statement: \n" + insertSQL);
 
-
-//        if (rowCount > 0) {
-//            //(boardGames);
-//        } else {
-            String insertSQL = "INSERT OR IGNORE INTO " + categoryTable + " (" + colId + ", " + colName + ") VALUES";
-
-            for (Map.Entry<String, String> category : categoryMap.entrySet()) {
-
-
-                String id = category.getKey();
-                String name = category.getValue();
-                insertSQL += "('" + id + "', '" + name + "'),";
-            }
-            insertSQL = insertSQL.substring(0, insertSQL.length()-1);
-            insertSQL += ";";
-
-            Log.d("BGCM-CT", "Bulk insert into " + categoryTable + "\nSQL statement: " + insertSQL);
-            //Do the insert
-            open();
-            database.execSQL(insertSQL);
-            close();
-            Log.d("BGCM-CT", "Bulk insert into " + categoryTable + "\nSQL statement: \n" + insertSQL);
-//        }
-       fetchTableCount(categoryTable);
+        fetchTableCount(categoryTable);
     }
 
     private void insert(Link ca) {
@@ -188,7 +141,7 @@ public class CategoryTable extends SQLController {
         super.close();
     }
 
-    public ArrayList<String> fetchAllGameIds() {
+    public ArrayList<String> fetchAllCategoryIds() {
         open();
         ArrayList<String> results = new ArrayList<String>();
         String[] columns = new String[]{
@@ -204,12 +157,12 @@ public class CategoryTable extends SQLController {
                 null,
                 null
         );
-        //if (cursor != null) {cursor.moveToFirst();}
+
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 results.add(cursor.getString(0));
             }
-            Log.d("BGCM-CAT", "All game Id list size: " + results.size());
+            Log.d("BGCM-CAT", "All category Id list size: " + results.size());
         }
         close();
         return results;
