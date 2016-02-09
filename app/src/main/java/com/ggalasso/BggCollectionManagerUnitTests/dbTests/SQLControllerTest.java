@@ -20,7 +20,7 @@ public class SQLControllerTest extends SQLController {
 
     @Test
     public void testGetSQLInsertString() throws Exception {
-        // Arrange
+        // Arrange base final test for github contribution credit
         Map<String,ArrayList<String>> bgCatMap = new HashMap<>();
         ArrayList<String> columns = new ArrayList<>();
         columns.add("cg_bg_Id");
