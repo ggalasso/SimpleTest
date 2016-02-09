@@ -3,25 +3,28 @@ package com.ggalasso.BggCollectionManager.db;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.ggalasso.BggCollectionManager.db.Schema.DBhelper;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by Edward on 9/8/2015.
  */
-public class SQLController{
+public class SQLController {
     Context context;
     SQLiteDatabase database;
     private DBhelper dbHelper;
 
-    public SQLController(){
+    public SQLController() {
 
     }
 
-    public SQLController(Context ctx){
+    public SQLController(Context ctx) {
         context = ctx;
         //dbHelper = new DBhelper(context);
     }
@@ -33,7 +36,7 @@ public class SQLController{
         return this;
     }
 
-    public void open()  {
+    public void open() {
         try {
             openConnection();
         } catch (SQLException e) {
@@ -44,7 +47,6 @@ public class SQLController{
     public void close() {
         dbHelper.close();
     }
-
 
     public void destroyEverything() {
         open();
@@ -63,11 +65,13 @@ public class SQLController{
                 orderBy,
                 limit
         );
-        if (cursor != null) {cursor.moveToFirst();}
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
         return cursor;
     }
 
-    public Integer fetchTableCount(String tableName){
+    public Integer fetchTableCount(String tableName) {
         open();
         Integer count = 0;
         String query = "SELECT COUNT(*) FROM " + tableName;
@@ -95,4 +99,24 @@ public class SQLController{
         close();
     }
 
+    @NonNull
+    protected String getSQLInsertString(Map<String, ArrayList<String>> map, String tableName, ArrayList<String> columns) {
+        String insertSQL = "INSERT OR IGNORE INTO " + tableName + " (";
+        for (String column :
+                columns) {
+            insertSQL += column + ", ";
+        }
+        insertSQL = insertSQL.substring(0, insertSQL.length() - 2);
+        insertSQL += ") VALUES ";
+
+        for (Map.Entry<String, ArrayList<String>> elem : map.entrySet()) {
+            String key = elem.getKey();
+            for (String value : elem.getValue()) {
+                insertSQL += "('" + key + "', '" + value + "'),";
+            }
+        }
+        insertSQL = insertSQL.substring(0, insertSQL.length() - 1);
+        insertSQL += ";";
+        return insertSQL;
+    }
 }

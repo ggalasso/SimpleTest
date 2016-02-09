@@ -13,6 +13,10 @@ import java.util.Map;
  */
 public class MechanicInGameTable extends SQLController {
 
+    public MechanicInGameTable(){
+
+    }
+
     public MechanicInGameTable(Context c) {
         super(c);
     }
