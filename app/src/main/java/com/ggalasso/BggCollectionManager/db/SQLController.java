@@ -11,6 +11,7 @@ import com.ggalasso.BggCollectionManager.db.Schema.DBhelper;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by Edward on 9/8/2015.
@@ -101,6 +102,9 @@ public class SQLController {
 
     @NonNull
     protected String getSQLInsertString(Map<String, ArrayList<String>> map, String tableName, ArrayList<String> columns) {
+        // This will sort the map
+        Map<String,ArrayList<String>> treeMap = new TreeMap<String,ArrayList<String>>(map);
+
         String insertSQL = "INSERT OR IGNORE INTO " + tableName + " (";
         for (String column :
                 columns) {
@@ -109,7 +113,7 @@ public class SQLController {
         insertSQL = insertSQL.substring(0, insertSQL.length() - 2);
         insertSQL += ") VALUES ";
 
-        for (Map.Entry<String, ArrayList<String>> elem : map.entrySet()) {
+        for (Map.Entry<String, ArrayList<String>> elem : treeMap.entrySet()) {
             String key = elem.getKey();
             for (String value : elem.getValue()) {
                 insertSQL += "('" + key + "', '" + value + "'),";

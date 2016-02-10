@@ -34,7 +34,7 @@ public class SQLControllerTest extends SQLController {
         bgCatMap.put("1002",secondItemIds);
 
         // Arrange Expected String to compare
-        String expected = "INSERT OR IGNORE INTO category_in_game (cg_bg_Id, cg_ca_Id) VALUES ('1002', '9008'),('1001', '9009');";
+        String expected = "INSERT OR IGNORE INTO category_in_game (cg_bg_Id, cg_ca_Id) VALUES ('1001', '9009'),('1002', '9008');";
 
         // Act
         String actual = super.getSQLInsertString(bgCatMap,"category_in_game",columns);

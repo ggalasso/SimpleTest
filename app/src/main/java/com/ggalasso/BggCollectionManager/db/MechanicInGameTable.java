@@ -23,19 +23,22 @@ public class MechanicInGameTable extends SQLController {
 
     public void insertAllMechanicsInGame(Map<String, ArrayList<String>> bgMecMap ) {
         String mechanicInGameTable = MechanicInGameHelper.getTableName();
-        String colBgId = MechanicInGameHelper.mg_bg_Id;
-        String colMeId = MechanicInGameHelper.mg_me_Id;
+        ArrayList<String> columns = new ArrayList<>();
+        columns.add(MechanicInGameHelper.mg_bg_Id);
+        columns.add(MechanicInGameHelper.mg_me_Id);
 
-        String insertSQL = "INSERT OR IGNORE INTO " + mechanicInGameTable + " (" + colBgId + ", " + colMeId + ") VALUES";
+        //String insertSQL = "INSERT OR IGNORE INTO " + mechanicInGameTable + " (" + colBgId + ", " + colMeId + ") VALUES";
 
-        for (Map.Entry<String, ArrayList<String>> game : bgMecMap.entrySet()) {
-            String bgId = game.getKey();
-            for(String meId: game.getValue()) {
-                insertSQL += "('" + bgId + "', '" + meId + "'),";
-            }
-        }
-        insertSQL = insertSQL.substring(0, insertSQL.length()-1);
-        insertSQL += ";";
+        String insertSQL = super.getSQLInsertString(bgMecMap, mechanicInGameTable, columns);
+
+//        for (Map.Entry<String, ArrayList<String>> game : bgMecMap.entrySet()) {
+//            String bgId = game.getKey();
+//            for(String meId: game.getValue()) {
+//                insertSQL += "('" + bgId + "', '" + meId + "'),";
+//            }
+//        }
+//        insertSQL = insertSQL.substring(0, insertSQL.length()-1);
+//        insertSQL += ";";
 
         Log.d("BGCM-CT", "Bulk insert into " + mechanicInGameTable + "\nSQL statement: " + insertSQL);
         //Do the insert
