@@ -36,9 +36,13 @@ public class GameIdManager {
         return gameIds;
     }
 
-    public String getIdListString() {
+    public String getIdListString(){
+        return GameIdManager.getIdListString(getGameIds());
+    }
+
+    public static String getIdListString(ArrayList<GameId> gameIds) {
         String idList = "";
-        for (GameId game : getGameIds()) {
+        for (GameId game : gameIds) {
             if (idList == "") {
                 idList = game.getObjectid();
             } else {
