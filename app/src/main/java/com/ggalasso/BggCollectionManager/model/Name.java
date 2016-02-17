@@ -22,10 +22,10 @@ public class Name {
         public Name() {
         }
 
-        public Name(String value) {
+        public Name(String value, String sortindex, String type) {
                 this.value = value;
-                this.sortindex = "1";
-                this.type = "primary";
+                this.sortindex = sortindex;
+                this.type = type;
         }
 
         public String getValue() {

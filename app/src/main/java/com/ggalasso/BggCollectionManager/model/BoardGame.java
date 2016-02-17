@@ -176,20 +176,27 @@ public class BoardGame {
         this.links = links;
     }
 
+    public ArrayList<Name> getNames() {
+        return names;
+    }
+
+    public void setNames(ArrayList<Name> names) {
+        this.names = names;
+    }
+
+
     public ArrayList<Link> getCategoryLinks() {
-        ArrayList<Link> results = new ArrayList<>();
-        for(Link link : getLinks()) {
-            if(link.getType().equals("boardgamecategory")){
-                results.add(link);
-            }
-        }
-        return results;
+        return getLinksOfType("boardgamecategory");
     }
 
     public ArrayList<Link> getMechanicLinks() {
+        return getLinksOfType("boardgamemechanic");
+    }
+
+    public ArrayList<Link> getLinksOfType(String filter) {
         ArrayList<Link> results = new ArrayList<>();
         for(Link link : getLinks()) {
-            if(link.getType().equals("boardgamemechanic")){
+            if(link.getType().equals(filter)){
                 results.add(link);
             }
         }

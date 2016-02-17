@@ -1,54 +1,76 @@
 package com.ggalasso.BggCollectionManagerUnitTests.modelTests;
 
 import com.ggalasso.BggCollectionManager.model.BoardGame;
-
-import junit.framework.TestCase;
+import com.ggalasso.BggCollectionManager.model.Link;
+import com.ggalasso.BggCollectionManager.model.Name;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 
-import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.*;
+import java.util.ArrayList;
+
+import static org.junit.Assert.*;
 
 /**
- * Created by truthd on 1/21/2016.
+ * Created by truthd on 2/16/2016.
  */
-public class BoardGameTest extends TestCase {
+public class BoardGameTest {
 
-    @Mock
     private BoardGame bg;
 
     @Before
     public void setUp() throws Exception {
-        initMocks(this);
-        Mockito.when(bg.getId()).thenReturn("171");
-        Mockito.when(bg.getPrimaryName()).thenReturn("Chess");
-    }
-
-    @After
-    public void tearDown() throws Exception {
-
+        bg = new BoardGame();
     }
 
     @Test
     public void testGetPrimaryName() throws Exception {
-        assertEquals(bg.getPrimaryName(), "Chess");
+        // arrange
+        //BoardGame bg = new BoardGame();
+        ArrayList<Name> names = new ArrayList<>();
+        names.add(new Name("ChessSquared", "1", "alternate"));
+        names.add(new Name("Chess 3d", "2", "alternate"));
+        names.add(new Name("Chess", "3", "primary"));
+        bg.setNames(names);
+        // act
+        String actualName = bg.getPrimaryName();
+        // assert
+        assertEquals("Chess", actualName);
+
     }
 
     @Test
-    public void testGetIdOption1() throws Exception {
-        BoardGame test = mock(BoardGame.class);
-        when(test.getId()).thenReturn("172");
-        assertEquals(test.getId(), "172");
+    public void testGetCategoryLinks() throws Exception {
+        //arrange
+        ArrayList<Link> links = new ArrayList<>();
+        links.add(new Link("Family", "1", "boardgamecategory"));
+        links.add(new Link("Role Playing", "2", "boardgamecategory"));
+        links.add(new Link("Card Game", "3", "boardgamecategory"));
+        links.add(new Link("Bluffing", "4", "boardgamemechanic"));
+        bg.setLinks(links);
+        //act
+        ArrayList<Link> catLinks = bg.getCategoryLinks();
+        Integer catSize = catLinks.size();
+        //assert
+        assertEquals(3, catSize.intValue());
     }
 
     @Test
-    public void testGetIdOption2() throws Exception {
-        assertEquals(bg.getId(), "171");
+    public void testGetMechanicLinks() throws Exception {
+        //arrange
+        ArrayList<Link> links = new ArrayList<>();
+        links.add(new Link("Family", "1", "boardgamecategory"));
+        links.add(new Link("Role Playing", "2", "boardgamecategory"));
+        links.add(new Link("Card Game", "3", "boardgamecategory"));
+        links.add(new Link("Bluffing", "4", "boardgamemechanic"));
+        links.add(new Link("Drafting", "5", "boardgamemechanic"));
+        links.add(new Link("Engine Building", "6", "boardgamemechanic"));
+        bg.setLinks(links);
+        //act
+        ArrayList<Link> mechanicLinks = bg.getMechanicLinks();
+        Integer mechanicSize = mechanicLinks.size();
+        //assert
+        assertEquals(3, mechanicSize.intValue());
     }
-
-
 }
