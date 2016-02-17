@@ -44,9 +44,9 @@ public class GameIdManager {
         String idList = "";
         for (GameId game : gameIds) {
             if (idList == "") {
-                idList = game.getObjectid();
+                idList = game.getObjectId();
             } else {
-                idList += "," + game.getObjectid();
+                idList += "," + game.getObjectId();
             }
         }
         return idList;

@@ -9,14 +9,21 @@ import org.simpleframework.xml.Root;
 @Root
 public class GameId {
     @Attribute(required=false)
-    private String objectid;
+    private String objectId;
 
-    public String getObjectid() {
-        return objectid;
+    public GameId() {
     }
 
-    public void setObjectid(String objectid) {
-        this.objectid = objectid;
+    public GameId(String objectId) {
+        this.objectId = objectId.trim();
+    }
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId.trim();
     }
 
 }

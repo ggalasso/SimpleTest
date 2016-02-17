@@ -39,19 +39,4 @@ public class CategoryInGameTable extends SQLController {
         Log.d("BGCM-CT", "Bulk insert into " + categoryInGameTable + "\nSQL statement: \n" + insertSQL);
     }
 
-//    @NonNull
-//    protected String getSQLInsertString1(Map<String, ArrayList<String>> bgCatMap, String categoryInGameTable, String colBgId, String colCaId) {
-//        String insertSQL = "INSERT OR IGNORE INTO " + categoryInGameTable + " (" + colBgId + ", " + colCaId + ") VALUES ";
-//
-//        for (Map.Entry<String, ArrayList<String>> game : bgCatMap.entrySet()) {
-//            String bgId = game.getKey();
-//            for(String caId: game.getValue()) {
-//                insertSQL += "('" + bgId + "', '" + caId + "'),";
-//            }
-//        }
-//        insertSQL = insertSQL.substring(0, insertSQL.length()-1);
-//        insertSQL += ";";
-//        return insertSQL;
-//    }
-
 }
