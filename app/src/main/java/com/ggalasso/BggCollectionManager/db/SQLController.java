@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.ggalasso.BggCollectionManager.db.Schema.DBhelper;
+import com.ggalasso.BggCollectionManager.model.UtilityConstants;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -17,8 +18,11 @@ import java.util.TreeMap;
  * Created by Edward on 9/8/2015.
  */
 public class SQLController {
+
+
     Context context;
     SQLiteDatabase database;
+
     private DBhelper dbHelper;
 
     public SQLController() {
@@ -100,27 +104,34 @@ public class SQLController {
         close();
     }
 
+
+    protected String getRowValues(String key, ArrayList<String> values) {
+        String sql_rows = "";
+        for (String value : values) {
+            sql_rows += "('" + key + "', '" + value + "'),";
+        }
+        return sql_rows;
+    }
+
+    protected String getRowValue(String key, String value) {
+        return "('" + key + "', '" + value + "'),";
+    }
+
+
     @NonNull
-    protected String getSQLInsertString(Map<String, ArrayList<String>> map, String tableName, ArrayList<String> columns) {
-        // This will sort the map
-        Map<String,ArrayList<String>> treeMap = new TreeMap<String,ArrayList<String>>(map);
-
-        String insertSQL = "INSERT OR IGNORE INTO " + tableName + " (";
-        for (String column :
-                columns) {
-            insertSQL += column + ", ";
+    protected String getColumns(ArrayList<String> columns) {
+        String sql_columns = "";
+        for (String column : columns) {
+            sql_columns += column + ", ";
         }
-        insertSQL = insertSQL.substring(0, insertSQL.length() - 2);
-        insertSQL += ") VALUES ";
+        sql_columns = sql_columns.substring(0, sql_columns.length() - UtilityConstants.TRIM_COMMA_AND_SPACE.getValue());
+        sql_columns += ")";
+        return sql_columns;
+    }
 
-        for (Map.Entry<String, ArrayList<String>> elem : treeMap.entrySet()) {
-            String key = elem.getKey();
-            for (String value : elem.getValue()) {
-                insertSQL += "('" + key + "', '" + value + "'),";
-            }
-        }
-        insertSQL = insertSQL.substring(0, insertSQL.length() - 1);
-        insertSQL += ";";
-        return insertSQL;
+    protected void insertToDatabase(String insertSQL) {
+        open();
+        database.execSQL(insertSQL);
+        close();
     }
 }

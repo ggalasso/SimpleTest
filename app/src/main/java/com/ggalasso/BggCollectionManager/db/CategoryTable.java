@@ -7,11 +7,16 @@ import android.util.Log;
 
 import com.ggalasso.BggCollectionManager.db.Schema.CategoryHelper;
 import com.ggalasso.BggCollectionManager.model.Link;
+import com.ggalasso.BggCollectionManager.model.UtilityConstants;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class CategoryTable extends SQLController {
+
+    public CategoryTable() {
+    }
 
     public CategoryTable(Context c) {
         super(c);
@@ -22,6 +27,11 @@ public class CategoryTable extends SQLController {
         Integer rowCount = fetchTableCount(categoryTable);
         String colId = CategoryHelper.ca_Id;
         String colName = CategoryHelper.ca_Name;
+        ArrayList<String> columns = new ArrayList<>();
+        columns.add(CategoryHelper.ca_Id);
+        columns.add(CategoryHelper.ca_Name);
+
+        //super.getSQLInsertString(categoryMap, categoryTable, columns);
 
         String insertSQL = "INSERT OR IGNORE INTO " + categoryTable + " (" + colId + ", " + colName + ") VALUES";
 
@@ -32,16 +42,28 @@ public class CategoryTable extends SQLController {
         }
         insertSQL = insertSQL.substring(0, insertSQL.length()-1);
         insertSQL += ";";
-
         Log.d("BGCM-CT", "Bulk insert into " + categoryTable + "\nSQL statement: " + insertSQL);
-        //Do the insert
-        open();
-        database.execSQL(insertSQL);
-        close();
-        Log.d("BGCM-CT", "Bulk insert into " + categoryTable + "\nSQL statement: \n" + insertSQL);
+        insertToDatabase(insertSQL);
+        Log.d("BGCM-CT", "Bulk insert into " + categoryTable + "\nSQL statement: " + insertSQL);
+
 
         fetchTableCount(categoryTable);
     }
+
+    public String getInsertSQL(Map<String, String> categoryMap, String tableName, ArrayList<String> columns) {
+        String insertSQL = "INSERT OR IGNORE INTO " + tableName + " (";
+        insertSQL += super.getColumns(columns);
+        insertSQL += " VALUES ";
+        Map<String, String> treeMap = new TreeMap<>(categoryMap);
+        for (Map.Entry<String, String> elem : treeMap.entrySet()) {
+            insertSQL += getRowValue(elem.getKey(), elem.getValue());
+        }
+        insertSQL = insertSQL.substring(0, insertSQL.length() - UtilityConstants.TRIM_COMMA.getValue());
+        insertSQL += ";";
+        return insertSQL;
+    }
+
+
 
     private void insert(Link ca) {
         open();
