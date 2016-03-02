@@ -63,8 +63,6 @@ public class CategoryTable extends SQLController {
         return insertSQL;
     }
 
-
-
     private void insert(Link ca) {
         open();
         ContentValues cv = new ContentValues();
@@ -104,15 +102,7 @@ public class CategoryTable extends SQLController {
                 CategoryHelper.ca_Name,
         };
 
-        Cursor cursor = database.query(
-                CategoryHelper.getTableName(),
-                columns,
-                filter,
-                null,
-                null,
-                null,
-                null
-        );
+        Cursor cursor = super.executeDBQuery(CategoryHelper.getTableName(), columns, filter, null, null, null, null);
 
         if (cursor != null) {
             while (cursor.moveToNext()) {

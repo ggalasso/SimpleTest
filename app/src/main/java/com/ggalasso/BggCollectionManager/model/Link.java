@@ -21,7 +21,7 @@ public class Link {
     public Link() {
     }
 
-//    public Link(String value, String id, String type) {
+    //    public Link(String value, String id, String type) {
     public Link(String value) {
         this.value = value;
         this.id = "1";

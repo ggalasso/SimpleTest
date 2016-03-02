@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.ggalasso.BggCollectionManager.db.Schema.CategoryHelper;
 import com.ggalasso.BggCollectionManager.db.Schema.DBhelper;
 import com.ggalasso.BggCollectionManager.model.UtilityConstants;
 
@@ -133,5 +134,9 @@ public class SQLController {
         open();
         database.execSQL(insertSQL);
         close();
+    }
+
+    public Cursor executeDBQuery(String tableName, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy) {
+        return database.query(tableName, columns, selection, selectionArgs, groupBy, having, orderBy );
     }
 }
