@@ -136,7 +136,10 @@ public class SQLController {
         close();
     }
 
-    public Cursor executeDBQuery(String tableName, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy) {
-        return database.query(tableName, columns, selection, selectionArgs, groupBy, having, orderBy );
+    protected Cursor executeDBQuery(String tableName, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy) {
+        open();
+        Cursor csr = database.query(tableName, columns, selection, selectionArgs, groupBy, having, orderBy );
+        close();
+        return csr;
     }
 }

@@ -87,15 +87,9 @@ public class CategoryTable extends SQLController {
     }
 
     public ArrayList<Link> fetch_impl(String id) {
-        open();
         ArrayList<Link> results = new ArrayList<Link>();
-        String filter;
 
-        if (id == null) {
-            filter = null;
-        } else {
-            filter = new String(CategoryHelper.ca_Id + " = " + id);
-        }
+        String filter = id == null ? null : new String(CategoryHelper.ca_Id + " = " + id);
 
         String[] columns = new String[]{
                 CategoryHelper.ca_Id,
@@ -111,7 +105,6 @@ public class CategoryTable extends SQLController {
             }
             Log.d("BGCM-CAT", "Category list size: " + results.size());
         }
-        close();
         return results;
     }
 

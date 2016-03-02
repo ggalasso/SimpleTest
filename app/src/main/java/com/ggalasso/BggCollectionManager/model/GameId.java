@@ -1,6 +1,7 @@
 package com.ggalasso.BggCollectionManager.model;
 
 import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.Path;
 import org.simpleframework.xml.Root;
 
 /**
@@ -8,7 +9,7 @@ import org.simpleframework.xml.Root;
  */
 @Root
 public class GameId {
-    @Attribute(required=false)
+    @Attribute(name = "objectid", required = false)
     private String objectId;
 
     public GameId() {
