@@ -5,16 +5,23 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
+import com.ggalasso.BggCollectionManager.db.Schema.CategoryHelper;
 import com.ggalasso.BggCollectionManager.db.Schema.MechanicHelper;
 import com.ggalasso.BggCollectionManager.model.Link;
+import com.ggalasso.BggCollectionManager.model.UtilityConstants;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by truthd on 9/20/2015.
  */
 public class MechanicTable extends SQLController {
+    public MechanicTable() {
+    }
 
     public MechanicTable(Context c) {
         super(c);
@@ -23,29 +30,26 @@ public class MechanicTable extends SQLController {
     public void syncMechanics(Map<String, String> mechanicMap) {
         String mechanicTable = MechanicHelper.getTableName();
         Integer rowCount = fetchTableCount(mechanicTable);
-        String colId = MechanicHelper.me_Id;
-        String colName = MechanicHelper.me_Name;
+        List<String> columns = Arrays.asList(MechanicHelper.me_Id, MechanicHelper.me_Name);
+        String insertSQL = getInsertSQL(mechanicMap, mechanicTable, columns);
 
-            String insertSQL = "INSERT OR IGNORE INTO " + mechanicTable + " (" + colId + ", " + colName + ") VALUES";
+        super.insertToDatabase(getInsertSQL(mechanicMap, mechanicTable, columns));
+        Log.d("BGCM-MT", "Bulk insert into " + mechanicTable + "\nSQL statement: \n" + insertSQL);
 
-            for (Map.Entry<String, String> mechanic : mechanicMap.entrySet()) {
+        fetchTableCount(mechanicTable);
+    }
 
-
-                String id = mechanic.getKey();
-                String name = mechanic.getValue();
-                insertSQL += "('" + id + "', '" + name + "'),";
-            }
-            insertSQL = insertSQL.substring(0, insertSQL.length()-1);
-            insertSQL += ";";
-
-            Log.d("BGCM-MT", "Bulk insert into " + mechanicTable + "\nSQL statement: " + insertSQL);
-            //Do the insert
-            open();
-            database.execSQL(insertSQL);
-            close();
-            Log.d("BGCM-MT", "Bulk insert into " + mechanicTable + "\nSQL statement: \n" + insertSQL);
-//        }
-       fetchTableCount(mechanicTable);
+    public String getInsertSQL(Map<String, String> mechanicMap, String tableName, List<String> columns) {
+        String insertSQL = "INSERT OR IGNORE INTO " + tableName + " (";
+        insertSQL += super.getColumns(columns);
+        insertSQL += " VALUES ";
+        Map<String, String> treeMap = new TreeMap<>(mechanicMap);
+        for (Map.Entry<String, String> elem : treeMap.entrySet()) {
+            insertSQL += getRowValue(elem.getKey(), elem.getValue());
+        }
+        insertSQL = insertSQL.substring(0, insertSQL.length() - UtilityConstants.TRIM_COMMA.getValue());
+        insertSQL += ";";
+        return insertSQL;
     }
 
     private void insert(Link me) {
@@ -74,8 +78,8 @@ public class MechanicTable extends SQLController {
     public ArrayList<Link> fetch_impl(String id) {
         open();
         ArrayList<Link> results = new ArrayList<Link>();
-        String filter;
 
+        String filter = id == null ? null : new String(CategoryHelper.ca_Id + " = " + id);
         if (id == null) {
             filter = null;
         } else {
@@ -87,15 +91,7 @@ public class MechanicTable extends SQLController {
                 MechanicHelper.me_Name,
         };
 
-        Cursor cursor = database.query(
-                MechanicHelper.getTableName(),
-                columns,
-                filter,
-                null,
-                null,
-                null,
-                null
-        );
+        Cursor cursor = super.executeDBQuery(CategoryHelper.getTableName(), columns, filter, null, null, null, null);
 
         if (cursor != null) {
             while (cursor.moveToNext()) {

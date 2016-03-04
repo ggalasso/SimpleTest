@@ -26,16 +26,6 @@ public class BoardGameTable extends SQLController {
         super(c);
     }
 
-    //10-11-15 - GAG - Not using this method currently but may come in handy later
-    public boolean isBoardGameInTable(String id) {
-        //BoardGame boardGame = this.fetchBoardGame(id);
-        if (this.fetchBoardGame(id) == null) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     public void syncBoardGameCollection(ArrayList<BoardGame> apiGames) {
 
         Integer rowCount = fetchTableCount(BoardGameHelper.getTableName());
@@ -85,26 +75,6 @@ public class BoardGameTable extends SQLController {
         return resultList;
     }
 
-//    protected ArrayList<BoardGame> getListOfGamesToDelete(ArrayList<BoardGame> apiGames, ArrayList<BoardGame> dbGames) {
-//        ArrayList<BoardGame> gamesToDelete = new ArrayList<>();
-//        for (BoardGame dbGame : dbGames) {
-//            if(idInArrayList(apiGames, dbGame.getId()) == false) {
-//                gamesToDelete.add(dbGame);
-//            }
-//        }
-//        return gamesToDelete;
-//    }
-//
-//    protected ArrayList<BoardGame> getListOfGamesToInsert(ArrayList<BoardGame> apiGames, ArrayList<BoardGame> dbGames) {
-//        ArrayList<BoardGame> gamesToInsert = new ArrayList<>();
-//        for (BoardGame apiGame : apiGames) {
-//            if(idInArrayList(dbGames, apiGame.getId()) == false) {
-//                gamesToInsert.add(apiGame);
-//            }
-//        }
-//        return gamesToInsert;
-//    }
-
     //Check the listToCheck to see if it contains the same id for the idToCheck
     private boolean idInArrayList(ArrayList<BoardGame> listToCheck, String idToCheck) {
         for (BoardGame bg : listToCheck) {
@@ -136,7 +106,6 @@ public class BoardGameTable extends SQLController {
     }
 
     private void insert(BoardGame bg) {
-        open();
         ContentValues cv = new ContentValues();
         cv.put(BoardGameHelper.bg_Id, bg.getId());
         cv.put(BoardGameHelper.bg_PrimaryName, bg.getPrimaryName());
@@ -152,9 +121,9 @@ public class BoardGameTable extends SQLController {
         cv.put(BoardGameHelper.bg_Rank, bg.getRank());
         cv.put(BoardGameHelper.bg_Image, bg.getImage());
         cv.put(BoardGameHelper.bg_Thumbnail, bg.getThumbnail());
-        database.insert(BoardGameHelper.getTableName(), null, cv);
+
+        super.insertToDatabase(BoardGameHelper.getTableName(), cv);
         Log.d("BGCM-BGT", "Successfully added " + bg.getId());
-        close();
     }
 
     public ArrayList<BoardGame> fetchAllBoardGames() {
@@ -171,15 +140,9 @@ public class BoardGameTable extends SQLController {
     }
 
     public ArrayList<BoardGame> fetch_impl(String id) {
-        open();
         ArrayList<BoardGame> results = new ArrayList<BoardGame>();
-        String filter;
 
-        if (id == null) {
-            filter = null;
-        } else {
-            filter = new String(BoardGameHelper.bg_Id + " = " + id);
-        }
+        String filter = id == null ? null : new String(BoardGameHelper.bg_Id + " = " + id);
 
         String[] columns = new String[]{
                 BoardGameHelper.bg_Id,
@@ -198,15 +161,8 @@ public class BoardGameTable extends SQLController {
                 BoardGameHelper.bg_MinAge
         };
 
-        Cursor cursor = database.query(
-                BoardGameHelper.getTableName(),
-                columns,
-                filter,
-                null,
-                null,
-                null,
-                null
-        );
+        open();
+        Cursor cursor = super.executeDBQuery(BoardGameHelper.getTableName(), columns, filter, null, null, null, null);
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -227,11 +183,13 @@ public class BoardGameTable extends SQLController {
                         , cursor.getInt(13)
                 );
                 results.add(bg);
-            }
+           }
+
             Log.d("BGCM-BGT", "Board game list size: " + results.size());
         }
         close();
         return results;
+
     }
 
     public int update(BoardGame bg) {

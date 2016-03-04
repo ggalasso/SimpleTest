@@ -1,5 +1,6 @@
 package com.ggalasso.BggCollectionManager.db;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -12,6 +13,7 @@ import com.ggalasso.BggCollectionManager.model.UtilityConstants;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -120,7 +122,7 @@ public class SQLController {
 
 
     @NonNull
-    protected String getColumns(ArrayList<String> columns) {
+    protected String getColumns(List<String> columns) {
         String sql_columns = "";
         for (String column : columns) {
             sql_columns += column + ", ";
@@ -130,6 +132,12 @@ public class SQLController {
         return sql_columns;
     }
 
+    protected void insertToDatabase(String tableName, ContentValues cv){
+        open();
+        database.insert(tableName, null, cv);
+        close();
+    }
+
     protected void insertToDatabase(String insertSQL) {
         open();
         database.execSQL(insertSQL);
@@ -137,9 +145,7 @@ public class SQLController {
     }
 
     protected Cursor executeDBQuery(String tableName, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy) {
-        open();
         Cursor csr = database.query(tableName, columns, selection, selectionArgs, groupBy, having, orderBy );
-        close();
         return csr;
     }
 }

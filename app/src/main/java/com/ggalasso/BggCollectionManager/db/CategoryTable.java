@@ -10,6 +10,8 @@ import com.ggalasso.BggCollectionManager.model.Link;
 import com.ggalasso.BggCollectionManager.model.UtilityConstants;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -25,32 +27,17 @@ public class CategoryTable extends SQLController {
     public void syncCategories(Map<String, String> categoryMap) {
         String categoryTable = CategoryHelper.getTableName();
         Integer rowCount = fetchTableCount(categoryTable);
-        String colId = CategoryHelper.ca_Id;
-        String colName = CategoryHelper.ca_Name;
-        ArrayList<String> columns = new ArrayList<>();
-        columns.add(CategoryHelper.ca_Id);
-        columns.add(CategoryHelper.ca_Name);
+        List<String> columns = Arrays.asList(CategoryHelper.ca_Id, CategoryHelper.ca_Name);
 
-        //super.getSQLInsertString(categoryMap, categoryTable, columns);
+        String insertSQL = getInsertSQL(categoryMap, categoryTable, columns);
 
-        String insertSQL = "INSERT OR IGNORE INTO " + categoryTable + " (" + colId + ", " + colName + ") VALUES";
-
-        for (Map.Entry<String, String> category : categoryMap.entrySet()) {
-            String id = category.getKey();
-            String name = category.getValue();
-            insertSQL += "('" + id + "', '" + name + "'),";
-        }
-        insertSQL = insertSQL.substring(0, insertSQL.length()-1);
-        insertSQL += ";";
+         super.insertToDatabase(insertSQL);
         Log.d("BGCM-CT", "Bulk insert into " + categoryTable + "\nSQL statement: " + insertSQL);
-        insertToDatabase(insertSQL);
-        Log.d("BGCM-CT", "Bulk insert into " + categoryTable + "\nSQL statement: " + insertSQL);
-
 
         fetchTableCount(categoryTable);
     }
 
-    public String getInsertSQL(Map<String, String> categoryMap, String tableName, ArrayList<String> columns) {
+    public String getInsertSQL(Map<String, String> categoryMap, String tableName, List<String> columns) {
         String insertSQL = "INSERT OR IGNORE INTO " + tableName + " (";
         insertSQL += super.getColumns(columns);
         insertSQL += " VALUES ";

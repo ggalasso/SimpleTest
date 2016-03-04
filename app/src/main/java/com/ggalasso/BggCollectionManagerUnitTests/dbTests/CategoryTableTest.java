@@ -29,10 +29,10 @@ public class CategoryTableTest extends CategoryTable {
         bgCatMap.put("1002", "Exploration");
         bgCatMap.put("1003", "Fantasy");
         // Arrange Expected String to compare
-        String expected = "INSERT OR IGNORE INTO category_in_game (ca_Id, ca_Name) VALUES ('1001', 'Adventure'),('1002', 'Exploration'),('1003', 'Fantasy');";
+        String expected = "INSERT OR IGNORE INTO category (ca_Id, ca_Name) VALUES ('1001', 'Adventure'),('1002', 'Exploration'),('1003', 'Fantasy');";
 
         // Act
-        String actual = getInsertSQL(bgCatMap, "category_in_game", columns);
+        String actual = getInsertSQL(bgCatMap, "category", columns);
 
         // Assert
         Assert.assertEquals(expected, actual);
