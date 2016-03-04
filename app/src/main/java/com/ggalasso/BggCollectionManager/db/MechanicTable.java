@@ -18,7 +18,7 @@ import java.util.TreeMap;
 
 /**
  * Created by truthd on 9/20/2015.
- * making a difference - e2thed 3/3/2016
+ * making a difference - e2thed 3/3/2016 - another change, another dollar
  */
 public class MechanicTable extends SQLController {
     public MechanicTable() {
