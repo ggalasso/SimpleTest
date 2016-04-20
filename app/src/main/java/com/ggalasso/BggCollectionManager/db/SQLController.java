@@ -153,7 +153,7 @@ public class SQLController {
         return csr;
     }
 
-    public static <T> int testingGeneric(T[] list, T itemToCount) {
+    public static <T> int genericPrimitiveListCounter(T[] list, T itemToCount) {
         int count = 0;
         if (itemToCount == null) {
             for (T listItem : list) if (listItem == null) count++;
