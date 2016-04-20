@@ -11,6 +11,10 @@ import com.ggalasso.BggCollectionManager.db.Schema.CategoryHelper;
 import com.ggalasso.BggCollectionManager.db.Schema.DBhelper;
 import com.ggalasso.BggCollectionManager.model.UtilityConstants;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.TypeVariable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -132,7 +136,7 @@ public class SQLController {
         return sql_columns;
     }
 
-    protected void insertToDatabase(String tableName, ContentValues cv){
+    protected void insertToDatabase(String tableName, ContentValues cv) {
         open();
         database.insert(tableName, null, cv);
         close();
@@ -145,7 +149,40 @@ public class SQLController {
     }
 
     protected Cursor executeDBQuery(String tableName, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy) {
-        Cursor csr = database.query(tableName, columns, selection, selectionArgs, groupBy, having, orderBy );
+        Cursor csr = database.query(tableName, columns, selection, selectionArgs, groupBy, having, orderBy);
         return csr;
+    }
+
+    public static <T> int testingGeneric(T[] list, T itemToCount) {
+        int count = 0;
+        if (itemToCount == null) {
+            for (T listItem : list) if (listItem == null) count++;
+        } else {
+            for (T listItem : list) if (itemToCount.equals(listItem)) count++;
+        }
+        return count;
+    }
+
+    public <T> ArrayList<T> SelectAll(Class<T> foo){
+        ArrayList<T> list = new ArrayList<>();
+        Field[] fields = foo.getDeclaredFields();
+        Class cls[] = new Class[] {String.class, String.class, String.class};
+
+        try {
+            Constructor<?> constructor = foo.getConstructor(cls);//foo.getConstructor(foo);
+            Constructor<?>[] constructors = foo.getConstructors();
+
+            for (Constructor<?> c : constructors) {
+                Class<?>[] pTypes = c.getParameterTypes();
+                String test = "";
+            }
+
+            list.add((T) constructor.newInstance("TestName","5","Category"));
+            //list.add(constructor);
+
+        }catch(Exception ex){
+            return list;
+        }
+        return list;
     }
 }
