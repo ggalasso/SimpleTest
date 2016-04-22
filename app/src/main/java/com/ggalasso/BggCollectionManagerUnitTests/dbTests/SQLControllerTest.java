@@ -4,6 +4,7 @@ import com.ggalasso.BggCollectionManager.model.BoardGame;
 import com.ggalasso.BggCollectionManager.model.Foo;
 import com.ggalasso.BggCollectionManager.model.Link;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -59,6 +60,21 @@ public class SQLControllerTest {
         ArrayList<Link> b = new com.ggalasso.BggCollectionManager.db.SQLController().SelectAll(Link.class);
 
         assertEquals(2, b.size());
+    }
+
+    @Test
+    public void testGetFieldsForObject_BoardGame_Expect_18(){
+        // Arrange
+        Integer expected = 18;
+        Integer actual = 0;
+        ArrayList<String> resultSet = new ArrayList<>();
+
+        // Act
+        resultSet = new com.ggalasso.BggCollectionManager.db.SQLController().getFieldsForObject(BoardGame.class);
+        actual = resultSet.size();
+
+        // Assert
+        assertEquals(expected, actual);
     }
 
 //    public <T> ArrayList<T> SelectAll(Class<T> foo){
