@@ -163,6 +163,27 @@ public class SQLController {
         return count;
     }
 
+//    public <T> ArrayList<T> SelectWithoutWrapper(T foo){
+//        ArrayList<T> list = new ArrayList<>();
+//    }
+
+    public <T> ArrayList<String> getFieldsForObject(Class<T> foo){
+        ArrayList<String> list = new ArrayList<>();
+        Field[] fields = foo.getDeclaredFields();
+
+        try {
+
+            for (Field field: fields) {
+                list.add(field.getName());
+            }
+        }catch(Exception ex){
+            return list;
+        }
+        return list;
+    }
+
+    // This is working throw away code that will help when we get further along in our
+    // research of generics
     public <T> ArrayList<T> SelectAll(Class<T> foo){
         ArrayList<T> list = new ArrayList<>();
         Field[] fields = foo.getDeclaredFields();
@@ -178,6 +199,7 @@ public class SQLController {
             }
 
             list.add((T) constructor.newInstance("TestName","5","Category"));
+            list.add((T) constructor.newInstance("TestName1","5","Category"));
             //list.add(constructor);
 
         }catch(Exception ex){

@@ -7,6 +7,7 @@ import com.ggalasso.BggCollectionManager.model.Link;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -54,7 +55,7 @@ public class SQLControllerTest {
     }
 
     @Test
-    public void TESTINGTEST() throws Exception {
+    public void testSelectAllWhichActuallConstructsNewObject() throws Exception {
         ArrayList<Link> b = new com.ggalasso.BggCollectionManager.db.SQLController().SelectAll(Link.class);
 
         assertEquals(2, b.size());
@@ -71,5 +72,6 @@ public class SQLControllerTest {
 //        }
 //        return null;
 //    }
+
 
 }
