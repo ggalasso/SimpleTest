@@ -55,7 +55,7 @@ public class SQLControllerTest {
     }
 
     @Test
-    public void testSelectAllWhichActuallConstructsNewObject() throws Exception {
+    public void testSelectAllWhichActuallyConstructsNewObject() throws Exception {
         ArrayList<Link> b = new com.ggalasso.BggCollectionManager.db.SQLController().SelectAll(Link.class);
 
         assertEquals(2, b.size());
