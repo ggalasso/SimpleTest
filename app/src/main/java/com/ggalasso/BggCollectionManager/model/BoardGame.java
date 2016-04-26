@@ -53,6 +53,7 @@ public class BoardGame {
     @Path("minage")
     @Attribute(name = "value", required = false)
     private int minAge;
+    private String syncValue;
 
     public BoardGame() {
     }
@@ -159,8 +160,6 @@ public class BoardGame {
     public String getThumbnail() {
         return thumbnail;
     }
-
-    private String syncValue;
 
     public String getSyncValue() {
         return syncValue;
