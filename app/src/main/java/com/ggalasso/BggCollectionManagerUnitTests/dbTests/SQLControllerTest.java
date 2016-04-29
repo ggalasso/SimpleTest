@@ -90,4 +90,21 @@ public class SQLControllerTest {
 //    }
 
 
+//public void testJava8(){
+//    // create list
+//    List<String> crunchifyList = new ArrayList<String>();
+//
+//    // add 4 different values to list
+//    crunchifyList.add("eBay");
+//    crunchifyList.add("Paypal");
+//    crunchifyList.add("Google");
+//    crunchifyList.add("Yahoo");
+//
+//
+//    System.out.println("\n==> collection stream() util....");
+//    crunchifyList.forEach((temp) -> {
+//        System.out.println(temp);
+//    });
+//}
+
 }

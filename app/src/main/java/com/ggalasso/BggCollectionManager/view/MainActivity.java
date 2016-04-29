@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import com.ggalasso.BggCollectionManager.R;
 import com.ggalasso.BggCollectionManager.api.CollectionAPI;
 import com.ggalasso.BggCollectionManager.api.ThingAPI;
+import com.ggalasso.BggCollectionManager.api.XMLApi;
 import com.ggalasso.BggCollectionManager.controller.BoardGameManager;
 import com.ggalasso.BggCollectionManager.controller.GameIdManager;
 import com.ggalasso.BggCollectionManager.db.BoardGameTable;
@@ -42,7 +43,9 @@ public class MainActivity extends AppCompatActivity {
 //        bgtCon.destroyEverything();
 
         CollectionAPI capi = new CollectionAPI();
-        GameIdManager gim = capi.getIDManager();
+        XMLApi xapi = new XMLApi("https://boardgamegeek.com/xmlapi2/collection?username=brickedphoneclub&own=1");
+        GameIdManager gim = xapi.getIDManager();
+        //GameIdManager gim = capi.getIDManager();
         BoardGameManager bgm2 = BoardGameManager.getInstance();
 
         ThingAPI tapi = new ThingAPI();

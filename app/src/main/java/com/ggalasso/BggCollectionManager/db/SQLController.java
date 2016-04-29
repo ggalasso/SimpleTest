@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+
 /**
  * Created by Edward on 9/8/2015.
  */
@@ -185,6 +186,31 @@ public class SQLController {
     // This is working throw away code that will help when we get further along in our
     // research of generics
     public <T> ArrayList<T> SelectAll(Class<T> foo){
+        ArrayList<T> list = new ArrayList<>();
+        Field[] fields = foo.getDeclaredFields();
+        Class cls[] = new Class[] {String.class, String.class, String.class};
+
+        try {
+            Constructor<?> constructor = foo.getConstructor(cls);//foo.getConstructor(foo);
+            Constructor<?>[] constructors = foo.getConstructors();
+
+            for (Constructor<?> c : constructors) {
+                Class<?>[] pTypes = c.getParameterTypes();
+                String test = "";
+            }
+
+            list.add((T) constructor.newInstance("TestName","5","Category"));
+            list.add((T) constructor.newInstance("TestName1","5","Category"));
+            //list.add(constructor);
+
+        }catch(Exception ex){
+            return list;
+        }
+        return list;
+    }
+    // This is working throw away code that will help when we get further along in our
+    // research of generics
+    public <T> ArrayList<T> usingGenericCanWeGetToTdotClass(Class<T> foo){
         ArrayList<T> list = new ArrayList<>();
         Field[] fields = foo.getDeclaredFields();
         Class cls[] = new Class[] {String.class, String.class, String.class};

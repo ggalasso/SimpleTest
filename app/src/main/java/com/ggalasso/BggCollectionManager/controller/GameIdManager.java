@@ -26,6 +26,7 @@ public class GameIdManager {
             synchronized (GameIdManager.class) {
                 if (ourInstance == null) {
                     ourInstance = new GameIdManager();
+
                 }
             }
         }
