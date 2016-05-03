@@ -43,10 +43,9 @@ public class MainActivity extends AppCompatActivity {
 //        bgtCon.destroyEverything();
 
         CollectionAPI capi = new CollectionAPI();
-        XMLApi xapi = new XMLApi("https://boardgamegeek.com/xmlapi2/collection?username=brickedphoneclub&own=1");
-        GameIdManager gim = xapi.getIDManager();
-        //GameIdManager gim = capi.getIDManager();
-        BoardGameManager bgm2 = BoardGameManager.getInstance();
+        GameIdManager gim = capi.getIDManager();
+
+        //BoardGameManager bgm2 = BoardGameManager.getInstance();
 
         ThingAPI tapi = new ThingAPI();
         BoardGameManager bgm = tapi.getGameManager(gim.getIdListString());
@@ -136,6 +135,15 @@ public class MainActivity extends AppCompatActivity {
 //            Log.d("BGCM-MA", "TOTAL Board Games in DB: " + bgList.size());
 //        }
         bgtCon.destroyEverything();
+
+        XMLApi xapi = new XMLApi(GameIdManager.class, "https://boardgamegeek.com/xmlapi2/collection?username=brickedphoneclub&own=1");
+        GameIdManager gim2 = (GameIdManager)xapi.getAPIManager();
+        String download2 = "https://boardgamegeek.com/xmlapi2/thing?id=" + gim2.getIdListString() + "&stats=1";
+        xapi = new XMLApi(BoardGameManager.class, download2);
+        BoardGameManager bgm2 = (BoardGameManager)xapi.getAPIManager();
+        bgm2.getIdListString();
+
+
     }
 
     @Override
