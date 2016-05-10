@@ -41,13 +41,12 @@ public class XMLApi<T> {
     /// HERE IS MORE DOCUMENTATION TO HELP US FIGURE THIS OUT
     // http://www.google.com/url?q=http%3A%2F%2Fstackoverflow.com%2Fquestions%2F5735320%2Fjava-generics-on-an-android-asynctask&sa=D&sntz=1&usg=AFQjCNGVZyeY3DG0ugtn1p0OJp9AfTHU5A
     private <T> T callAPI() throws ExecutionException, InterruptedException {
-        Log.i("BGCM-CAPI", "Attempting to download data from: " + url);
+        Log.i("BGCM-XAPI", "Attempting to download data from: " + url);
         AsyncTask<String, Void, T> getGameIDTask = new getAPIResponse<T>((Class<T>) genericType).execute(url);
         try {
             T result = getGameIDTask.get();
             return result;
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -55,7 +54,7 @@ public class XMLApi<T> {
         return null;
     }
 
-    private class getAPIResponse<T> extends AsyncTask<String, Void,  T> {
+    private class getAPIResponse<T> extends AsyncTask<String, Void, T> {
 
         private Class<T> type;
 
@@ -66,18 +65,32 @@ public class XMLApi<T> {
         @Override
         protected T doInBackground(String... params) {
             Log.i("BGCM-XAPI", "REACHED doInBackground with class type: " + type);
-
+            int conAttempts = 0;
+            int sleepSeconds = 2 * 1000;
             T manager = null;
             try {
                 URL url = new URL(params[0]);
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("GET");
+                Log.i("BGCM-XAPI", "connection response: " + con.getResponseMessage());
+                /*
+                   TODO : eqc | 9 may 16 : Response<T> which will have a message that we can check and boolean
+                        :   this is so we can stop the remaining api calls which will fail if the response is null
+                        :   also if first succeeds and second fails (API Calls)
+                */
+                while (!con.getResponseMessage().equals("OK") && conAttempts < 30) {
+                    con.disconnect();
+                    Thread.sleep(sleepSeconds);
+                    con = (HttpURLConnection) url.openConnection();
+                    conAttempts++;
+                    Log.i("BGCM-XAPI", "Trying attempt " + conAttempts + " Status: " + con.getResponseMessage() + " RequestMethod: " + con.getRequestMethod());
+                }
                 try {
                     InputStream is = new BufferedInputStream(con.getInputStream());
                     Serializer serializer = new Persister();
                     manager = serializer.read(type, is, false);
 
-                    Log.i("BGCM-CAPI", "Finished Serializing");
+                    Log.i("BGCM-XAPI", "Finished Serializing");
                 } finally {
                     con.disconnect();
                 }

@@ -116,13 +116,13 @@ public class SQLController {
     protected String getRowValues(String key, ArrayList<String> values) {
         String sql_rows = "";
         for (String value : values) {
-            sql_rows += "('" + key + "', '" + value + "'),";
+            sql_rows += "(\"" + key + "\", \"" + value + "\"),";
         }
         return sql_rows;
     }
 
     protected String getRowValue(String key, String value) {
-        return "('" + key + "', '" + value + "'),";
+        return "(\"" + key + "\", \"" + value + "\"),";
     }
 
 
