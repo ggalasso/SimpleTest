@@ -66,19 +66,15 @@ public class XMLApi<T> {
         protected T doInBackground(String... params) {
             Log.i("BGCM-XAPI", "REACHED doInBackground with class type: " + type);
             int conAttempts = 0;
-            int sleepSeconds = 2 * 1000;
+            int sleepSeconds = 1 * 1000;
+            int maxAttempts = 5;
             T manager = null;
             try {
                 URL url = new URL(params[0]);
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("GET");
                 Log.i("BGCM-XAPI", "connection response: " + con.getResponseMessage());
-                /*
-                   TODO : eqc | 9 may 16 : Response<T> which will have a message that we can check and boolean
-                        :   this is so we can stop the remaining api calls which will fail if the response is null
-                        :   also if first succeeds and second fails (API Calls)
-                */
-                while (!con.getResponseMessage().equals("OK") && conAttempts < 30) {
+                while (!con.getResponseMessage().equals("OK") && conAttempts < maxAttempts) {
                     con.disconnect();
                     Thread.sleep(sleepSeconds);
                     con = (HttpURLConnection) url.openConnection();
