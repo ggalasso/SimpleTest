@@ -8,8 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.ggalasso.BggCollectionManager.R;
-import com.ggalasso.BggCollectionManager.api.CollectionAPI;
-import com.ggalasso.BggCollectionManager.api.ThingAPI;
+import com.ggalasso.BggCollectionManager.api.XMLApi;
 import com.ggalasso.BggCollectionManager.controller.BoardGameManager;
 import com.ggalasso.BggCollectionManager.controller.GameIdManager;
 import com.ggalasso.BggCollectionManager.db.BoardGameTable;
@@ -40,13 +39,20 @@ public class MainActivity extends AppCompatActivity {
         MechanicInGameTable migtCon = new MechanicInGameTable(ctx);
 
 //        bgtCon.destroyEverything();
+        XMLApi xapi = new XMLApi(GameIdManager.class, "https://boardgamegeek.com/xmlapi2/collection?username=brickedphoneclub&own=1");
+        GameIdManager gim = (GameIdManager)xapi.getAPIManager();
+        String download2 = "https://boardgamegeek.com/xmlapi2/thing?id=" + gim.getIdListString() + "&stats=1";
+        xapi = new XMLApi(BoardGameManager.class, download2);
+        BoardGameManager bgm = (BoardGameManager)xapi.getAPIManager();
+        bgm.getIdListString();
 
-        CollectionAPI capi = new CollectionAPI();
-        GameIdManager gim = capi.getIDManager();
-        BoardGameManager bgm2 = BoardGameManager.getInstance();
+//        CollectionAPI capi = new CollectionAPI();
+//        GameIdManager gim = capi.getIDManager();
 
-        ThingAPI tapi = new ThingAPI();
-        BoardGameManager bgm = tapi.getGameManager(gim.getIdListString());
+        //BoardGameManager bgm2 = BoardGameManager.getInstance();
+
+//        ThingAPI tapi = new ThingAPI();
+//        BoardGameManager bgm = tapi.getGameManager(gim.getIdListString());
 
         bgtCon.syncBoardGameCollection(bgm.getBoardGames());
 
@@ -133,6 +139,9 @@ public class MainActivity extends AppCompatActivity {
 //            Log.d("BGCM-MA", "TOTAL Board Games in DB: " + bgList.size());
 //        }
         bgtCon.destroyEverything();
+
+
+
     }
 
     @Override

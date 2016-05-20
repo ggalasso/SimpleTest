@@ -10,6 +10,8 @@ import java.util.ArrayList;
 
 @Root
 public class BoardGame {
+
+    public int bob;
     //Id of the Game, this is required otherwise we shouldn't be able to find the game.
     @Attribute
     private String id;
@@ -51,6 +53,7 @@ public class BoardGame {
     @Path("minage")
     @Attribute(name = "value", required = false)
     private int minAge;
+    private String syncValue;
 
     public BoardGame() {
     }
@@ -158,8 +161,6 @@ public class BoardGame {
         return thumbnail;
     }
 
-    private String syncValue;
-
     public String getSyncValue() {
         return syncValue;
     }
@@ -202,4 +203,5 @@ public class BoardGame {
         }
         return results;
     }
+
 }

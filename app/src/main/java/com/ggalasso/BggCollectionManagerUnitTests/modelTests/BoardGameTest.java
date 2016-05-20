@@ -1,6 +1,8 @@
 package com.ggalasso.BggCollectionManagerUnitTests.modelTests;
 
+import com.ggalasso.BggCollectionManager.db.SQLController;
 import com.ggalasso.BggCollectionManager.model.BoardGame;
+import com.ggalasso.BggCollectionManager.model.Foo;
 import com.ggalasso.BggCollectionManager.model.Link;
 import com.ggalasso.BggCollectionManager.model.Name;
 
@@ -8,6 +10,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
@@ -73,4 +77,6 @@ public class BoardGameTest {
         //assert
         assertEquals(3, mechanicSize.intValue());
     }
+
+
 }
