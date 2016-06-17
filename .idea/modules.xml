@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bgg-collection-manager-ssh.iml" filepath="$PROJECT_DIR$/bgg-collection-manager-ssh.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bgg-collection-manager.iml" filepath="$PROJECT_DIR$/bgg-collection-manager.iml" />
     </modules>
   </component>
 </project>
