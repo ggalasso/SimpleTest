@@ -30,6 +30,9 @@ public class LoginActivity extends AppCompatActivity{
         loginButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 Log.d("BGCM-LA","We Clickity Clicked the button: text = " + usernameTextBox.getText().toString());
+                Intent usernameIntent = new Intent(view.getContext(), MainActivity.class);
+                usernameIntent.putExtra("UserName",usernameTextBox.getText().toString());
+                startActivity(usernameIntent);
             }
         });
     }
