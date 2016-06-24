@@ -19,6 +19,7 @@ import com.ggalasso.BggCollectionManager.R;
 public class LoginActivity extends AppCompatActivity{
     Button loginButton;
     EditText usernameTextBox;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
