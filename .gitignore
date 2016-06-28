@@ -1,12 +1,9 @@
-/.idea/workspace.xml
-/.idea/libraries
-.DS_Store
-
+#refernce: https://github.com/github/gitignore/blob/master/Android.gitignore
 # Built application files
 *.apk
 *.ap_
 
-# Files for the Dalvik VM
+# Files for the ART/Dalvik VM
 *.dex
 
 # Java class files
@@ -38,6 +35,7 @@ captures/
 
 # Intellij
 *.iml
+.idea/workspace.xml
 
 # Keystore files
 *.jks

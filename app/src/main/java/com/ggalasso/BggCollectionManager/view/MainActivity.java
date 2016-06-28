@@ -26,6 +26,7 @@ import com.ggalasso.BggCollectionManager.model.Link;
 import java.util.ArrayList;
 import java.util.Map;
 
+/// TODO : Create Layout for Main Activity
 
 public class MainActivity extends AppCompatActivity {
     Context ctx = this;
