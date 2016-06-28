@@ -9,6 +9,11 @@ import android.text.Layout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.ggalasso.BggCollectionManager.R;
 import com.ggalasso.BggCollectionManager.api.XMLApi;
@@ -43,8 +48,14 @@ public class MainActivity extends AppCompatActivity {
 
         BoardGameTable bgtCon = getBoardGameCollection(username);
 
+        //ListView gameListView = getGameListView();
+
         bgtCon.destroyEverything();
     }
+
+
+
+
 
 
     @NonNull
@@ -113,4 +124,37 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    class GameAdapter extends ArrayAdapter<BoardGame> {
+
+
+        public GameAdapter(Context context, int resource, BoardGame[] objects) {
+            super(context, resource, objects);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view;
+            if (convertView == null) {
+                view = getLayoutInflater().inflate(R.layout.game_item, parent, false);
+            } else {
+                view = convertView;
+            }
+
+            BoardGame bg = getItem(position);
+
+            TextView gameTitleView = (TextView) view.findViewById(R.id.gameTitleText);
+            TextView gameTimeView = (TextView) view.findViewById(R.id.gameTimeText);
+            TextView gameRatingView = (TextView) view.findViewById(R.id.gameRatingText);
+            TextView gamePlayersView = (TextView) view.findViewById(R.id.gameNumPlayersText);
+
+            gameTitleView.setText(bg.getPrimaryName());
+            gameTimeView.setText(bg.getPlayTime());
+            gameRatingView.setText(Double.toString(bg.getRating()));
+            gamePlayersView.setText(bg.getMinPlayers() + "-" + bg.getMaxPlayers());
+
+            return view;
+        }
+    }
+
 }
