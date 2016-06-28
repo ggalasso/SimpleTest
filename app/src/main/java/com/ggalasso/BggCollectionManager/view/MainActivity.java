@@ -1,5 +1,6 @@
 package com.ggalasso.BggCollectionManager.view;
 
+import android.app.ListActivity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -33,29 +34,32 @@ import java.util.Map;
 
 /// TODO : Create Layout for Main Activity
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends ListActivity {
     Context ctx = this;
+    private ArrayList<BoardGame> bgList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         String username = getIntent().getStringExtra("UserName");
+
+
 
         Log.d("BGCM-MA","Username = " + username);
         setTitle("Collection for " + username);
 
-        BoardGameTable bgtCon = getBoardGameCollection(username);
 
-        //ListView gameListView = getGameListView();
+        BoardGameTable bgtCon = getBoardGameCollection(username);
+        bgList = bgtCon.fetchAllBoardGames();
+
+        ListView gameListView = getListView();
+        setListAdapter(new GameAdapter(this, R.layout.game_item, bgList));
 
         bgtCon.destroyEverything();
     }
-
-
-
-
 
 
     @NonNull
@@ -73,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         String download2 = "https://boardgamegeek.com/xmlapi2/thing?id=" + gim.getIdListString() + "&stats=1";
         xapi = new XMLApi(BoardGameManager.class, download2);
         BoardGameManager bgm = (BoardGameManager)xapi.getAPIManager();
+
         bgm.getIdListString();
 
         bgtCon.syncBoardGameCollection(bgm.getBoardGames());
@@ -125,10 +130,13 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+
+
     class GameAdapter extends ArrayAdapter<BoardGame> {
 
 
-        public GameAdapter(Context context, int resource, BoardGame[] objects) {
+        public GameAdapter(Context context, int resource, ArrayList<BoardGame> objects) {
             super(context, resource, objects);
         }
 
@@ -149,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
             TextView gamePlayersView = (TextView) view.findViewById(R.id.gameNumPlayersText);
 
             gameTitleView.setText(bg.getPrimaryName());
-            gameTimeView.setText(bg.getPlayTime());
+            gameTimeView.setText(Integer.toString(bg.getPlayTime()));
             gameRatingView.setText(Double.toString(bg.getRating()));
             gamePlayersView.setText(bg.getMinPlayers() + "-" + bg.getMaxPlayers());
 
