@@ -1,5 +1,7 @@
 package com.ggalasso.BggCollectionManager.model;
 
+import android.util.Log;
+
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
@@ -216,15 +218,19 @@ public class BoardGame {
     public String getMinMaxTimeToString(){
         if (this.minTime == this.maxTime){
             return Integer.toString(this.maxTime) + " Min";
-        }else {
+        } else if(this.minTime > this.maxTime) {
+            return Integer.toString(this.minTime) + " Min";
+        } else {
             return Integer.toString(this.minTime) + "-" + Integer.toString(this.maxTime) + " Min";
         }
     }
 
     public String getMinMaxPlayersToString(){
         if (this.minPlayers == this.maxPlayers){
-            return Integer.toString(this.minPlayers) + " Players";
-        }else {
+            return Integer.toString(this.minPlayers) + (this.minPlayers == 1 ? " Player" : " Players");
+        } else if (this.minPlayers > this.maxPlayers){
+            return Integer.toString(this.minPlayers) + (this.minPlayers == 1 ? " Player" : " Players");
+        } else {
             return Integer.toString(this.minPlayers) + "-" + Integer.toString(this.maxPlayers) + " Players";
         }
     }
