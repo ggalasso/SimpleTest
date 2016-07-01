@@ -159,7 +159,7 @@ public class MainActivity extends ListActivity {
             gameTitleView.setText(bg.getPrimaryName());
             gameTimeView.setText(bg.getMinMaxTimeToString());
             gameRatingView.setText(bg.getRatingToString());
-            gamePlayersView.setText(bg.getMinPlayers() + "-" + bg.getMaxPlayers());
+            gamePlayersView.setText(bg.getMinMaxPlayersToString());
 
             return view;
         }

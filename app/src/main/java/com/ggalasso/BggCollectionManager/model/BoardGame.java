@@ -220,4 +220,13 @@ public class BoardGame {
             return Integer.toString(this.minTime) + "-" + Integer.toString(this.maxTime) + " Min";
         }
     }
+
+    public String getMinMaxPlayersToString(){
+        if (this.minPlayers == this.maxPlayers){
+            return Integer.toString(this.minPlayers) + " Players";
+        }else {
+            return Integer.toString(this.minPlayers) + "-" + Integer.toString(this.maxPlayers) + " Players";
+        }
+    }
+
 }
