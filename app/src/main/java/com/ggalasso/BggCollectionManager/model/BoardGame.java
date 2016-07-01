@@ -6,6 +6,7 @@ import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Path;
 import org.simpleframework.xml.Root;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 @Root
@@ -123,6 +124,14 @@ public class BoardGame {
 
     public double getRating() {
         return rating;
+    }
+
+    public String getRatingToString() {
+        Double truncatedDouble = new BigDecimal(this.rating)
+                .setScale(1, BigDecimal.ROUND_HALF_UP)
+                .doubleValue();
+
+        return "Rating: " + truncatedDouble;
     }
 
     public int getMinAge() {
