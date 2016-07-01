@@ -7,5 +7,10 @@
     <string name="boardgamegeek_logo">BoardGameGeek Logo</string>
     <string name="username">Username</string>
     <string name="login">Login</string>
+    <string name="rating">Rating</string>
+    <string name="title">Title</string>
+    <string name="num_of_players">Num of Players</string>
+    <string name="time_xx_xx">Time: xx-xx</string>
+    <string name="gameimage">GameImage</string>
 
 </resources>

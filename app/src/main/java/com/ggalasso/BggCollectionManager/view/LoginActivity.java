@@ -28,6 +28,8 @@ public class LoginActivity extends AppCompatActivity{
         loginButton = (Button)findViewById(R.id.loginButton);
         usernameTextBox = (EditText)findViewById(R.id.usernameTextBox);
 
+        usernameTextBox.setText("BrickedPhoneClub");
+
         loginButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 Log.d("BGCM-LA","We Clickity Clicked the button: text = " + usernameTextBox.getText().toString());
