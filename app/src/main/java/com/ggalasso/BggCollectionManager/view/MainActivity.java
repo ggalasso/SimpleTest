@@ -157,7 +157,7 @@ public class MainActivity extends ListActivity {
             TextView gamePlayersView = (TextView) view.findViewById(R.id.gameNumPlayersText);
 
             gameTitleView.setText(bg.getPrimaryName());
-            gameTimeView.setText(Integer.toString(bg.getPlayTime()));
+            gameTimeView.setText(bg.getMinMaxTimeToString());
             gameRatingView.setText(bg.getRatingToString());
             gamePlayersView.setText(bg.getMinPlayers() + "-" + bg.getMaxPlayers());
 

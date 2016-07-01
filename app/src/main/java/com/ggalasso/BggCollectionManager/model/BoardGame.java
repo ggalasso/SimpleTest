@@ -126,14 +126,6 @@ public class BoardGame {
         return rating;
     }
 
-    public String getRatingToString() {
-        Double truncatedDouble = new BigDecimal(this.rating)
-                .setScale(1, BigDecimal.ROUND_HALF_UP)
-                .doubleValue();
-
-        return "Rating: " + truncatedDouble;
-    }
-
     public int getMinAge() {
         return minAge;
     }
@@ -213,4 +205,19 @@ public class BoardGame {
         return results;
     }
 
+    public String getRatingToString() {
+        Double truncatedDouble = new BigDecimal(this.rating)
+                .setScale(1, BigDecimal.ROUND_HALF_UP)
+                .doubleValue();
+
+        return "Rating: " + truncatedDouble;
+    }
+
+    public String getMinMaxTimeToString(){
+        if (this.minTime == this.maxTime){
+            return Integer.toString(this.maxTime) + " Min";
+        }else {
+            return Integer.toString(this.minTime) + "-" + Integer.toString(this.maxTime) + " Min";
+        }
+    }
 }
