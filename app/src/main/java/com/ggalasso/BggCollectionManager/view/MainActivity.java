@@ -2,6 +2,10 @@ package com.ggalasso.BggCollectionManager.view;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
@@ -13,10 +17,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ggalasso.BggCollectionManager.R;
+import com.ggalasso.BggCollectionManager.api.ImageService;
 import com.ggalasso.BggCollectionManager.api.XMLApi;
 import com.ggalasso.BggCollectionManager.controller.BoardGameManager;
 import com.ggalasso.BggCollectionManager.controller.GameIdManager;
@@ -29,6 +35,12 @@ import com.ggalasso.BggCollectionManager.model.BoardGame;
 import com.ggalasso.BggCollectionManager.model.Link;
 
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -155,11 +167,16 @@ public class MainActivity extends ListActivity {
             TextView gameTimeView = (TextView) view.findViewById(R.id.gameTimeText);
             TextView gameRatingView = (TextView) view.findViewById(R.id.gameRatingText);
             TextView gamePlayersView = (TextView) view.findViewById(R.id.gameNumPlayersText);
+            ImageView thumbImg = (ImageView) view.findViewById(R.id.gameImageView);
 
             gameTitleView.setText(bg.getPrimaryName());
             gameTimeView.setText(bg.getMinMaxTimeToString());
             gameRatingView.setText(bg.getRatingToString());
             gamePlayersView.setText(bg.getMinMaxPlayersToString());
+
+            //Call the Image Service to git the bitmap for the ImageView
+            Bitmap b = new ImageService().getBitmap("http:" + bg.getThumbnail());
+            thumbImg.setImageBitmap(b);
 
             return view;
         }
