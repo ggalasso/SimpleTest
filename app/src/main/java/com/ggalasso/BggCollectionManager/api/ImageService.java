@@ -27,7 +27,7 @@ public class ImageService {
     }
 
     private Bitmap callImageService(String url) throws ExecutionException, InterruptedException {
-        Log.i("BGCM-XAPI", "Attempting to download data from: " + url);
+        Log.i("BGCM-IS", "Attempting to download data from: " + url);
         AsyncTask<String, Void, Bitmap> getImageTask = new getImage().execute(url);
         try {
             Bitmap result = getImageTask.get();
@@ -43,7 +43,6 @@ public class ImageService {
     private class getImage extends AsyncTask<String, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(String... params) {
-            Log.i("BGCM-IS", "REACHED doInBackground getImage.");
             Bitmap bm = null;
             try {
                 URL aURL = new URL(params[0]);
