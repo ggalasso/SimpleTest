@@ -175,7 +175,7 @@ public class MainActivity extends ListActivity {
             gamePlayersView.setText(bg.getMinMaxPlayersToString());
 
             //Call the Image Service to git the bitmap for the ImageView
-            Bitmap b = new ImageService().getBitmap("http:" + bg.getThumbnail());
+            Bitmap b = new ImageService().getBitmap(bg.getThumbnailURL());
             thumbImg.setImageBitmap(b);
 
             return view;

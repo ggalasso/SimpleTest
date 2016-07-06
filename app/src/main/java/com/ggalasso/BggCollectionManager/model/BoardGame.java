@@ -164,6 +164,10 @@ public class BoardGame {
         return thumbnail;
     }
 
+    public String getThumbnailURL() {
+        return "http:" + thumbnail;
+    }
+
     public String getSyncValue() {
         return syncValue;
     }
