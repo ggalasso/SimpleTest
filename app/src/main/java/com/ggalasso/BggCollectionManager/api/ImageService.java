@@ -1,12 +1,16 @@
 package com.ggalasso.BggCollectionManager.api;
 
+import android.app.Application;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -15,6 +19,18 @@ import java.util.concurrent.ExecutionException;
 
 
 public class ImageService {
+    private String imgStorageDir;
+
+    public String getImgStorageDir() {
+        return imgStorageDir;
+    }
+
+    public void setImgStorageDir(Context ctx) {
+        this.imgStorageDir = Environment.getExternalStorageDirectory()
+                + "/Andoid/data/"
+                + ctx.getString(ctx.getApplicationInfo().labelRes)
+                + "/img_t";
+    }
 
     public Bitmap getImage(String url) {
         try {
@@ -59,6 +75,29 @@ public class ImageService {
             }
             return bm;
         }
+    }
+
+    public void storeImage(Context ctx, Bitmap image) {
+        File pic = getOutputMediaFile(ctx);
+
+    }
+
+    private File getOutputMediaFile(Context ctx) {
+        Log.d("BGCM-IS-File","External Storage State: " + Environment.getExternalStorageState());           // mounted
+        Log.d("BGCM-IS-File", "Data Directory: " + Environment.getDataDirectory());                         // /data
+        Log.d("BGCM-IS-File", "Ext Storage Directory: " + Environment.getExternalStorageDirectory());       // /storage/emulated/0
+        Log.d("BGCM-IS-File", "Root Directory: " + Environment.getRootDirectory());                         // /system
+        Log.d("BGCM-IS-File", "Package Name: " + ctx.getApplicationInfo().packageName);                     // com.ggalasso.BggCollectionManager FROM AndroidManifest.xml
+        Log.d("BGCM-IS-File", "labelRes is: " + ctx.getApplicationInfo().labelRes);                         // 2131034130
+        Log.d("BGCM-IS-File", "labelRes converted: " + ctx.getString(ctx.getApplicationInfo().labelRes));   // BGGCM FOM AndroidManifest.xml
+
+        if (getImgStorageDir() == null){
+            setImgStorageDir(ctx);
+        }
+
+        File mediaStorageDir = new File(getImgStorageDir());
+
+        return null;
     }
 }
 

@@ -53,10 +53,10 @@ public class MainActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         String username = getIntent().getStringExtra("UserName");
 
-
+        ImageService img = new ImageService();
+        img.storeImage(ctx, null);
 
         Log.d("BGCM-MA","Username = " + username);
         setTitle("Collection for " + username);
