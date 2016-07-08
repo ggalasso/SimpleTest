@@ -90,7 +90,7 @@ public class MainActivity extends ListActivity {
 
         bgm.getIdListString();
 
-        bgtCon.syncBoardGameCollection(bgm.getBoardGames());
+        bgtCon.syncBoardGameCollection(ctx, bgm.getBoardGames());
 
         ArrayList<BoardGame> bgList = bgtCon.fetchAllBoardGames();
 

@@ -82,14 +82,26 @@ public class ImageService {
 
     }
 
+    public void deleteImageDirectory(Context ctx){
+        if (getImgStorageDir() == null){
+            setImgStorageDir(ctx);
+        }
+
+        deleteRecursive(new File(getImgStorageDir()));
+    }
+
+    private void deleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory()) {
+            for (File child : fileOrDirectory.listFiles()) {
+                Log.d("BGCM-IS", child.getName() + " was deleted");
+                deleteRecursive(child);
+            }
+        }
+        fileOrDirectory.delete();
+    }
+
     private File getOutputMediaFile(Context ctx) {
-        Log.d("BGCM-IS-File","External Storage State: " + Environment.getExternalStorageState());           // mounted
-        Log.d("BGCM-IS-File", "Data Directory: " + Environment.getDataDirectory());                         // /data
-        Log.d("BGCM-IS-File", "Ext Storage Directory: " + Environment.getExternalStorageDirectory());       // /storage/emulated/0
-        Log.d("BGCM-IS-File", "Root Directory: " + Environment.getRootDirectory());                         // /system
-        Log.d("BGCM-IS-File", "Package Name: " + ctx.getApplicationInfo().packageName);                     // com.ggalasso.BggCollectionManager FROM AndroidManifest.xml
-        Log.d("BGCM-IS-File", "labelRes is: " + ctx.getApplicationInfo().labelRes);                         // 2131034130
-        Log.d("BGCM-IS-File", "labelRes converted: " + ctx.getString(ctx.getApplicationInfo().labelRes));   // BGGCM FOM AndroidManifest.xml
+        Log.d("BGCM-IS-File","External Storage State: " + Environment.getExternalStorageState());
 
         if (getImgStorageDir() == null){
             setImgStorageDir(ctx);
