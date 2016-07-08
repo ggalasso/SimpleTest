@@ -61,17 +61,5 @@ public class ImageService {
         }
     }
 }
-//    private class getImageFromURL extends AsyncTask<String, Void, Drawable> {
-//        @Override
-//        protected Drawable doInBackground(String... params) {
-//            try {
-//                InputStream is = (InputStream) new URL(params[0]).getContent();
-//                Drawable d = Drawable.createFromStream(is, "src name");
-//                return d;
-//            } catch (Exception e) {
-//                return null;
-//            }
-//        }
-//    }
-//}
+
 
