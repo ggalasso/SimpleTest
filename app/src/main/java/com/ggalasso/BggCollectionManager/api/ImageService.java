@@ -16,7 +16,7 @@ import java.util.concurrent.ExecutionException;
 
 public class ImageService {
 
-    public Drawable getImage(String url) {
+    public Bitmap getImage(String url) {
         try {
             return callImageService(url);
         } catch (ExecutionException e) {
@@ -27,11 +27,11 @@ public class ImageService {
         return null;
     }
 
-    private Drawable callImageService(String url) throws ExecutionException, InterruptedException {
+    private Bitmap callImageService(String url) throws ExecutionException, InterruptedException {
         Log.i("BGCM-IS", "Attempting to download data from: " + url);
-        AsyncTask<String, Void, Drawable> getImageTask = new getImageFromURL().execute(url);
+        AsyncTask<String, Void, Bitmap> getImageTask = new getImageFromURL().execute(url);
         try {
-            Drawable result = getImageTask.get();
+            Bitmap result = getImageTask.get();
             return result;
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -41,36 +41,36 @@ public class ImageService {
         return null;
     }
 
-    private class getImageFromURL extends AsyncTask<String, Void, Drawable> {
+    private class getImageFromURL extends AsyncTask<String, Void, Bitmap> {
         @Override
-        protected Drawable doInBackground(String... params) {
+        protected Bitmap doInBackground(String... params) {
+            Bitmap bm = null;
             try {
-                InputStream is = (InputStream) new URL(params[0]).getContent();
-                Drawable d = Drawable.createFromStream(is, "src name");
-                return d;
-            } catch (Exception e) {
-                return null;
+                URL aURL = new URL(params[0]);
+                URLConnection conn = aURL.openConnection();
+                conn.connect();
+                InputStream is = conn.getInputStream();
+                BufferedInputStream bis = new BufferedInputStream(is);
+                bm = BitmapFactory.decodeStream(bis);
+                bis.close();
+                is.close();
+            } catch (IOException e) {
+                Log.e("BGCM-IS", "Error getting bitmap from: " + params[0], e);
             }
+            return bm;
         }
     }
 }
-//    private class getImageFromURL extends AsyncTask<String, Void, Bitmap> {
+//    private class getImageFromURL extends AsyncTask<String, Void, Drawable> {
 //        @Override
-//        protected Bitmap doInBackground(String... params) {
-//            Bitmap bm = null;
+//        protected Drawable doInBackground(String... params) {
 //            try {
-//                URL aURL = new URL(params[0]);
-//                URLConnection conn = aURL.openConnection();
-//                conn.connect();
-//                InputStream is = conn.getInputStream();
-//                BufferedInputStream bis = new BufferedInputStream(is);
-//                bm = BitmapFactory.decodeStream(bis);
-//                bis.close();
-//                is.close();
-//            } catch (IOException e) {
-//                Log.e("BGCM-IS", "Error getting bitmap from: " + params[0], e);
+//                InputStream is = (InputStream) new URL(params[0]).getContent();
+//                Drawable d = Drawable.createFromStream(is, "src name");
+//                return d;
+//            } catch (Exception e) {
+//                return null;
 //            }
-//            return bm;
 //        }
 //    }
 //}

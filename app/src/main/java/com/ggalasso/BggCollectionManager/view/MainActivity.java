@@ -44,8 +44,6 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Map;
 
-/// TODO : Create Layout for Main Activity
-
 public class MainActivity extends ListActivity {
     Context ctx = this;
     private ArrayList<BoardGame> bgList;
@@ -175,8 +173,8 @@ public class MainActivity extends ListActivity {
             gamePlayersView.setText(bg.getMinMaxPlayersToString());
 
             //Call the Image Service to git the bitmap for the ImageView
-            Drawable b = new ImageService().getImage(bg.getThumbnailURL());
-            thumbImg.setImageDrawable(b);
+            Bitmap b = new ImageService().getImage(bg.getThumbnailURL());
+            thumbImg.setImageBitmap(b);
 
             return view;
         }
