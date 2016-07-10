@@ -9,6 +9,8 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 
+import com.ggalasso.BggCollectionManager.BuildConfig;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -25,10 +27,10 @@ public class ImageService {
         return imgStorageDir;
     }
 
-    public void setImgStorageDir(Context ctx) {
+    public void setImgStorageDir() {
         this.imgStorageDir = Environment.getExternalStorageDirectory()
                 + "/Andoid/data/"
-                + ctx.getString(ctx.getApplicationInfo().labelRes)
+                + BuildConfig.APPLICATION_ID
                 + "/img_t";
     }
 
@@ -77,14 +79,14 @@ public class ImageService {
         }
     }
 
-    public void storeImage(Context ctx, Bitmap image) {
-        File pic = getOutputMediaFile(ctx);
+    public void storeImage(Bitmap image) {
+        File pic = getOutputMediaFile();
 
     }
 
-    public void deleteImageDirectory(Context ctx){
+    public void deleteImageDirectory(){
         if (getImgStorageDir() == null){
-            setImgStorageDir(ctx);
+            setImgStorageDir();
         }
 
         deleteRecursive(new File(getImgStorageDir()));
@@ -100,11 +102,11 @@ public class ImageService {
         fileOrDirectory.delete();
     }
 
-    private File getOutputMediaFile(Context ctx) {
+    private File getOutputMediaFile() {
         Log.d("BGCM-IS-File","External Storage State: " + Environment.getExternalStorageState());
 
         if (getImgStorageDir() == null){
-            setImgStorageDir(ctx);
+            setImgStorageDir();
         }
 
         File mediaStorageDir = new File(getImgStorageDir());

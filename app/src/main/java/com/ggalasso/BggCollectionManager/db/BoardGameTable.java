@@ -27,7 +27,7 @@ public class BoardGameTable extends SQLController {
         super(c);
     }
 
-    public void syncBoardGameCollection(Context ctx, ArrayList<BoardGame> apiGames) {
+    public void syncBoardGameCollection(ArrayList<BoardGame> apiGames) {
 
         Integer rowCount = fetchTableCount(BoardGameHelper.getTableName());
 
@@ -36,15 +36,15 @@ public class BoardGameTable extends SQLController {
             Map<String,BoardGame> bgMap = markAPIvsDB(apiGames, dbGames);
             syncShallowIteratorComparison(bgMap);
         } else {
-            syncDeep(ctx, apiGames);
+            syncDeep(apiGames);
         }
         fetchTableCount(BoardGameHelper.getTableName());
     }
 
-    private void syncDeep(Context ctx, ArrayList<BoardGame> boardGames) {
+    private void syncDeep(ArrayList<BoardGame> boardGames) {
         ImageService is = new ImageService();
         deleteAllRowsFromTable(BoardGameHelper.getTableName());
-        is.deleteImageDirectory(ctx);
+        is.deleteImageDirectory();
         for(BoardGame game : boardGames) {
             insert(game);
         }

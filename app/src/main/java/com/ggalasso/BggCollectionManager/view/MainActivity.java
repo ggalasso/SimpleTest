@@ -3,14 +3,8 @@ package com.ggalasso.BggCollectionManager.view;
 import android.app.ListActivity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.text.Layout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,12 +29,6 @@ import com.ggalasso.BggCollectionManager.model.BoardGame;
 import com.ggalasso.BggCollectionManager.model.Link;
 
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -56,7 +44,7 @@ public class MainActivity extends ListActivity {
         String username = getIntent().getStringExtra("UserName");
 
         ImageService img = new ImageService();
-        img.storeImage(ctx, null);
+        img.storeImage(null);
 
         Log.d("BGCM-MA","Username = " + username);
         setTitle("Collection for " + username);
@@ -90,7 +78,7 @@ public class MainActivity extends ListActivity {
 
         bgm.getIdListString();
 
-        bgtCon.syncBoardGameCollection(ctx, bgm.getBoardGames());
+        bgtCon.syncBoardGameCollection(bgm.getBoardGames());
 
         ArrayList<BoardGame> bgList = bgtCon.fetchAllBoardGames();
 
