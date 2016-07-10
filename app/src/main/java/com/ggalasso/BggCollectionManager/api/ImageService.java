@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 
@@ -79,8 +81,21 @@ public class ImageService {
         }
     }
 
-    public void storeImage(Bitmap image) {
+    public boolean storeImage(Bitmap image) {
         File pic = getOutputMediaFile();
+        return true;
+    }
+
+    public String getFileNameFromURL(String url) {
+        int i = url.lastIndexOf("/");
+        String fileName =  url.substring(i+1, url.length());
+        return fileName;
+    }
+
+    public boolean getAndStoreImage(String url) {
+        String file = getFileNameFromURL(url);
+        Log.d("BGCM-IS", "File name: " + file);
+        return storeImage(getImage(url));
 
     }
 
@@ -102,6 +117,10 @@ public class ImageService {
         fileOrDirectory.delete();
     }
 
+    /**
+     * http://stackoverflow.com/questions/15662258/how-to-save-a-bitmap-on-internal-storage#answer-15662384
+     * Create a File for saving an image or video
+     **/
     private File getOutputMediaFile() {
         Log.d("BGCM-IS-File","External Storage State: " + Environment.getExternalStorageState());
 
@@ -111,7 +130,20 @@ public class ImageService {
 
         File mediaStorageDir = new File(getImgStorageDir());
 
-        return null;
+        // Create the storage directory if it does not exist
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                return null;
+            }
+        }
+
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
+        File mediaFile;
+        String mImageName="MI_"+ timeStamp +".jpg";
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
+        return mediaFile;
+
     }
 }
 

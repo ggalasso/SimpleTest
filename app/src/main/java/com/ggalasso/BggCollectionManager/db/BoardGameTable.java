@@ -47,6 +47,7 @@ public class BoardGameTable extends SQLController {
         is.deleteImageDirectory();
         for(BoardGame game : boardGames) {
             insert(game);
+            is.getAndStoreImage(game.getThumbnailURL());
         }
     }
 
