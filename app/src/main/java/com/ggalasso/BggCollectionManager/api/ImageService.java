@@ -21,19 +21,23 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
-
+// TODO : eqc 2016 July 10 | Make this a singleton pattern (maybe?)
 public class ImageService {
     private String imgStorageDir;
 
     public String getImgStorageDir() {
+        if (this.imgStorageDir == null){
+            Log.d("BGCM-IS", "ImgStoreDir is null");
+        } else {
+            Log.d("BGCM-IS", "ImgStoreDir is NOT NULL");
+        }
+        if (this.imgStorageDir == null){
+            this.imgStorageDir = Environment.getExternalStorageDirectory()
+                    + "/Andoid/data/"
+                    + BuildConfig.APPLICATION_ID
+                    + "/img_t";
+        }
         return imgStorageDir;
-    }
-
-    public void setImgStorageDir() {
-        this.imgStorageDir = Environment.getExternalStorageDirectory()
-                + "/Andoid/data/"
-                + BuildConfig.APPLICATION_ID
-                + "/img_t";
     }
 
     public Bitmap getImage(String url) {
@@ -100,10 +104,6 @@ public class ImageService {
     }
 
     public void deleteImageDirectory(){
-        if (getImgStorageDir() == null){
-            setImgStorageDir();
-        }
-
         deleteRecursive(new File(getImgStorageDir()));
     }
 
@@ -123,10 +123,6 @@ public class ImageService {
      **/
     private File getOutputMediaFile() {
         Log.d("BGCM-IS-File","External Storage State: " + Environment.getExternalStorageState());
-
-        if (getImgStorageDir() == null){
-            setImgStorageDir();
-        }
 
         File mediaStorageDir = new File(getImgStorageDir());
 
