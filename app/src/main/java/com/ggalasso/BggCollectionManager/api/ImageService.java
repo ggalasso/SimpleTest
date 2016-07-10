@@ -17,8 +17,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 // TODO : eqc 2016 July 10 | Make this a singleton pattern (maybe?)
@@ -85,8 +87,8 @@ public class ImageService {
         }
     }
 
-    public boolean storeImage(Bitmap image) {
-        File pic = getOutputMediaFile();
+    public boolean storeImage(Bitmap image, String fileName) {
+        File pic = getOutputMediaFile(fileName);
         return true;
     }
 
@@ -99,7 +101,7 @@ public class ImageService {
     public boolean getAndStoreImage(String url) {
         String file = getFileNameFromURL(url);
         Log.d("BGCM-IS", "File name: " + file);
-        return storeImage(getImage(url));
+        return storeImage(getImage(url),file);
 
     }
 
@@ -121,7 +123,7 @@ public class ImageService {
      * http://stackoverflow.com/questions/15662258/how-to-save-a-bitmap-on-internal-storage#answer-15662384
      * Create a File for saving an image or video
      **/
-    private File getOutputMediaFile() {
+    private File getOutputMediaFile(String fileName) {
         Log.d("BGCM-IS-File","External Storage State: " + Environment.getExternalStorageState());
 
         File mediaStorageDir = new File(getImgStorageDir());
@@ -134,10 +136,14 @@ public class ImageService {
         }
 
         // Create a media file name
-        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
+      //String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new De());
+//        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.US);
+//        String timeStamp = df.parse()
+//        Log.d("BGCM-IS", "timeStamp = " + timeStamp);
         File mediaFile;
-        String mImageName="MI_"+ timeStamp +".jpg";
-        mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
+//        String mImageName="MI_"+ timeStamp +".jpg";
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + fileName);
+        Log.d("BGCM-IS", "Media File (name - path) " + mediaFile.getName() + " - " + mediaFile.getPath());
         return mediaFile;
 
     }

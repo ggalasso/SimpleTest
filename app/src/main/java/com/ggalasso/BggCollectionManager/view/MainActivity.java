@@ -44,7 +44,7 @@ public class MainActivity extends ListActivity {
         String username = getIntent().getStringExtra("UserName");
 
         ImageService img = new ImageService();
-        img.storeImage(null);
+        //img.storeImage(null);
 
         Log.d("BGCM-MA","Username = " + username);
         setTitle("Collection for " + username);
