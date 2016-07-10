@@ -13,6 +13,8 @@ import com.ggalasso.BggCollectionManager.BuildConfig;
 
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -89,6 +91,22 @@ public class ImageService {
 
     public boolean storeImage(Bitmap image, String fileName) {
         File pic = getOutputMediaFile(fileName);
+
+        if (pic == null) {
+            Log.d("BGCM-IS", "Error creating media file, check storage permissions: ");
+            return false;
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(pic);
+            image.compress(Bitmap.CompressFormat.PNG, 90, fos);
+            Log.d("BGCM-IS", "Saved: " + fileName);
+            fos.close();
+        } catch (FileNotFoundException e) {
+            Log.d("BGCM-IS", "File not found: " + e.getMessage());
+        } catch (IOException e) {
+            Log.d("BGCM-IS", "Error accessing file: " + e.getMessage());
+        }
+
         return true;
     }
 
@@ -127,6 +145,8 @@ public class ImageService {
         Log.d("BGCM-IS-File","External Storage State: " + Environment.getExternalStorageState());
 
         File mediaStorageDir = new File(getImgStorageDir());
+
+        //TODO: Check to see if external storage is mounted and only proceed if it is.
 
         // Create the storage directory if it does not exist
         if (! mediaStorageDir.exists()){
