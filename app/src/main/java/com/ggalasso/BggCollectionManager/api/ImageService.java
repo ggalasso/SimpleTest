@@ -90,24 +90,25 @@ public class ImageService {
     }
 
     public boolean storeImage(Bitmap image, String fileName) {
-        File pic = getOutputMediaFile(fileName);
+        File imageLocation = getOutputMediaFile(fileName);
 
-        if (pic == null) {
-            Log.d("BGCM-IS", "Error creating media file, check storage permissions: ");
+        if (imageLocation == null) {
+            Log.d("BGCM-IS", "Error creating media file, something failed when generating file location.");
             return false;
         }
+
         try {
-            FileOutputStream fos = new FileOutputStream(pic);
+            FileOutputStream fos = new FileOutputStream(imageLocation);
             image.compress(Bitmap.CompressFormat.PNG, 90, fos);
             Log.d("BGCM-IS", "Saved: " + fileName);
             fos.close();
+            return true;
         } catch (FileNotFoundException e) {
             Log.d("BGCM-IS", "File not found: " + e.getMessage());
         } catch (IOException e) {
             Log.d("BGCM-IS", "Error accessing file: " + e.getMessage());
         }
-
-        return true;
+        return false;
     }
 
     public String getFileNameFromURL(String url) {
@@ -118,9 +119,8 @@ public class ImageService {
 
     public boolean getAndStoreImage(String url) {
         String file = getFileNameFromURL(url);
-        Log.d("BGCM-IS", "File name: " + file);
-        return storeImage(getImage(url),file);
-
+        Bitmap bm = getImage(url);
+        return storeImage(bm,file);
     }
 
     public void deleteImageDirectory(){
@@ -144,28 +144,28 @@ public class ImageService {
     private File getOutputMediaFile(String fileName) {
         Log.d("BGCM-IS-File","External Storage State: " + Environment.getExternalStorageState());
 
-        File mediaStorageDir = new File(getImgStorageDir());
-
         //TODO: Check to see if external storage is mounted and only proceed if it is.
+        File mediaStorageDir;
+        if (!Environment.getExternalStorageState().equals("mounted")) {
+            Log.d("BGCM-IS-File","ERROR - The media is not mounted" + Environment.getExternalStorageState());
+            return null;
+        } else {
+            mediaStorageDir = new File(getImgStorageDir());
+        }
 
         // Create the storage directory if it does not exist
         if (! mediaStorageDir.exists()){
             if (! mediaStorageDir.mkdirs()){
+                Log.d("BGCM-IS-File","ERROR!!!!: Couldn't make directory!");
                 return null;
             }
         }
 
         // Create a media file name
-      //String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new De());
-//        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.US);
-//        String timeStamp = df.parse()
-//        Log.d("BGCM-IS", "timeStamp = " + timeStamp);
         File mediaFile;
-//        String mImageName="MI_"+ timeStamp +".jpg";
         mediaFile = new File(mediaStorageDir.getPath() + File.separator + fileName);
         Log.d("BGCM-IS", "Media File (name - path) " + mediaFile.getName() + " - " + mediaFile.getPath());
         return mediaFile;
-
     }
 }
 
