@@ -14,7 +14,6 @@ import java.util.ArrayList;
 @Root
 public class BoardGame {
 
-    public int bob;
     //Id of the Game, this is required otherwise we shouldn't be able to find the game.
     @Attribute
     private String id;

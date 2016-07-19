@@ -76,8 +76,6 @@ public class MainActivity extends ListActivity {
         xapi = new XMLApi(BoardGameManager.class, download2);
         BoardGameManager bgm = (BoardGameManager)xapi.getAPIManager();
 
-        bgm.getIdListString();
-
         bgtCon.syncBoardGameCollection(bgm.getBoardGames());
 
         ArrayList<BoardGame> bgList = bgtCon.fetchAllBoardGames();

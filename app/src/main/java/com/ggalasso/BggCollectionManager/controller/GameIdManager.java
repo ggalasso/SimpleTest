@@ -2,6 +2,7 @@ package com.ggalasso.BggCollectionManager.controller;
 
 import android.util.Log;
 
+import com.ggalasso.BggCollectionManager.api.XMLApi;
 import com.ggalasso.BggCollectionManager.model.GameId;
 
 import org.simpleframework.xml.ElementList;

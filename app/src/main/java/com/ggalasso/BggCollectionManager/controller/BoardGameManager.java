@@ -104,6 +104,7 @@ public class BoardGameManager {
 
         return bg_categories;
     }
+
     public Map<String, ArrayList<String>> getAllBoardGameMechanics() {
         Map<String, ArrayList<String>> bg_mechanics = new HashMap<>();
 
@@ -118,6 +119,10 @@ public class BoardGameManager {
         }
 
         return bg_mechanics;
+    }
+
+    public void getAndSaveAllImages(){
+
     }
 
 }
