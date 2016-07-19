@@ -11,7 +11,6 @@ import com.ggalasso.BggCollectionManager.model.BoardGame;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -133,6 +132,7 @@ public class BoardGameTable extends SQLController {
         cv.put(BoardGameHelper.bg_Rank, bg.getRank());
         cv.put(BoardGameHelper.bg_Image, bg.getImage());
         cv.put(BoardGameHelper.bg_Thumbnail, bg.getThumbnail());
+        cv.put(BoardGameHelper.bg_ThumbnailPath, bg.getThumbnailPath());
 
         super.insertToDatabase(BoardGameHelper.getTableName(), cv);
         Log.d("BGCM-BGT", "Successfully added " + bg.getId());

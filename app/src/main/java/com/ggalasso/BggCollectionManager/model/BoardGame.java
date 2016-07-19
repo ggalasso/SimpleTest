@@ -1,7 +1,5 @@
 package com.ggalasso.BggCollectionManager.model;
 
-import android.util.Log;
-
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
@@ -56,7 +54,7 @@ public class BoardGame {
     @Attribute(name = "value", required = false)
     private int minAge;
     private String syncValue;
-    private String thumbnailFilePath;
+    private String thumbnailPath;
 
     public BoardGame() {
     }
@@ -91,6 +89,41 @@ public class BoardGame {
         this.minTime = minTime;
         this.maxTime = maxTime;
         this.minAge = minAge;
+    }
+
+    // This is used to rehydrate the boardgame from the table
+    public BoardGame(
+            String id
+            , String primaryName
+            , String yearPub
+            , String description
+            , String thumbnail
+            , String image
+            , double rating
+            , String rank
+            , int minPlayers
+            , int maxPlayers
+            , int playTime
+            , int minTime
+            , int maxTime
+            , int minAge
+            , String thumbnailPath
+    ) {
+        this.id = id;
+        this.primaryName = primaryName;
+        this.yearPub = yearPub;
+        this.description = description;
+        this.thumbnail = thumbnail;
+        this.image = image;
+        this.rating = rating;
+        this.rank = rank;
+        this.minPlayers = minPlayers;
+        this.maxPlayers = maxPlayers;
+        this.playTime = playTime;
+        this.minTime = minTime;
+        this.maxTime = maxTime;
+        this.minAge = minAge;
+        this.thumbnailPath = thumbnailPath;
     }
 
     public String getId() {
@@ -168,12 +201,12 @@ public class BoardGame {
         return "http:" + thumbnail;
     }
 
-    public String getThumbnailFilePath() {
-        return thumbnailFilePath;
+    public String getThumbnailPath() {
+        return thumbnailPath;
     }
 
-    public void setThumbnailFilePath(String thumbnailFilePath) {
-        this.thumbnailFilePath = thumbnailFilePath;
+    public void setThumbnailPath(String thumbnailPath) {
+        this.thumbnailPath = thumbnailPath;
     }
 
     public String getThumbnailURLFileName() {

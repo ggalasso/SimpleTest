@@ -153,9 +153,9 @@ public class BoardGameManager {
 
     private void saveImage(ImageService is, BoardGame game) {
         if (is.getAndStoreImage(game.getThumbnailURL())) {
-            game.setThumbnailFilePath(is.getImgStorageDir() + game.getThumbnailURLFileName());
+            game.setThumbnailPath(is.getImgStorageDir() + game.getThumbnailURLFileName());
         } else {
-            game.setThumbnailFilePath("nofilepath");
+            game.setThumbnailPath("nofilepath");
             Log.d("BGCM-BGM","No file path for: " + game.getPrimaryName());
         }
     }

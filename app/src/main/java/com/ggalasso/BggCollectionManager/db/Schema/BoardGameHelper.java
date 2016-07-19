@@ -24,6 +24,7 @@ public class BoardGameHelper {
     public static final String bg_MinTime = "bg_MinTime";
     public static final String bg_MaxTime = "bg_MaxTime";
     public static final String bg_MinAge = "bg_MinAge";
+    public static final String bg_ThumbnailPath = "bg_ThumbnailPath";
 
     // Table name
     private static final String tableName = "board_game";
@@ -46,6 +47,7 @@ public class BoardGameHelper {
         columns.add(bg_MinTime + " INT");
         columns.add(bg_MaxTime + " INT");
         columns.add(bg_MinAge + " INT");
+        columns.add(bg_ThumbnailPath + " TEXT");
 
         Log.i("BGCM-BGH", "Instantiated BoardGameHelper");
     }
