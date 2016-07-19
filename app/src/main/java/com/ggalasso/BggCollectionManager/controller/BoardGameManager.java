@@ -2,6 +2,8 @@ package com.ggalasso.BggCollectionManager.controller;
 
 import android.util.Log;
 
+import com.ggalasso.BggCollectionManager.api.ImageService;
+import com.ggalasso.BggCollectionManager.db.BoardGameTable;
 import com.ggalasso.BggCollectionManager.model.BoardGame;
 import com.ggalasso.BggCollectionManager.model.Link;
 
@@ -122,7 +124,76 @@ public class BoardGameManager {
     }
 
     public void getAndSaveAllImages(){
-
+        ImageService is = new ImageService();
+        is.getImgStorageDir();
     }
 
+    public void syncBoardGameCollection(ArrayList<BoardGame> apiGames) {
+        BoardGameTable bgt = new BoardGameTable();
+        Integer rowCount = bgt.fetchBoardGameCount();
+
+        if (rowCount > 0) {
+            ArrayList<BoardGame> dbGames = bgt.fetchAllBoardGames();
+            Map<String,BoardGame> bgMap = markAPIvsDB(apiGames, dbGames);
+            syncShallowIteratorComparison(bgMap);
+        } else {
+            syncDeep(apiGames, bgt);
+        }
+    }
+
+    private void syncDeep(ArrayList<BoardGame> boardGames, BoardGameTable bgt) {
+        ImageService is = new ImageService();
+        bgt.deleteAllRowsFromTable();
+        is.deleteImageDirectory();
+        for(BoardGame game : boardGames) {
+            saveImage(is, game);
+            bgt.insert(game);
+        }
+    }
+
+    private void saveImage(ImageService is, BoardGame game) {
+        if (is.getAndStoreImage(game.getThumbnailURL())) {
+            game.setThumbnailFilePath(is.getImgStorageDir() + game.getThumbnailURLFileName());
+        } else {
+            game.setThumbnailFilePath("nofilepath");
+            Log.d("BGCM-BGM","No file path for: " + game.getPrimaryName());
+        }
+    }
+
+    protected Map<String,BoardGame> markAPIvsDB(ArrayList<BoardGame> apiGames, ArrayList<BoardGame> dbGames) {
+        Map<String,BoardGame> gameMap = new HashMap<String,BoardGame>();
+        for (BoardGame game : dbGames){
+            game.setSyncValue("DBOnly");
+            gameMap.put(game.getId(),game);
+        }
+        for (BoardGame game : apiGames){
+            String id = game.getId();
+            if (gameMap.containsKey(id)){
+                gameMap.remove(id);
+            } else {
+                game.setSyncValue("APIOnly");
+                gameMap.put(id, game);
+            }
+        }
+        return gameMap;
+    }
+
+    private void syncShallowIteratorComparison(Map<String,BoardGame> bgMap) {
+        Integer countDeleted = 0, countInserted = 0;
+
+        for (Map.Entry<String,BoardGame> game : bgMap.entrySet()){
+            BoardGame bg = game.getValue();
+            String syncVal = bg.getSyncValue();
+            Log.d("BGCM-BGT", "Id: " + bg.getId() + " Val: " + syncVal);
+            if (syncVal.equals("DBOnly")){
+                //delete(bg);
+                countDeleted++;
+            } else {
+                //insert(bg);
+                countInserted++;
+            }
+        }
+
+        Log.d("BGCM-BGT","Deleted: " + countDeleted + " Inserted New: " + countInserted);
+    }
 }

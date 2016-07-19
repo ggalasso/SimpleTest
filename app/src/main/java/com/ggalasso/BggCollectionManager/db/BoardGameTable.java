@@ -27,6 +27,10 @@ public class BoardGameTable extends SQLController {
         super(c);
     }
 
+    public int fetchBoardGameCount(){
+        return fetchTableCount(BoardGameHelper.getTableName());
+    }
+
     public void syncBoardGameCollection(ArrayList<BoardGame> apiGames) {
 
         Integer rowCount = fetchTableCount(BoardGameHelper.getTableName());
@@ -109,7 +113,11 @@ public class BoardGameTable extends SQLController {
         Log.d("BGCM-BGT","Deleted: " + countDeleted + " Inserted New: " + countInserted);
     }
 
-    private void insert(BoardGame bg) {
+    public void deleteAllRowsFromTable(){
+        deleteAllRowsFromTable(BoardGameHelper.getTableName());
+    }
+
+    public void insert(BoardGame bg) {
         ContentValues cv = new ContentValues();
         cv.put(BoardGameHelper.bg_Id, bg.getId());
         cv.put(BoardGameHelper.bg_PrimaryName, bg.getPrimaryName());

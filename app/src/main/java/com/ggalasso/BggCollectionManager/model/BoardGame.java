@@ -56,6 +56,7 @@ public class BoardGame {
     @Attribute(name = "value", required = false)
     private int minAge;
     private String syncValue;
+    private String thumbnailFilePath;
 
     public BoardGame() {
     }
@@ -167,6 +168,21 @@ public class BoardGame {
         return "http:" + thumbnail;
     }
 
+    public String getThumbnailFilePath() {
+        return thumbnailFilePath;
+    }
+
+    public void setThumbnailFilePath(String thumbnailFilePath) {
+        this.thumbnailFilePath = thumbnailFilePath;
+    }
+
+    public String getThumbnailURLFileName() {
+        String url = getThumbnailURL();
+        int i = url.lastIndexOf("/");
+        String fileName =  url.substring(i+1, url.length());
+        return fileName;
+    }
+
     public String getSyncValue() {
         return syncValue;
     }
@@ -190,7 +206,6 @@ public class BoardGame {
     public void setNames(ArrayList<Name> names) {
         this.names = names;
     }
-
 
     public ArrayList<Link> getCategoryLinks() {
         return getLinksOfType("boardgamecategory");

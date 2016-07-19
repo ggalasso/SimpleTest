@@ -112,7 +112,6 @@ public class SQLController {
         close();
     }
 
-
     protected String getRowValues(String key, ArrayList<String> values) {
         String sql_rows = "";
         for (String value : values) {
