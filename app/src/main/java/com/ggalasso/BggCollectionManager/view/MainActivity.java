@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Menu;
@@ -30,6 +31,7 @@ import com.ggalasso.BggCollectionManager.model.BoardGame;
 import com.ggalasso.BggCollectionManager.model.Link;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -167,9 +169,15 @@ public class MainActivity extends ListActivity {
 
             //Call the Image Service to git the bitmap for the ImageView
             //Bitmap b = new ImageService().getImage(bg.getThumbnailURL());
-            Bitmap b = BitmapFactory.decodeFile(bg.getThumbnailPath());
-            thumbImg.setImageBitmap(b);
 
+            //http://stackoverflow.com/questions/4181774/show-image-view-from-file-path#answer-4182060
+            File imgFile = new File(bg.getThumbnailPath());
+            if(imgFile.exists()) {
+                Bitmap b = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                thumbImg.setImageBitmap(b);
+            } else {
+                //TODO: Generic image to display if thumbnail not available
+            }
             return view;
         }
     }

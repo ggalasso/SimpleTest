@@ -11,6 +11,7 @@ import com.ggalasso.BggCollectionManager.model.Link;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -155,7 +156,7 @@ public class BoardGameManager {
 
     private void saveImage(ImageService is, BoardGame game) {
         if (is.getAndStoreImage(game.getThumbnailURL())) {
-            game.setThumbnailPath(is.getImgStorageDir() + game.getThumbnailURLFileName());
+            game.setThumbnailPath(is.getImgStorageDir() + File.separator + game.getThumbnailURLFileName());
         } else {
             game.setThumbnailPath("nofilepath");
             Log.d("BGCM-BGM","No file path for: " + game.getPrimaryName());

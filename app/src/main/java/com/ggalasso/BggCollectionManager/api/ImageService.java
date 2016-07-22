@@ -31,15 +31,10 @@ public class ImageService {
 
     public String getImgStorageDir() {
         if (this.imgStorageDir == null){
-            Log.d("BGCM-IS", "ImgStoreDir is null");
-        } else {
-            Log.d("BGCM-IS", "ImgStoreDir is NOT NULL");
-        }
-        if (this.imgStorageDir == null){
             this.imgStorageDir = Environment.getExternalStorageDirectory()
-                    + "/Andoid/data/"
+                    + "/Android/data/"
                     + BuildConfig.APPLICATION_ID
-                    + "/img_t";
+                    + "/img_t/";
         }
         return imgStorageDir;
     }
@@ -167,6 +162,8 @@ public class ImageService {
         Log.d("BGCM-IS", "Media File (name - path) " + mediaFile.getName() + " - " + mediaFile.getPath());
         return mediaFile;
     }
+
+
 }
 
 

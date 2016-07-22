@@ -172,7 +172,8 @@ public class BoardGameTable extends SQLController {
                 BoardGameHelper.bg_PlayTime,
                 BoardGameHelper.bg_MinTime,
                 BoardGameHelper.bg_MaxTime,
-                BoardGameHelper.bg_MinAge
+                BoardGameHelper.bg_MinAge,
+                BoardGameHelper.bg_ThumbnailPath
         };
 
         open();
@@ -195,6 +196,7 @@ public class BoardGameTable extends SQLController {
                         , cursor.getInt(11)
                         , cursor.getInt(12)
                         , cursor.getInt(13)
+                        , cursor.getString(14)
                 );
                 results.add(bg);
            }
