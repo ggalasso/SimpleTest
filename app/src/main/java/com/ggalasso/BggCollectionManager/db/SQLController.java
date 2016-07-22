@@ -63,6 +63,7 @@ public class SQLController {
 
     public void destroyEverything() {
         open();
+        //TODO: Should we delete the images in the image directory when deleting the database as a cleanup step?
         dbHelper.deleteDatabase(context);
         close();
     }

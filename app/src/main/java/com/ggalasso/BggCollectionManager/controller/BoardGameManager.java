@@ -1,5 +1,6 @@
 package com.ggalasso.BggCollectionManager.controller;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.ggalasso.BggCollectionManager.api.ImageService;
@@ -128,8 +129,9 @@ public class BoardGameManager {
         is.getImgStorageDir();
     }
 
-    public void syncBoardGameCollection(ArrayList<BoardGame> apiGames) {
-        BoardGameTable bgt = new BoardGameTable();
+    public void syncBoardGameCollection(Context ctx) {
+        ArrayList<BoardGame> apiGames = getBoardGames();
+        BoardGameTable bgt = new BoardGameTable(ctx);
         Integer rowCount = bgt.fetchBoardGameCount();
 
         if (rowCount > 0) {

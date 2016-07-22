@@ -3,6 +3,7 @@ package com.ggalasso.BggCollectionManager.view;
 import android.app.ListActivity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -46,6 +47,7 @@ public class MainActivity extends ListActivity {
         ImageService img = new ImageService();
         //img.storeImage(null);
 
+
         Log.d("BGCM-MA","Username = " + username);
         setTitle("Collection for " + username);
 
@@ -53,10 +55,14 @@ public class MainActivity extends ListActivity {
         BoardGameTable bgtCon = getBoardGameCollection(username);
         bgList = bgtCon.fetchAllBoardGames();
 
+        //bgtCon.destroyEverything();
+        //img.deleteImageDirectory();
+
         ListView gameListView = getListView();
         setListAdapter(new GameAdapter(this, R.layout.game_item, bgList));
 
         bgtCon.destroyEverything();
+        //img.deleteImageDirectory();
     }
 
 
@@ -76,7 +82,8 @@ public class MainActivity extends ListActivity {
         xapi = new XMLApi(BoardGameManager.class, download2);
         BoardGameManager bgm = (BoardGameManager)xapi.getAPIManager();
 
-        bgtCon.syncBoardGameCollection(bgm.getBoardGames());
+        bgm.syncBoardGameCollection(ctx);
+        //bgtCon.syncBoardGameCollection(bgm.getBoardGames());
 
         ArrayList<BoardGame> bgList = bgtCon.fetchAllBoardGames();
 
@@ -159,7 +166,8 @@ public class MainActivity extends ListActivity {
             gamePlayersView.setText(bg.getMinMaxPlayersToString());
 
             //Call the Image Service to git the bitmap for the ImageView
-            Bitmap b = new ImageService().getImage(bg.getThumbnailURL());
+            //Bitmap b = new ImageService().getImage(bg.getThumbnailURL());
+            Bitmap b = BitmapFactory.decodeFile(bg.getThumbnailPath());
             thumbImg.setImageBitmap(b);
 
             return view;

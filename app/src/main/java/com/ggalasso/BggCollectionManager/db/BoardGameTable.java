@@ -18,8 +18,10 @@ import java.util.Map;
  */
 public class BoardGameTable extends SQLController {
 
+    //Used empty constructor for unit tests. Calling it otherwise will cause the application to crash
+    //since a context is needed in the super class (SQLController).
     public BoardGameTable(){
-        
+
     }
 
     public BoardGameTable(Context c) {
