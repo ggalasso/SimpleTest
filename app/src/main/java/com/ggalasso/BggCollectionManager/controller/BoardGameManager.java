@@ -30,6 +30,7 @@ public class BoardGameManager {
             synchronized (BoardGameManager.class) {
                 if (ourInstance == null) {
                     ourInstance = new BoardGameManager();
+                    Log.d("BGCM-BGM", "!! Instantiated Board Game Manager for the first time.");
                 }
             }
         }
@@ -47,6 +48,11 @@ public class BoardGameManager {
 
     public ArrayList<BoardGame> getBoardGames() {
         return BoardGames;
+    }
+
+    public void setBoardGames(Context ctx) {
+        BoardGameTable bgt = new BoardGameTable(ctx);
+        BoardGames = bgt.fetchAllBoardGames();
     }
 
     public String getIdListString() {
@@ -199,4 +205,26 @@ public class BoardGameManager {
 
         Log.d("BGCM-BGT","Deleted: " + countDeleted + " Inserted New: " + countInserted);
     }
+
+    protected ArrayList<BoardGame> findArraylistValuesNotInSecondArraylist(ArrayList<BoardGame> arrayListLeft, ArrayList<BoardGame> arrayListRight){
+        ArrayList<BoardGame> resultList = new ArrayList<>();
+        for (BoardGame lgame: arrayListLeft) {
+            if(idInArrayList(arrayListRight, lgame.getId()) == false){
+                resultList.add(lgame);
+            }
+        }
+        return resultList;
+    }
+
+    //Check the listToCheck to see if it contains the same id for the idToCheck
+    private boolean idInArrayList(ArrayList<BoardGame> listToCheck, String idToCheck) {
+        for (BoardGame bg : listToCheck) {
+            String gameId = bg.getId();
+            if (gameId.equals(idToCheck)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

@@ -37,7 +37,6 @@ import java.util.Map;
 
 public class MainActivity extends ListActivity {
     Context ctx = this;
-    private ArrayList<BoardGame> bgList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,25 +45,16 @@ public class MainActivity extends ListActivity {
 
         String username = getIntent().getStringExtra("UserName");
 
-        ImageService img = new ImageService();
-        //img.storeImage(null);
-
-
         Log.d("BGCM-MA","Username = " + username);
         setTitle("Collection for " + username);
 
-
+        //Main series of steps
         BoardGameTable bgtCon = getBoardGameCollection(username);
-        bgList = bgtCon.fetchAllBoardGames();
-
-        //bgtCon.destroyEverything();
-        //img.deleteImageDirectory();
-
-        ListView gameListView = getListView();
-        setListAdapter(new GameAdapter(this, R.layout.game_item, bgList));
-
+        BoardGameManager bgm = BoardGameManager.getInstance();
+        //TODO: Not sure why we need to setBoardGames, if the BoardGameManager should hold a reference to all the games without removing them.
+        bgm.setBoardGames(ctx);
+        setListAdapter(new GameAdapter(this, R.layout.game_item, bgm.getBoardGames()));
         bgtCon.destroyEverything();
-        //img.deleteImageDirectory();
     }
 
 
@@ -76,8 +66,6 @@ public class MainActivity extends ListActivity {
         MechanicTable metCon = new MechanicTable(ctx);
         MechanicInGameTable migtCon = new MechanicInGameTable(ctx);
 
-//        bgtCon.destroyEverything();
-
         XMLApi xapi = new XMLApi(GameIdManager.class, "https://boardgamegeek.com/xmlapi2/collection?username="+ username +"&own=1");
         GameIdManager gim = (GameIdManager)xapi.getAPIManager();
         String download2 = "https://boardgamegeek.com/xmlapi2/thing?id=" + gim.getIdListString() + "&stats=1";
@@ -85,7 +73,6 @@ public class MainActivity extends ListActivity {
         BoardGameManager bgm = (BoardGameManager)xapi.getAPIManager();
 
         bgm.syncBoardGameCollection(ctx);
-        //bgtCon.syncBoardGameCollection(bgm.getBoardGames());
 
         ArrayList<BoardGame> bgList = bgtCon.fetchAllBoardGames();
 
@@ -93,10 +80,6 @@ public class MainActivity extends ListActivity {
         for (Link link : caLinks) {
             Log.d("BCGM-MA", "Category link is: " + link.getValue() + " id: " + link.getId() + " and type: " + link.getType());
         }
-
-//        catCon.delete("1002");
-//        catCon.delete("1001");
-//        catCon.delete("2145");
 
         Map<String, String> uniqueCategoriesMap = bgm.getUniqueCategories();
         catCon.syncCategories(uniqueCategoriesMap);
@@ -166,9 +149,6 @@ public class MainActivity extends ListActivity {
             gameTimeView.setText(bg.getMinMaxTimeToString());
             gameRatingView.setText(bg.getRatingToString());
             gamePlayersView.setText(bg.getMinMaxPlayersToString());
-
-            //Call the Image Service to git the bitmap for the ImageView
-            //Bitmap b = new ImageService().getImage(bg.getThumbnailURL());
 
             //http://stackoverflow.com/questions/4181774/show-image-view-from-file-path#answer-4182060
             File imgFile = new File(bg.getThumbnailPath());
