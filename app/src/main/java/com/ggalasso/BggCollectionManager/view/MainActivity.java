@@ -52,7 +52,9 @@ public class MainActivity extends ListActivity {
         BoardGameTable bgtCon = getBoardGameCollection(username);
         BoardGameManager bgm = BoardGameManager.getInstance();
         //TODO: Not sure why we need to setBoardGames, if the BoardGameManager should hold a reference to all the games without removing them.
-        bgm.setBoardGames(ctx);
+        BoardGameManager bgmmain = BoardGameManager.getInstance();
+        bgmmain = bgm;
+//        bgm.setBoardGames(ctx);
         setListAdapter(new GameAdapter(this, R.layout.game_item, bgm.getBoardGames()));
         bgtCon.destroyEverything();
     }
@@ -70,7 +72,8 @@ public class MainActivity extends ListActivity {
         GameIdManager gim = (GameIdManager)xapi.getAPIManager();
         String download2 = "https://boardgamegeek.com/xmlapi2/thing?id=" + gim.getIdListString() + "&stats=1";
         xapi = new XMLApi(BoardGameManager.class, download2);
-        BoardGameManager bgm = (BoardGameManager)xapi.getAPIManager();
+        BoardGameManager bgm = BoardGameManager.getInstance(); //(BoardGameManager)xapi.getAPIManager();
+        bgm.setBoardGamesFromAPI(gim.getIdListString());
 
         bgm.syncBoardGameCollection(ctx);
 
@@ -92,6 +95,9 @@ public class MainActivity extends ListActivity {
 
         Map<String, ArrayList<String>> mechanicsInGame = bgm.getAllBoardGameMechanics();
         migtCon.insertAllMechanicsInGame(mechanicsInGame);
+
+        BoardGameManager bgm2 = BoardGameManager.getInstance();
+
 
         return bgtCon;
     }

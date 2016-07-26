@@ -4,7 +4,9 @@ import android.content.Context;
 import android.util.Log;
 
 import com.ggalasso.BggCollectionManager.api.ImageService;
+import com.ggalasso.BggCollectionManager.api.XMLApi;
 import com.ggalasso.BggCollectionManager.db.BoardGameTable;
+import com.ggalasso.BggCollectionManager.model.APIBoardGames;
 import com.ggalasso.BggCollectionManager.model.BoardGame;
 import com.ggalasso.BggCollectionManager.model.Link;
 
@@ -19,22 +21,25 @@ import java.util.Map;
 @Root(name="items")
 public class BoardGameManager {
 
-    private static BoardGameManager ourInstance = null;
+    private static final Object lock = new Object();
+    private static volatile BoardGameManager ourInstance = null;
     @ElementList(entry="item", inline=true)
     private ArrayList<BoardGame> BoardGames;
 
-    private BoardGameManager() { Log.i("BGCM-BGM", "Instantiated BoardGameManager"); }
+    //private BoardGameManager() { Log.i("BGCM-BGM", "Instantiated BoardGameManager"); }
 
     public static BoardGameManager getInstance() {
-        if (ourInstance == null) {
-            synchronized (BoardGameManager.class) {
-                if (ourInstance == null) {
-                    ourInstance = new BoardGameManager();
-                    Log.d("BGCM-BGM", "!! Instantiated Board Game Manager for the first time.");
+        BoardGameManager bgm = ourInstance;
+        if (bgm == null) {
+            synchronized (lock){
+                bgm = ourInstance;
+                if (bgm == null){
+                    bgm = new BoardGameManager();
+                    ourInstance = bgm;
                 }
             }
         }
-        return ourInstance;
+        return bgm;
     }
 
     public BoardGame getBoardGameById(String id){
@@ -50,9 +55,20 @@ public class BoardGameManager {
         return BoardGames;
     }
 
-    public void setBoardGames(Context ctx) {
+    public void setBoardGames(ArrayList<BoardGame> bgList){
+        this.BoardGames = bgList;
+    }
+
+    public void setBoardGamesFromDB(Context ctx) {
         BoardGameTable bgt = new BoardGameTable(ctx);
-        BoardGames = bgt.fetchAllBoardGames();
+        setBoardGames(bgt.fetchAllBoardGames());
+    }
+
+    public void setBoardGamesFromAPI(String idList){
+        String download2 = "https://boardgamegeek.com/xmlapi2/thing?id=" + idList + "&stats=1";
+        XMLApi xapi = new XMLApi(APIBoardGames.class, download2);
+        APIBoardGames abgs = (APIBoardGames)xapi.getAPIManager();
+        setBoardGames(abgs.getBoardGames());
     }
 
     public String getIdListString() {

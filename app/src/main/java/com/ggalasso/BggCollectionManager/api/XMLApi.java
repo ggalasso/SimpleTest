@@ -3,6 +3,7 @@ package com.ggalasso.BggCollectionManager.api;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.ggalasso.BggCollectionManager.controller.BoardGameManager;
 import com.ggalasso.BggCollectionManager.controller.GameIdManager;
 
 import org.simpleframework.xml.Serializer;
@@ -45,6 +46,7 @@ public class XMLApi<T> {
         AsyncTask<String, Void, T> getGameIDTask = new getAPIResponse<T>((Class<T>) genericType).execute(url);
         try {
             T result = getGameIDTask.get();
+            BoardGameManager bgm = BoardGameManager.getInstance();
             return result;
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -68,7 +70,7 @@ public class XMLApi<T> {
             int conAttempts = 0;
             int sleepSeconds = 1 * 1000;
             int maxAttempts = 5;
-            T manager = null;
+            T apiResponse = null;
             try {
                 URL url = new URL(params[0]);
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -84,7 +86,7 @@ public class XMLApi<T> {
                 try {
                     InputStream is = new BufferedInputStream(con.getInputStream());
                     Serializer serializer = new Persister();
-                    manager = serializer.read(type, is, false);
+                    apiResponse = serializer.read(type, is, false);
 
                     Log.i("BGCM-XAPI", "Finished Serializing");
                 } finally {
@@ -95,7 +97,7 @@ public class XMLApi<T> {
             } catch (Exception e) {
                 Log.e("BGCM-XAPI", "Logging exception: " + e);
             }
-            return manager;
+            return apiResponse;
         }
     }
 }
