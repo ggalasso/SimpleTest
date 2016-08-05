@@ -1,10 +1,7 @@
 package com.ggalasso.BggCollectionManager.api;
 
-import android.app.Application;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
@@ -19,10 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 // TODO : eqc 2016 July 10 | Make this a singleton pattern (maybe?)
@@ -119,14 +112,18 @@ public class ImageService {
     }
 
     public void deleteImageDirectory(){
-        deleteRecursive(new File(getImgStorageDir()));
+        deleteFileOrDirectory(new File(getImgStorageDir()));
     }
 
-    private void deleteRecursive(File fileOrDirectory) {
+    public void deleteImageFile(File file) {
+        deleteFileOrDirectory(file);
+    }
+
+    private void deleteFileOrDirectory(File fileOrDirectory) {
         if (fileOrDirectory.isDirectory()) {
             for (File child : fileOrDirectory.listFiles()) {
                 Log.d("BGCM-IS", child.getName() + " was deleted");
-                deleteRecursive(child);
+                deleteFileOrDirectory(child);
             }
         }
         fileOrDirectory.delete();

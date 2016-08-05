@@ -147,11 +147,6 @@ public class BoardGameManager {
         return bg_mechanics;
     }
 
-    public void getAndSaveAllImages(){
-        ImageService is = new ImageService();
-        is.getImgStorageDir();
-    }
-
     public void syncBoardGameCollection(Context ctx) {
         ArrayList<BoardGame> apiGames = getBoardGames();
         BoardGameTable bgt = new BoardGameTable(ctx);
@@ -160,10 +155,14 @@ public class BoardGameManager {
         if (rowCount > 0) {
             ArrayList<BoardGame> dbGames = bgt.fetchAllBoardGames();
             Map<String,BoardGame> bgMap = markAPIvsDB(apiGames, dbGames);
-            syncShallowIteratorComparison(bgMap);
+            syncShallowIteratorComparison(bgMap, bgt);
         } else {
             syncDeep(apiGames, bgt);
         }
+
+        //TODO : Need to also retrieve the mechanics and categories from the DB when using the DB instead of the API
+        //When retrieving from the DB we are only getting board games and not mechanics and categories.
+        //Should handle the saving of mechanics and categories somewhere other than the main activity.
     }
 
     private void syncDeep(ArrayList<BoardGame> boardGames, BoardGameTable bgt) {
@@ -203,7 +202,8 @@ public class BoardGameManager {
         return gameMap;
     }
 
-    private void syncShallowIteratorComparison(Map<String,BoardGame> bgMap) {
+    private void syncShallowIteratorComparison(Map<String,BoardGame> bgMap, BoardGameTable bgt) {
+        ImageService is = new ImageService();
         Integer countDeleted = 0, countInserted = 0;
 
         for (Map.Entry<String,BoardGame> game : bgMap.entrySet()){
@@ -211,15 +211,27 @@ public class BoardGameManager {
             String syncVal = bg.getSyncValue();
             Log.d("BGCM-BGT", "Id: " + bg.getId() + " Val: " + syncVal);
             if (syncVal.equals("DBOnly")){
-                //delete(bg);
+                deleteGame(bg, bgt);
+                deleteImage(bg);
                 countDeleted++;
             } else {
-                //insert(bg);
+                bgt.insert(bg);
+                saveImage(is, bg);
                 countInserted++;
             }
         }
 
         Log.d("BGCM-BGT","Deleted: " + countDeleted + " Inserted New: " + countInserted);
+    }
+
+    private void deleteGame(BoardGame bg, BoardGameTable bgt) {
+        bgt.delete(bg);
+    }
+
+    private void deleteImage(BoardGame bg) {
+        ImageService is = new ImageService();
+        File imgFile = new File(bg.getThumbnailPath());
+        is.deleteImageFile(imgFile);
     }
 
     protected ArrayList<BoardGame> findArraylistValuesNotInSecondArraylist(ArrayList<BoardGame> arrayListLeft, ArrayList<BoardGame> arrayListRight){
@@ -241,6 +253,16 @@ public class BoardGameManager {
             }
         }
         return false;
+    }
+
+    //Development purposes only to clear out all data (both DB and images on disk)
+    public void destroyEverything(Context c) {
+        BoardGameTable bgt = new BoardGameTable(c);
+        ImageService is = new ImageService();
+        //Destroy DB
+        bgt.destroyDB();
+        //Destroy Images
+        is.deleteImageDirectory();
     }
 
 }

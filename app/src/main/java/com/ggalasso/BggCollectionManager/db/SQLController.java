@@ -61,9 +61,8 @@ public class SQLController {
         dbHelper.close();
     }
 
-    public void destroyEverything() {
+    public void destroyDB() {
         open();
-        //TODO: Should we delete the images in the image directory when deleting the database as a cleanup step?
         dbHelper.deleteDatabase(context);
         close();
     }
