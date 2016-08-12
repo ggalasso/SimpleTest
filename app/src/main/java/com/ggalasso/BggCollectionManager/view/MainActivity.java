@@ -46,7 +46,7 @@ public class MainActivity extends ListActivity {
         setTitle("Collection for " + username);
 
         //Main series of steps
-        BoardGameTable bgtCon = getBoardGameCollection(username);
+        getBoardGameCollection(username);
         BoardGameManager bgm = BoardGameManager.getInstance();
 
         setListAdapter(new GameAdapter(this, R.layout.game_item, bgm.getBoardGames()));
@@ -58,12 +58,12 @@ public class MainActivity extends ListActivity {
 
 
     @NonNull
-    private BoardGameTable getBoardGameCollection(String username) {
-        BoardGameTable bgtCon = new BoardGameTable(ctx);
-        CategoryTable catCon = new CategoryTable(ctx);
-        CategoryInGameTable cigtCon = new CategoryInGameTable(ctx);
-        MechanicTable metCon = new MechanicTable(ctx);
-        MechanicInGameTable migtCon = new MechanicInGameTable(ctx);
+    private void getBoardGameCollection(String username) {
+//        BoardGameTable bgtCon = new BoardGameTable(ctx);
+//        CategoryTable catCon = new CategoryTable(ctx);
+//        CategoryInGameTable cigtCon = new CategoryInGameTable(ctx);
+//        MechanicTable metCon = new MechanicTable(ctx);
+//        MechanicInGameTable migtCon = new MechanicInGameTable(ctx);
 
         XMLApi xapi = new XMLApi(GameIdManager.class, "https://boardgamegeek.com/xmlapi2/collection?username="+ username +"&own=1");
         GameIdManager gim = (GameIdManager)xapi.getAPIManager();
@@ -79,21 +79,21 @@ public class MainActivity extends ListActivity {
 //            Log.d("BCGM-MA", "Category link is: " + link.getValue() + " id: " + link.getId() + " and type: " + link.getType());
 //        }
 
-        Map<String, String> uniqueCategoriesMap = bgm.getUniqueCategories();
-        catCon.syncCategories(uniqueCategoriesMap);
-
-        Map<String, ArrayList<String>> categoriesInGame = bgm.getAllBoardGameCategories();
-        cigtCon.insertAllCatergoriesInGame(categoriesInGame);
-
-        Map<String, String> uniqueMechanicMap = bgm.getUniqueMechanics();
-        metCon.syncMechanics(uniqueMechanicMap);
-
-        Map<String, ArrayList<String>> mechanicsInGame = bgm.getAllBoardGameMechanics();
-        migtCon.insertAllMechanicsInGame(mechanicsInGame);
+//        Map<String, String> uniqueCategoriesMap = bgm.getUniqueCategories();
+//        catCon.syncCategories(uniqueCategoriesMap);
+//
+//        Map<String, ArrayList<String>> categoriesInGame = bgm.getAllBoardGameCategories();
+//        cigtCon.insertAllCatergoriesInGame(categoriesInGame);
+//
+//        Map<String, String> uniqueMechanicMap = bgm.getUniqueMechanics();
+//        metCon.syncMechanics(uniqueMechanicMap);
+//
+//        Map<String, ArrayList<String>> mechanicsInGame = bgm.getAllBoardGameMechanics();
+//        migtCon.insertAllMechanicsInGame(mechanicsInGame);
 
         //bgm.setBoardGames(bgtCon.fetchAllBoardGames());
 
-        return bgtCon;
+//        return bgtCon;
     }
 
     @Override

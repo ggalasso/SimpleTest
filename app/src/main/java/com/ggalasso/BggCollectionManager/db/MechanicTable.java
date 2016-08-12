@@ -5,8 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
-import com.ggalasso.BggCollectionManager.db.Schema.CategoryHelper;
+//import com.ggalasso.BggCollectionManager.db.Schema.CategoryHelper;
 import com.ggalasso.BggCollectionManager.db.Schema.MechanicHelper;
+import com.ggalasso.BggCollectionManager.db.Schema.MechanicInGameHelper;
 import com.ggalasso.BggCollectionManager.model.Link;
 import com.ggalasso.BggCollectionManager.model.UtilityConstants;
 
@@ -39,6 +40,11 @@ public class MechanicTable extends SQLController {
 
         fetchTableCount(mechanicTable);
     }
+
+    public void deleteAllRowsFromTable(){
+        deleteAllRowsFromTable(MechanicHelper.getTableName());
+    }
+
 
     public String getInsertSQL(Map<String, String> mechanicMap, String tableName, List<String> columns) {
         String insertSQL = "INSERT OR IGNORE INTO " + tableName + " (";
@@ -80,7 +86,7 @@ public class MechanicTable extends SQLController {
         open();
         ArrayList<Link> results = new ArrayList<Link>();
 
-        String filter = id == null ? null : new String(CategoryHelper.ca_Id + " = " + id);
+        String filter = id == null ? null : new String(MechanicHelper.me_Id + " = " + id);
         if (id == null) {
             filter = null;
         } else {
@@ -92,7 +98,7 @@ public class MechanicTable extends SQLController {
                 MechanicHelper.me_Name,
         };
 
-        Cursor cursor = super.executeDBQuery(CategoryHelper.getTableName(), columns, filter, null, null, null, null);
+        Cursor cursor = super.executeDBQuery(MechanicHelper.getTableName(), columns, filter, null, null, null, null);
 
         if (cursor != null) {
             while (cursor.moveToNext()) {

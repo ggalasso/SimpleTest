@@ -6,6 +6,10 @@ import android.util.Log;
 import com.ggalasso.BggCollectionManager.api.ImageService;
 import com.ggalasso.BggCollectionManager.api.XMLApi;
 import com.ggalasso.BggCollectionManager.db.BoardGameTable;
+import com.ggalasso.BggCollectionManager.db.CategoryInGameTable;
+import com.ggalasso.BggCollectionManager.db.CategoryTable;
+import com.ggalasso.BggCollectionManager.db.MechanicInGameTable;
+import com.ggalasso.BggCollectionManager.db.MechanicTable;
 import com.ggalasso.BggCollectionManager.model.APIBoardGames;
 import com.ggalasso.BggCollectionManager.model.BoardGame;
 import com.ggalasso.BggCollectionManager.model.Link;
@@ -157,6 +161,7 @@ public class BoardGameManager {
     }
 
     public void syncBoardGameCollection(Context ctx) {
+        this.ctx = ctx;
         ArrayList<BoardGame> apiGames = getBoardGames();
         BoardGameTable bgt = new BoardGameTable(ctx);
         Integer rowCount = bgt.fetchBoardGameCount();
@@ -175,7 +180,12 @@ public class BoardGameManager {
     }
 
     private void syncDeep(ArrayList<BoardGame> boardGames, BoardGameTable bgt) {
+        CategoryTable catCon = new CategoryTable(ctx);
+        CategoryInGameTable cigtCon = new CategoryInGameTable(ctx);
+        MechanicTable metCon = new MechanicTable(ctx);
+        MechanicInGameTable migtCon = new MechanicInGameTable(ctx);
         ImageService is = new ImageService();
+
         bgt.deleteAllRowsFromTable();
 
         is.deleteImageDirectory();
@@ -184,17 +194,22 @@ public class BoardGameManager {
             bgt.insert(game);
         }
 
-//        Map<String, String> uniqueCategoriesMap = bgm.getUniqueCategories();
-//        catCon.syncCategories(uniqueCategoriesMap);
-//
-//        Map<String, ArrayList<String>> categoriesInGame = bgm.getAllBoardGameCategories();
-//        cigtCon.insertAllCatergoriesInGame(categoriesInGame);
-//
-//        Map<String, String> uniqueMechanicMap = bgm.getUniqueMechanics();
-//        metCon.syncMechanics(uniqueMechanicMap);
-//
-//        Map<String, ArrayList<String>> mechanicsInGame = bgm.getAllBoardGameMechanics();
-//        migtCon.insertAllMechanicsInGame(mechanicsInGame);
+        cigtCon.deleteAllRowsFromTable();
+        migtCon.deleteAllRowsFromTable();
+        catCon.deleteAllRowsFromTable();
+        metCon.deleteAllRowsFromTable();
+
+        Map<String, String> uniqueCategoriesMap = getUniqueCategories();
+        catCon.syncCategories(uniqueCategoriesMap);
+
+        Map<String, ArrayList<String>> categoriesInGame = getAllBoardGameCategories();
+        cigtCon.insertAllCatergoriesInGame(categoriesInGame);
+
+        Map<String, String> uniqueMechanicMap = getUniqueMechanics();
+        metCon.syncMechanics(uniqueMechanicMap);
+
+        Map<String, ArrayList<String>> mechanicsInGame = getAllBoardGameMechanics();
+        migtCon.insertAllMechanicsInGame(mechanicsInGame);
     }
 
     private void saveImage(ImageService is, BoardGame game) {

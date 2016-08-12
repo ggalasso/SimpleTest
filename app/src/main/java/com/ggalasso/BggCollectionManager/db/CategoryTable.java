@@ -24,6 +24,10 @@ public class CategoryTable extends SQLController {
         super(c);
     }
 
+    public void deleteAllRowsFromTable(){
+        deleteAllRowsFromTable(CategoryHelper.getTableName());
+    }
+
     public void syncCategories(Map<String, String> categoryMap) {
         String categoryTable = CategoryHelper.getTableName();
         Integer rowCount = fetchTableCount(categoryTable);

@@ -26,6 +26,10 @@ public class MechanicInGameTable extends SQLController {
         super(c);
     }
 
+    public void deleteAllRowsFromTable(){
+        deleteAllRowsFromTable(MechanicInGameHelper.getTableName());
+    }
+
     public void insertAllMechanicsInGame(Map<String, ArrayList<String>> bgMecMap ) {
         String mechanicInGameTable = MechanicInGameHelper.getTableName();
         List<String> columns = Arrays.asList(MechanicInGameHelper.mg_bg_Id,MechanicInGameHelper.mg_me_Id);

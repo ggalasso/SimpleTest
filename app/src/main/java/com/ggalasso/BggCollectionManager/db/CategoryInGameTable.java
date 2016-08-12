@@ -27,6 +27,10 @@ public class CategoryInGameTable extends SQLController {
         super(c);
     }
 
+    public void deleteAllRowsFromTable(){
+        deleteAllRowsFromTable(CategoryInGameHelper.getTableName());
+    }
+
     public void insertAllCatergoriesInGame(Map<String, ArrayList<String>> bgCatMap ) {
         String categoryInGameTable = CategoryInGameHelper.getTableName();
 
