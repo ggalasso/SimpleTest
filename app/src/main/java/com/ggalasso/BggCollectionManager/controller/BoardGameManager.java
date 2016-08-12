@@ -25,6 +25,7 @@ public class BoardGameManager {
     private static volatile BoardGameManager ourInstance = null;
     @ElementList(entry="item", inline=true)
     private ArrayList<BoardGame> BoardGames;
+    private Context ctx;
 
     //private BoardGameManager() { Log.i("BGCM-BGM", "Instantiated BoardGameManager"); }
 
@@ -49,6 +50,14 @@ public class BoardGameManager {
             }
         }
         return null;
+    }
+
+    public Context getCtx() {
+        return ctx;
+    }
+
+    public void setCtx(Context ctx) {
+        this.ctx = ctx;
     }
 
     public ArrayList<BoardGame> getBoardGames() {
@@ -168,11 +177,24 @@ public class BoardGameManager {
     private void syncDeep(ArrayList<BoardGame> boardGames, BoardGameTable bgt) {
         ImageService is = new ImageService();
         bgt.deleteAllRowsFromTable();
+
         is.deleteImageDirectory();
         for(BoardGame game : boardGames) {
             saveImage(is, game);
             bgt.insert(game);
         }
+
+//        Map<String, String> uniqueCategoriesMap = bgm.getUniqueCategories();
+//        catCon.syncCategories(uniqueCategoriesMap);
+//
+//        Map<String, ArrayList<String>> categoriesInGame = bgm.getAllBoardGameCategories();
+//        cigtCon.insertAllCatergoriesInGame(categoriesInGame);
+//
+//        Map<String, String> uniqueMechanicMap = bgm.getUniqueMechanics();
+//        metCon.syncMechanics(uniqueMechanicMap);
+//
+//        Map<String, ArrayList<String>> mechanicsInGame = bgm.getAllBoardGameMechanics();
+//        migtCon.insertAllMechanicsInGame(mechanicsInGame);
     }
 
     private void saveImage(ImageService is, BoardGame game) {

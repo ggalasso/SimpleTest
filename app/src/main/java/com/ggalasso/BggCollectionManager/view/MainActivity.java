@@ -91,7 +91,7 @@ public class MainActivity extends ListActivity {
         Map<String, ArrayList<String>> mechanicsInGame = bgm.getAllBoardGameMechanics();
         migtCon.insertAllMechanicsInGame(mechanicsInGame);
 
-        bgm.setBoardGames(bgtCon.fetchAllBoardGames());
+        //bgm.setBoardGames(bgtCon.fetchAllBoardGames());
 
         return bgtCon;
     }
