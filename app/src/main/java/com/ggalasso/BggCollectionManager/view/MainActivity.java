@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Menu;
@@ -14,11 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ggalasso.BggCollectionManager.R;
-import com.ggalasso.BggCollectionManager.api.ImageService;
 import com.ggalasso.BggCollectionManager.api.XMLApi;
 import com.ggalasso.BggCollectionManager.controller.BoardGameManager;
 import com.ggalasso.BggCollectionManager.controller.GameIdManager;
@@ -51,12 +48,12 @@ public class MainActivity extends ListActivity {
         //Main series of steps
         BoardGameTable bgtCon = getBoardGameCollection(username);
         BoardGameManager bgm = BoardGameManager.getInstance();
-        //TODO: Not sure why we need to setBoardGames, if the BoardGameManager should hold a reference to all the games without removing them.
-        BoardGameManager bgmmain = BoardGameManager.getInstance();
-        bgmmain = bgm;
-//        bgm.setBoardGames(ctx);
+
         setListAdapter(new GameAdapter(this, R.layout.game_item, bgm.getBoardGames()));
-        bgtCon.destroyEverything();
+
+        //Cleanup for testing
+        //bgm.destroyEverything(ctx);
+
     }
 
 
@@ -77,12 +74,10 @@ public class MainActivity extends ListActivity {
 
         bgm.syncBoardGameCollection(ctx);
 
-        ArrayList<BoardGame> bgList = bgtCon.fetchAllBoardGames();
-
-        ArrayList<Link> caLinks = bgm.getCategoryLinks();
-        for (Link link : caLinks) {
-            Log.d("BCGM-MA", "Category link is: " + link.getValue() + " id: " + link.getId() + " and type: " + link.getType());
-        }
+//        ArrayList<Link> caLinks = bgm.getCategoryLinks();
+//        for (Link link : caLinks) {
+//            Log.d("BCGM-MA", "Category link is: " + link.getValue() + " id: " + link.getId() + " and type: " + link.getType());
+//        }
 
         Map<String, String> uniqueCategoriesMap = bgm.getUniqueCategories();
         catCon.syncCategories(uniqueCategoriesMap);
@@ -96,8 +91,7 @@ public class MainActivity extends ListActivity {
         Map<String, ArrayList<String>> mechanicsInGame = bgm.getAllBoardGameMechanics();
         migtCon.insertAllMechanicsInGame(mechanicsInGame);
 
-        BoardGameManager bgm2 = BoardGameManager.getInstance();
-
+        bgm.setBoardGames(bgtCon.fetchAllBoardGames());
 
         return bgtCon;
     }
@@ -157,12 +151,14 @@ public class MainActivity extends ListActivity {
             gamePlayersView.setText(bg.getMinMaxPlayersToString());
 
             //http://stackoverflow.com/questions/4181774/show-image-view-from-file-path#answer-4182060
-            File imgFile = new File(bg.getThumbnailPath());
-            if(imgFile.exists()) {
-                Bitmap b = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                thumbImg.setImageBitmap(b);
-            } else {
-                //TODO: Generic image to display if thumbnail not available
+            if (bg.getThumbnailPath() != null) {
+                File imgFile = new File(bg.getThumbnailPath());
+                if (imgFile.exists()) {
+                    Bitmap b = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                    thumbImg.setImageBitmap(b);
+                } else {
+                    //TODO: Generic image to display if thumbnail not available
+                }
             }
             return view;
         }
