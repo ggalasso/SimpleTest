@@ -22,12 +22,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-@Root(name="items")
+@Root(name = "items")
 public class BoardGameManager {
 
     private static final Object lock = new Object();
     private static volatile BoardGameManager ourInstance = null;
-    @ElementList(entry="item", inline=true)
+    @ElementList(entry = "item", inline = true)
     private ArrayList<BoardGame> BoardGames;
     private Context ctx;
 
@@ -36,9 +36,9 @@ public class BoardGameManager {
     public static BoardGameManager getInstance() {
         BoardGameManager bgm = ourInstance;
         if (bgm == null) {
-            synchronized (lock){
+            synchronized (lock) {
                 bgm = ourInstance;
-                if (bgm == null){
+                if (bgm == null) {
                     bgm = new BoardGameManager();
                     ourInstance = bgm;
                 }
@@ -47,9 +47,9 @@ public class BoardGameManager {
         return bgm;
     }
 
-    public BoardGame getBoardGameById(String id){
-        for (BoardGame game: getBoardGames()){
-            if (game.getId().equals(id)){
+    public BoardGame getBoardGameById(String id) {
+        for (BoardGame game : getBoardGames()) {
+            if (game.getId().equals(id)) {
                 return game;
             }
         }
@@ -68,7 +68,7 @@ public class BoardGameManager {
         return BoardGames;
     }
 
-    public void setBoardGames(ArrayList<BoardGame> bgList){
+    public void setBoardGames(ArrayList<BoardGame> bgList) {
         this.BoardGames = bgList;
     }
 
@@ -77,10 +77,10 @@ public class BoardGameManager {
         setBoardGames(bgt.fetchAllBoardGames());
     }
 
-    public void setBoardGamesFromAPI(String idList){
+    public void setBoardGamesFromAPI(String idList) {
         String download2 = "https://boardgamegeek.com/xmlapi2/thing?id=" + idList + "&stats=1";
         XMLApi xapi = new XMLApi(APIBoardGames.class, download2);
-        APIBoardGames abgs = (APIBoardGames)xapi.getAPIManager();
+        APIBoardGames abgs = (APIBoardGames) xapi.getAPIManager();
         setBoardGames(abgs.getBoardGames());
     }
 
@@ -131,11 +131,11 @@ public class BoardGameManager {
     public Map<String, ArrayList<String>> getAllBoardGameCategories() {
         Map<String, ArrayList<String>> bg_categories = new HashMap<>();
 
-        for (BoardGame bg: getBoardGames()) {
+        for (BoardGame bg : getBoardGames()) {
             String id = bg.getId();
             ArrayList<Link> categories = bg.getCategoryLinks();
             ArrayList<String> categoryIds = new ArrayList<>();
-            for(Link link: categories) {
+            for (Link link : categories) {
                 categoryIds.add(link.getId());
             }
             bg_categories.put(id, categoryIds);
@@ -147,11 +147,11 @@ public class BoardGameManager {
     public Map<String, ArrayList<String>> getAllBoardGameMechanics() {
         Map<String, ArrayList<String>> bg_mechanics = new HashMap<>();
 
-        for (BoardGame bg: getBoardGames()) {
+        for (BoardGame bg : getBoardGames()) {
             String id = bg.getId();
             ArrayList<Link> mechanics = bg.getMechanicLinks();
             ArrayList<String> mechanicsIds = new ArrayList<>();
-            for(Link link: mechanics) {
+            for (Link link : mechanics) {
                 mechanicsIds.add(link.getId());
             }
             bg_mechanics.put(id, mechanicsIds);
@@ -162,21 +162,23 @@ public class BoardGameManager {
 
     public void syncBoardGameCollection(Context ctx) {
         this.ctx = ctx;
+        ImageService is = new ImageService();
         ArrayList<BoardGame> apiGames = getBoardGames();
         BoardGameTable bgt = new BoardGameTable(ctx);
         Integer rowCount = bgt.fetchBoardGameCount();
 
         if (rowCount > 0) {
             ArrayList<BoardGame> dbGames = bgt.fetchAllBoardGames();
-            Map<String,BoardGame> bgMap = markAPIvsDB(apiGames, dbGames);
+            Map<String, BoardGame> bgMap = markAPIvsDB(apiGames, dbGames);
             syncShallowIteratorComparison(bgMap, bgt);
+            for (BoardGame bg : BoardGames) {
+                bg.setThumbnailPath(is.getImgStorageDir() + File.separator + is.getFileNameFromURL(bg.getThumbnailURL()));
+            }
         } else {
             syncDeep(apiGames, bgt);
         }
 
-        //TODO : Need to also retrieve the mechanics and categories from the DB when using the DB instead of the API
-        //When retrieving from the DB we are only getting board games and not mechanics and categories.
-        //Should handle the saving of mechanics and categories somewhere other than the main activity.
+
     }
 
     private void syncDeep(ArrayList<BoardGame> boardGames, BoardGameTable bgt) {
@@ -189,7 +191,7 @@ public class BoardGameManager {
         bgt.deleteAllRowsFromTable();
 
         is.deleteImageDirectory();
-        for(BoardGame game : boardGames) {
+        for (BoardGame game : boardGames) {
             saveImage(is, game);
             bgt.insert(game);
         }
@@ -217,19 +219,19 @@ public class BoardGameManager {
             game.setThumbnailPath(is.getImgStorageDir() + File.separator + game.getThumbnailURLFileName());
         } else {
             game.setThumbnailPath("nofilepath");
-            Log.d("BGCM-BGM","No file path for: " + game.getPrimaryName());
+            Log.d("BGCM-BGM", "No file path for: " + game.getPrimaryName());
         }
     }
 
-    protected Map<String,BoardGame> markAPIvsDB(ArrayList<BoardGame> apiGames, ArrayList<BoardGame> dbGames) {
-        Map<String,BoardGame> gameMap = new HashMap<String,BoardGame>();
-        for (BoardGame game : dbGames){
+    protected Map<String, BoardGame> markAPIvsDB(ArrayList<BoardGame> apiGames, ArrayList<BoardGame> dbGames) {
+        Map<String, BoardGame> gameMap = new HashMap<String, BoardGame>();
+        for (BoardGame game : dbGames) {
             game.setSyncValue("DBOnly");
-            gameMap.put(game.getId(),game);
+            gameMap.put(game.getId(), game);
         }
-        for (BoardGame game : apiGames){
+        for (BoardGame game : apiGames) {
             String id = game.getId();
-            if (gameMap.containsKey(id)){
+            if (gameMap.containsKey(id)) {
                 gameMap.remove(id);
             } else {
                 game.setSyncValue("APIOnly");
@@ -239,15 +241,15 @@ public class BoardGameManager {
         return gameMap;
     }
 
-    private void syncShallowIteratorComparison(Map<String,BoardGame> bgMap, BoardGameTable bgt) {
+    private void syncShallowIteratorComparison(Map<String, BoardGame> bgMap, BoardGameTable bgt) {
         ImageService is = new ImageService();
         Integer countDeleted = 0, countInserted = 0;
 
-        for (Map.Entry<String,BoardGame> game : bgMap.entrySet()){
+        for (Map.Entry<String, BoardGame> game : bgMap.entrySet()) {
             BoardGame bg = game.getValue();
             String syncVal = bg.getSyncValue();
             Log.d("BGCM-BGT", "Id: " + bg.getId() + " Val: " + syncVal);
-            if (syncVal.equals("DBOnly")){
+            if (syncVal.equals("DBOnly")) {
                 deleteGame(bg, bgt);
                 deleteImage(bg);
                 countDeleted++;
@@ -257,8 +259,9 @@ public class BoardGameManager {
                 countInserted++;
             }
         }
-
-        Log.d("BGCM-BGT","Deleted: " + countDeleted + " Inserted New: " + countInserted);
+        //TODO : Need to also retrieve the mechanics and categories from the DB when using the DB instead of the API
+        //When retrieving from the DB we are only getting board games and not mechanics and categories.
+        Log.d("BGCM-BGT", "Deleted: " + countDeleted + " Inserted New: " + countInserted);
     }
 
     private void deleteGame(BoardGame bg, BoardGameTable bgt) {
@@ -271,10 +274,10 @@ public class BoardGameManager {
         is.deleteImageFile(imgFile);
     }
 
-    protected ArrayList<BoardGame> findArraylistValuesNotInSecondArraylist(ArrayList<BoardGame> arrayListLeft, ArrayList<BoardGame> arrayListRight){
+    protected ArrayList<BoardGame> findArraylistValuesNotInSecondArraylist(ArrayList<BoardGame> arrayListLeft, ArrayList<BoardGame> arrayListRight) {
         ArrayList<BoardGame> resultList = new ArrayList<>();
-        for (BoardGame lgame: arrayListLeft) {
-            if(idInArrayList(arrayListRight, lgame.getId()) == false){
+        for (BoardGame lgame : arrayListLeft) {
+            if (idInArrayList(arrayListRight, lgame.getId()) == false) {
                 resultList.add(lgame);
             }
         }

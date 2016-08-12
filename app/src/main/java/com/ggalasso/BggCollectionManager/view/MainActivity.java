@@ -42,7 +42,7 @@ public class MainActivity extends ListActivity {
 
         String username = getIntent().getStringExtra("UserName");
 
-        Log.d("BGCM-MA","Username = " + username);
+        Log.d("BGCM-MA", "Username = " + username);
         setTitle("Collection for " + username);
 
         //Main series of steps
@@ -59,41 +59,11 @@ public class MainActivity extends ListActivity {
 
     @NonNull
     private void getBoardGameCollection(String username) {
-//        BoardGameTable bgtCon = new BoardGameTable(ctx);
-//        CategoryTable catCon = new CategoryTable(ctx);
-//        CategoryInGameTable cigtCon = new CategoryInGameTable(ctx);
-//        MechanicTable metCon = new MechanicTable(ctx);
-//        MechanicInGameTable migtCon = new MechanicInGameTable(ctx);
-
-        XMLApi xapi = new XMLApi(GameIdManager.class, "https://boardgamegeek.com/xmlapi2/collection?username="+ username +"&own=1");
-        GameIdManager gim = (GameIdManager)xapi.getAPIManager();
-        String download2 = "https://boardgamegeek.com/xmlapi2/thing?id=" + gim.getIdListString() + "&stats=1";
-        xapi = new XMLApi(BoardGameManager.class, download2);
-        BoardGameManager bgm = BoardGameManager.getInstance(); //(BoardGameManager)xapi.getAPIManager();
+        XMLApi xapi = new XMLApi(GameIdManager.class, "https://boardgamegeek.com/xmlapi2/collection?username=" + username + "&own=1");
+        GameIdManager gim = (GameIdManager) xapi.getAPIManager();
+        BoardGameManager bgm = BoardGameManager.getInstance();
         bgm.setBoardGamesFromAPI(gim.getIdListString());
-
         bgm.syncBoardGameCollection(ctx);
-
-//        ArrayList<Link> caLinks = bgm.getCategoryLinks();
-//        for (Link link : caLinks) {
-//            Log.d("BCGM-MA", "Category link is: " + link.getValue() + " id: " + link.getId() + " and type: " + link.getType());
-//        }
-
-//        Map<String, String> uniqueCategoriesMap = bgm.getUniqueCategories();
-//        catCon.syncCategories(uniqueCategoriesMap);
-//
-//        Map<String, ArrayList<String>> categoriesInGame = bgm.getAllBoardGameCategories();
-//        cigtCon.insertAllCatergoriesInGame(categoriesInGame);
-//
-//        Map<String, String> uniqueMechanicMap = bgm.getUniqueMechanics();
-//        metCon.syncMechanics(uniqueMechanicMap);
-//
-//        Map<String, ArrayList<String>> mechanicsInGame = bgm.getAllBoardGameMechanics();
-//        migtCon.insertAllMechanicsInGame(mechanicsInGame);
-
-        //bgm.setBoardGames(bgtCon.fetchAllBoardGames());
-
-//        return bgtCon;
     }
 
     @Override
@@ -117,8 +87,6 @@ public class MainActivity extends ListActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
 
 
     class GameAdapter extends ArrayAdapter<BoardGame> {
