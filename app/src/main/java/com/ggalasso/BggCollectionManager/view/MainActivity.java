@@ -31,7 +31,12 @@ import com.ggalasso.BggCollectionManager.model.Link;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class MainActivity extends ListActivity {
     Context ctx = this;
@@ -66,7 +71,17 @@ public class MainActivity extends ListActivity {
 
         bgm.setCtx(ctx);
         if (bgm.getDBNumberOfGames() > 0) {
-            String[] apiIDArray = gim.getIdListString().split(",");
+            List<String> apiIdArray = Arrays.asList(gim.getIdListString().split(","));
+            ArrayList<String> dbIdArray = bgm.getDBGameIds();
+
+            Set<String> dbGameSet = new HashSet<String>(dbIdArray);
+            Set<String> newGameSet = new HashSet<String>();
+            for(String id: apiIdArray) {
+                if(!dbGameSet.contains(id)) {
+                    newGameSet.add(id);
+                }
+            }
+
         }
 
         bgm.setBoardGamesFromAPI(gim.getIdListString());

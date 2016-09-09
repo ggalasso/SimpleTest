@@ -186,6 +186,11 @@ public class BoardGameManager {
         return bgt.fetchBoardGameCount();
     }
 
+    public ArrayList<String> getDBGameIds() {
+        BoardGameTable bgt = new BoardGameTable(ctx);
+        return bgt.fetchAllGameIds();
+    }
+
     private void syncDeep(ArrayList<BoardGame> boardGames, BoardGameTable bgt) {
         CategoryTable catCon = new CategoryTable(ctx);
         CategoryInGameTable cigtCon = new CategoryInGameTable(ctx);
