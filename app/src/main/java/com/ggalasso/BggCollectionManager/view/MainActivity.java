@@ -70,6 +70,7 @@ public class MainActivity extends ListActivity {
         BoardGameManager bgm = BoardGameManager.getInstance();
 
         bgm.setCtx(ctx);
+        String newGameIdString = "";
         if (bgm.getDBNumberOfGames() > 0) {
             List<String> apiIdArray = Arrays.asList(gim.getIdListString().split(","));
             ArrayList<String> dbIdArray = bgm.getDBGameIds();
@@ -82,9 +83,18 @@ public class MainActivity extends ListActivity {
                 }
             }
 
+            for(String id: newGameSet) {
+                if(newGameIdString.isEmpty()) {
+                    newGameIdString = id;
+                } else {
+                    newGameIdString += "," + id;
+                }
+            }
+            Log.d("BGCM-MA", "Found the following id's to retrieve details from the API: " + newGameIdString);
         }
 
-        bgm.setBoardGamesFromAPI(gim.getIdListString());
+        //bgm.setBoardGamesFromAPI(gim.getIdListString());
+        bgm.setBoardGamesFromAPI(newGameIdString);
         bgm.syncBoardGameCollection(ctx);
     }
 
