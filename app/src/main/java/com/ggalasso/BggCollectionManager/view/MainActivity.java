@@ -29,6 +29,7 @@ import com.ggalasso.BggCollectionManager.model.Link;
 
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -62,6 +63,12 @@ public class MainActivity extends ListActivity {
         XMLApi xapi = new XMLApi(GameIdManager.class, "https://boardgamegeek.com/xmlapi2/collection?username=" + username + "&own=1");
         GameIdManager gim = (GameIdManager) xapi.getAPIManager();
         BoardGameManager bgm = BoardGameManager.getInstance();
+
+        bgm.setCtx(ctx);
+        if (bgm.getDBNumberOfGames() > 0) {
+            String[] apiIDArray = gim.getIdListString().split(",");
+        }
+
         bgm.setBoardGamesFromAPI(gim.getIdListString());
         bgm.syncBoardGameCollection(ctx);
     }
