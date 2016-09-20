@@ -84,9 +84,11 @@ public class BoardGameManager {
         setBoardGames(bgt.fetchAllBoardGames());
     }
 
-    public void setBoardGamesFromAPI(String idList) {
-        String download2 = "https://boardgamegeek.com/xmlapi2/thing?id=" + idList + "&stats=1";
-        XMLApi xapi = new XMLApi(APIBoardGames.class, download2);
+    public void setBoardGamesFromAPI(String username) {
+        XMLApi xapi = new XMLApi(GameIdManager.class, "https://boardgamegeek.com/xmlapi2/collection?username=" + username + "&own=1");
+        GameIdManager gim = (GameIdManager) xapi.getAPIManager();
+        String download2 = "https://boardgamegeek.com/xmlapi2/thing?id=" + gim.getIdListString() + "&stats=1";
+        xapi = new XMLApi(APIBoardGames.class, download2);
         APIBoardGames abgs = (APIBoardGames) xapi.getAPIManager();
         setBoardGames(abgs.getBoardGames());
     }
@@ -167,26 +169,24 @@ public class BoardGameManager {
         return bg_mechanics;
     }
 
-    public void syncBoardGameCollection(Context ctx) {
-        this.ctx = ctx;
-        ImageService is = new ImageService();
-        ArrayList<BoardGame> apiGames = getBoardGames();
-        BoardGameTable bgt = new BoardGameTable(ctx);
-        Integer rowCount = bgt.fetchBoardGameCount();
-
-        if (rowCount > 0) {
-            ArrayList<BoardGame> dbGames = bgt.fetchAllBoardGames();
-            Map<String, BoardGame> bgMap = markAPIvsDB(apiGames, dbGames);
-            syncShallowIteratorComparison(bgMap, bgt);
-            for (BoardGame bg : BoardGames) {
-                bg.setThumbnailPath(is.getImgStorageDir() + File.separator + is.getFileNameFromURL(bg.getThumbnailURL()));
-            }
-        } else {
-            syncDeep(apiGames, bgt);
-        }
-
-
-    }
+//    public void syncBoardGameCollection(Context ctx) {
+//        this.ctx = ctx;
+//        ImageService is = new ImageService();
+//        ArrayList<BoardGame> apiGames = getBoardGames();
+//        BoardGameTable bgt = new BoardGameTable(ctx);
+//        Integer rowCount = bgt.fetchBoardGameCount();
+//
+//        if (rowCount > 0) {
+//            ArrayList<BoardGame> dbGames = bgt.fetchAllBoardGames();
+//            Map<String, BoardGame> bgMap = markAPIvsDB(apiGames, dbGames);
+//            syncShallowIteratorComparison(bgMap, bgt);
+//            for (BoardGame bg : BoardGames) {
+//                bg.setThumbnailPath(is.getImgStorageDir() + File.separator + is.getFileNameFromURL(bg.getThumbnailURL()));
+//            }
+//        } else {
+//            syncDeep(apiGames, bgt);
+//        }
+//    }
 
     public int getDBNumberOfGames() {
         BoardGameTable bgt = new BoardGameTable(ctx);
@@ -198,26 +198,24 @@ public class BoardGameManager {
         return bgt.fetchAllGameIds();
     }
 
-    private void syncDeep(ArrayList<BoardGame> boardGames, BoardGameTable bgt) {
+    private void syncDeep() {
+        String username = "truthd";
+        deleteAllBoardGameData();
+        setBoardGamesFromAPI(username);
+        saveAllBoardGameData();
+    }
+
+    private void saveAllBoardGameData(){
+        ImageService is = new ImageService();
+        BoardGameTable bgt = new BoardGameTable(ctx);
+        MechanicInGameTable migtCon = new MechanicInGameTable(ctx);
         CategoryTable catCon = new CategoryTable(ctx);
         CategoryInGameTable cigtCon = new CategoryInGameTable(ctx);
         MechanicTable metCon = new MechanicTable(ctx);
-        MechanicInGameTable migtCon = new MechanicInGameTable(ctx);
-        ImageService is = new ImageService();
-
-        bgt.deleteAllRowsFromTable();
-
-        is.deleteImageDirectory();
-        for (BoardGame game : boardGames) {
+        for (BoardGame game : this.getBoardGames()) {
             saveImage(is, game);
             bgt.insert(game);
         }
-
-        cigtCon.deleteAllRowsFromTable();
-        migtCon.deleteAllRowsFromTable();
-        catCon.deleteAllRowsFromTable();
-        metCon.deleteAllRowsFromTable();
-
         Map<String, String> uniqueCategoriesMap = getUniqueCategories();
         catCon.syncCategories(uniqueCategoriesMap);
 
@@ -229,6 +227,31 @@ public class BoardGameManager {
 
         Map<String, ArrayList<String>> mechanicsInGame = getAllBoardGameMechanics();
         migtCon.insertAllMechanicsInGame(mechanicsInGame);
+    }
+
+    private void deleteAllBoardGameData() {
+        deleteAllGameDataFromTables();
+        deleteAllGameImagesFromFile();
+    }
+
+    private void deleteAllGameImagesFromFile() {
+        ImageService is = new ImageService();
+        is.deleteImageDirectory();
+    }
+
+    private void deleteAllGameDataFromTables() {
+        BoardGameTable bgt = new BoardGameTable(ctx);
+        CategoryTable catCon = new CategoryTable(ctx);
+        CategoryInGameTable cigtCon = new CategoryInGameTable(ctx);
+        MechanicTable metCon = new MechanicTable(ctx);
+        MechanicInGameTable migtCon = new MechanicInGameTable(ctx);
+
+        bgt.deleteAllRowsFromTable();
+
+        cigtCon.deleteAllRowsFromTable();
+        migtCon.deleteAllRowsFromTable();
+        catCon.deleteAllRowsFromTable();
+        metCon.deleteAllRowsFromTable();
     }
 
     private void saveImage(ImageService is, BoardGame game) {
@@ -338,15 +361,18 @@ public class BoardGameManager {
     }
 
     public void loadBoardGameCollection(String username) {
+        boolean request_to_delete_everything = false;
         XMLApi xapi = new XMLApi(GameIdManager.class, "https://boardgamegeek.com/xmlapi2/collection?username=" + username + "&own=1");
         GameIdManager gim = (GameIdManager) xapi.getAPIManager();
-        BoardGameManager bgm = BoardGameManager.getInstance();
 
-        bgm.setCtx(ctx);
+        if (request_to_delete_everything || getDBNumberOfGames() == 0) {
+            syncDeep();
+        }
+
         String newGameIdString = "";
-        if (bgm.getDBNumberOfGames() > 0) {
+        if (getDBNumberOfGames() > 0) {
             List<String> apiIdArray = Arrays.asList(gim.getIdListString().split(","));
-            ArrayList<String> dbIdArray = bgm.getDBGameIds();
+            ArrayList<String> dbIdArray = getDBGameIds();
 
             // Adding new games from API to DB
             Set<String> dbGameSet = new HashSet<String>(dbIdArray);
@@ -369,20 +395,19 @@ public class BoardGameManager {
             Set<String> deleteGameSet = new HashSet<>();
             for (String id : dbIdArray) {
                 if (!apiGameSet.contains(id)) {
-                    bgm.deleteGameById(id);
+                    deleteGameById(id);
                 }
             }
 
-            bgm.deleteGameById("1032");
+            deleteGameById("1032");
 
             Log.d("BGCM-MA", "Found the following id's to retrieve details from the API: " + newGameIdString);
             if (!newGameIdString.isEmpty()) {
-                bgm.setBoardGamesFromAPI(newGameIdString);
+                setBoardGamesFromAPI(newGameIdString);
             }
         } else {
-            bgm.setBoardGamesFromAPI(gim.getIdListString());
+            setBoardGamesFromAPI(gim.getIdListString());
         }
-
-        bgm.syncBoardGameCollection(ctx);
+//        syncBoardGameCollection(ctx);
     }
 }
