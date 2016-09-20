@@ -178,6 +178,10 @@ public class BoardGameManager {
 //        Map<String, BoardGame> bgMap = markAPIvsDB(apiGames, dbGames);
 //        syncShallowIteratorComparison(bgMap, bgt);
 
+        // TODO: Get Db Games to find games that need to be deleted from the database, which are the ones not in the
+        // API Call.
+        // Then Get the DB Games, combine them with the API Games from earlier in this code and set it to the
+        // BoardGameManager Collection.
 
         for (BoardGame bg : BoardGames) {
             bg.setThumbnailPath(is.getImgStorageDir() + File.separator + is.getFileNameFromURL(bg.getThumbnailURL()));
