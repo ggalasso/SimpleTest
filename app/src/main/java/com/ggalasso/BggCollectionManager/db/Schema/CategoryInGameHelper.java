@@ -27,8 +27,8 @@ public class CategoryInGameHelper {
 
         columns.add(cg_bg_Id + " TEXT");
         columns.add(cg_ca_Id + " TEXT");
-        columns.add("FOREIGN KEY(cg_bg_Id) REFERENCES " + bg_table_name + "(" + bg_Id + ")");
-        columns.add("FOREIGN KEY(cg_ca_Id) REFERENCES " + ca_table_name + "(" + ca_Id + ")");
+        columns.add("FOREIGN KEY(cg_bg_Id) REFERENCES " + bg_table_name + "(" + bg_Id + ") ON DELETE CASCADE");
+        columns.add("FOREIGN KEY(cg_ca_Id) REFERENCES " + ca_table_name + "(" + ca_Id + ") ON DELETE CASCADE");
 
         Log.i("BGCM-CIG", "Instantiated CategoryHelper");
     }

@@ -148,7 +148,7 @@ public class BoardGameTable extends SQLController {
         if (result > 0) {
             Log.d("BGCM-BGT", "Successfully deleted boardgame " + id + " as STRING");
         } else {
-            Log.d("BGCM-BGT", "Unable to delete boardgame, STRING id: " + id);
+            Log.d("BGCM-BGT", "Unable to delete boardgame, STRING id: " + id + "; Result = " + result);
         }
         super.close();
     }

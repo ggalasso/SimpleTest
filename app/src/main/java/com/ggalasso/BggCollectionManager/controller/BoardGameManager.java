@@ -1,6 +1,7 @@
 package com.ggalasso.BggCollectionManager.controller;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.ggalasso.BggCollectionManager.api.ImageService;
@@ -10,6 +11,8 @@ import com.ggalasso.BggCollectionManager.db.CategoryInGameTable;
 import com.ggalasso.BggCollectionManager.db.CategoryTable;
 import com.ggalasso.BggCollectionManager.db.MechanicInGameTable;
 import com.ggalasso.BggCollectionManager.db.MechanicTable;
+import com.ggalasso.BggCollectionManager.db.Schema.CategoryInGameHelper;
+import com.ggalasso.BggCollectionManager.db.Schema.MechanicInGameHelper;
 import com.ggalasso.BggCollectionManager.model.APIBoardGames;
 import com.ggalasso.BggCollectionManager.model.BoardGame;
 import com.ggalasso.BggCollectionManager.model.Link;
@@ -19,8 +22,12 @@ import org.simpleframework.xml.Root;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Root(name = "items")
 public class BoardGameManager {
@@ -315,4 +322,67 @@ public class BoardGameManager {
         is.deleteImageDirectory();
     }
 
+    public void deleteGameById(String id) {
+        // Delete From
+        BoardGameTable bgt = new BoardGameTable(ctx);
+        CategoryInGameTable cigt = new CategoryInGameTable(ctx);
+        MechanicInGameTable migt = new MechanicInGameTable(ctx);
+
+        cigt.fetchTableCount(CategoryInGameHelper.getTableName());
+        migt.fetchTableCount(MechanicInGameHelper.getTableName());
+
+        bgt.delete(id);
+
+        cigt.fetchTableCount(CategoryInGameHelper.getTableName());
+        migt.fetchTableCount(MechanicInGameHelper.getTableName());
+    }
+
+    public void loadBoardGameCollection(String username) {
+        XMLApi xapi = new XMLApi(GameIdManager.class, "https://boardgamegeek.com/xmlapi2/collection?username=" + username + "&own=1");
+        GameIdManager gim = (GameIdManager) xapi.getAPIManager();
+        BoardGameManager bgm = BoardGameManager.getInstance();
+
+        bgm.setCtx(ctx);
+        String newGameIdString = "";
+        if (bgm.getDBNumberOfGames() > 0) {
+            List<String> apiIdArray = Arrays.asList(gim.getIdListString().split(","));
+            ArrayList<String> dbIdArray = bgm.getDBGameIds();
+
+            // Adding new games from API to DB
+            Set<String> dbGameSet = new HashSet<String>(dbIdArray);
+            Set<String> addGameSet = new HashSet<String>();
+            for (String id : apiIdArray) {
+                if (!dbGameSet.contains(id)) {
+                    addGameSet.add(id);
+                }
+            }
+            for (String id : addGameSet) {
+                if (newGameIdString.isEmpty()) {
+                    newGameIdString = id;
+                } else {
+                    newGameIdString += "," + id;
+                }
+            }
+
+            // Deleting old games that are not in API, but in DB
+            Set<String> apiGameSet = new HashSet<String>(apiIdArray);
+            Set<String> deleteGameSet = new HashSet<>();
+            for (String id : dbIdArray) {
+                if (!apiGameSet.contains(id)) {
+                    bgm.deleteGameById(id);
+                }
+            }
+
+            bgm.deleteGameById("1032");
+
+            Log.d("BGCM-MA", "Found the following id's to retrieve details from the API: " + newGameIdString);
+            if (!newGameIdString.isEmpty()) {
+                bgm.setBoardGamesFromAPI(newGameIdString);
+            }
+        } else {
+            bgm.setBoardGamesFromAPI(gim.getIdListString());
+        }
+
+        bgm.syncBoardGameCollection(ctx);
+    }
 }

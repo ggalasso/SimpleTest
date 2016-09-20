@@ -99,4 +99,19 @@ public class DBhelper extends SQLiteOpenHelper {
         Log.d("BGCM-DBH", "Table " + tableName + " was dropped.");
     }
 
+    @Override
+    public void onConfigure(SQLiteDatabase db) {
+        super.onConfigure(db);
+        Log.d("BGCM-DBH","Set Foreign Key Constraint By onConfigure");
+        db.setForeignKeyConstraintsEnabled(true);
+    }
+
+//    @Override
+//    public void onOpen(SQLiteDatabase db) {
+//        super.onOpen(db);
+//        if(!db.isReadOnly()){
+//            Log.d("BGCM-DBH","Foreign Keys Constraints Activated!!");
+//            db.execSQL("PRAGMA foreign_keys=ON;");
+//        }
+//    }
 }

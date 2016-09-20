@@ -124,7 +124,6 @@ public class SQLController {
         return "(\"" + key + "\", \"" + value + "\"),";
     }
 
-
     @NonNull
     protected String getColumns(List<String> columns) {
         String sql_columns = "";

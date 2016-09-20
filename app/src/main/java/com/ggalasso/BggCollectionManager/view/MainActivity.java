@@ -52,51 +52,66 @@ public class MainActivity extends ListActivity {
         setTitle("Collection for " + username);
 
         //Main series of steps
-        getBoardGameCollection(username);
         BoardGameManager bgm = BoardGameManager.getInstance();
+        //bgm.destroyEverything(ctx);
+        bgm.loadBoardGameCollection(username);
 
         setListAdapter(new GameAdapter(this, R.layout.game_item, bgm.getBoardGames()));
 
         //Cleanup for testing
-        //bgm.destroyEverything(ctx);
 
     }
 
 
-    @NonNull
-    private void getBoardGameCollection(String username) {
-        XMLApi xapi = new XMLApi(GameIdManager.class, "https://boardgamegeek.com/xmlapi2/collection?username=" + username + "&own=1");
-        GameIdManager gim = (GameIdManager) xapi.getAPIManager();
-        BoardGameManager bgm = BoardGameManager.getInstance();
-
-        bgm.setCtx(ctx);
-        String newGameIdString = "";
-        if (bgm.getDBNumberOfGames() > 0) {
-            List<String> apiIdArray = Arrays.asList(gim.getIdListString().split(","));
-            ArrayList<String> dbIdArray = bgm.getDBGameIds();
-
-            Set<String> dbGameSet = new HashSet<String>(dbIdArray);
-            Set<String> newGameSet = new HashSet<String>();
-            for(String id: apiIdArray) {
-                if(!dbGameSet.contains(id)) {
-                    newGameSet.add(id);
-                }
-            }
-
-            for(String id: newGameSet) {
-                if(newGameIdString.isEmpty()) {
-                    newGameIdString = id;
-                } else {
-                    newGameIdString += "," + id;
-                }
-            }
-            Log.d("BGCM-MA", "Found the following id's to retrieve details from the API: " + newGameIdString);
-        }
-
-        //bgm.setBoardGamesFromAPI(gim.getIdListString());
-        bgm.setBoardGamesFromAPI(newGameIdString);
-        bgm.syncBoardGameCollection(ctx);
-    }
+//    @NonNull
+//    private void getBoardGameCollection(String username) {
+//        XMLApi xapi = new XMLApi(GameIdManager.class, "https://boardgamegeek.com/xmlapi2/collection?username=" + username + "&own=1");
+//        GameIdManager gim = (GameIdManager) xapi.getAPIManager();
+//        BoardGameManager bgm = BoardGameManager.getInstance();
+//
+//        bgm.setCtx(ctx);
+//        String newGameIdString = "";
+//        if (bgm.getDBNumberOfGames() > 0) {
+//            List<String> apiIdArray = Arrays.asList(gim.getIdListString().split(","));
+//            ArrayList<String> dbIdArray = bgm.getDBGameIds();
+//
+//            // Adding new games from API to DB
+//            Set<String> dbGameSet = new HashSet<String>(dbIdArray);
+//            Set<String> addGameSet = new HashSet<String>();
+//            for (String id : apiIdArray) {
+//                if (!dbGameSet.contains(id)) {
+//                    addGameSet.add(id);
+//                }
+//            }
+//            for (String id : addGameSet) {
+//                if (newGameIdString.isEmpty()) {
+//                    newGameIdString = id;
+//                } else {
+//                    newGameIdString += "," + id;
+//                }
+//            }
+//
+//            // Deleting old games that are not in API, but in DB
+//            Set<String> apiGameSet = new HashSet<String>(apiIdArray);
+//            Set<String> deleteGameSet = new HashSet<>();
+//            for (String id : dbIdArray) {
+//                if (!apiGameSet.contains(id)) {
+//                    bgm.deleteGameById(id);
+//                }
+//            }
+//
+//            bgm.deleteGameById("1032");
+//
+//            Log.d("BGCM-MA", "Found the following id's to retrieve details from the API: " + newGameIdString);
+//            if (!newGameIdString.isEmpty()) {
+//                bgm.setBoardGamesFromAPI(newGameIdString);
+//            }
+//        } else {
+//            bgm.setBoardGamesFromAPI(gim.getIdListString());
+//        }
+//
+//        bgm.syncBoardGameCollection(ctx);
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
