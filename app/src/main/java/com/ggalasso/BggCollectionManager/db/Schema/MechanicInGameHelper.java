@@ -27,8 +27,8 @@ public class MechanicInGameHelper {
 
         columns.add(mg_bg_Id + " TEXT");
         columns.add(mg_me_Id + " TEXT");
-        columns.add("FOREIGN KEY(mg_bg_Id) REFERENCES " + bg_table_name + "(" + bg_Id + ") ON DELETE CASCADE");
-        columns.add("FOREIGN KEY(mg_me_Id) REFERENCES " + me_table_name + "(" + me_Id + ") ON DELETE CASCADE");
+        columns.add("FOREIGN KEY(mg_bg_Id) REFERENCES " + bg_table_name + "(" + bg_Id + ")");
+        columns.add("FOREIGN KEY(mg_me_Id) REFERENCES " + me_table_name + "(" + me_Id + ")");
 
         Log.i("BGCM-MIG", "Instantiated MechanicHelper");
     }

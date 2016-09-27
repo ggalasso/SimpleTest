@@ -99,6 +99,23 @@ public class SQLController {
         return count;
     }
 
+    public Integer fetchTableCount(String tableName, String whereClause) {
+        open();
+        Integer count = 0;
+        //mg_bg_id = 8
+        String query = "SELECT COUNT(*) FROM " + tableName + " WHERE " + whereClause;
+
+        Cursor cursor = database.rawQuery(query, null);
+        if (cursor != null) {
+            cursor.moveToNext();
+            count = cursor.getInt(0);
+        }
+        Log.d("BGCM-SQL", "Fetch Table Count = " + count);
+        close();
+        return count;
+    }
+
+
     public void dropTable(String tableName) {
         open();
         dbHelper.dropTable(database, tableName);
@@ -111,6 +128,15 @@ public class SQLController {
         Log.d("BGCM-SQL", "Deleted all rows from " + tableName);
         close();
     }
+
+    public void deleteFromTableWhere(String tableName, String whereClause) {
+        open();
+        Integer numRowsDeleted = database.delete(tableName, whereClause, null);
+        Log.d("BGCM-SQL", "Deleted rows from " + tableName + " WHERE " + whereClause + "\n\r Number of rows deleted: "
+                + numRowsDeleted );
+        close();
+    }
+
 
     protected String getRowValues(String key, ArrayList<String> values) {
         String sql_rows = "";

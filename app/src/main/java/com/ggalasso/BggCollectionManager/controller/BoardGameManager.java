@@ -169,10 +169,14 @@ public class BoardGameManager {
         return bg_mechanics;
     }
 
-    public void syncShallow() {
+    public void syncShallow(String username) {
         ImageService is = new ImageService();
-        ArrayList<BoardGame> apiGames = getBoardGames();
         BoardGameTable bgt = new BoardGameTable(ctx);
+
+        ArrayList<BoardGame> apiGamesNoteInDB = getAPIGamesNotInDB(username).getBoardGames();
+        //Pass the list of new games to be saved to the DB and file system.
+        saveAllBoardGameData(apiGamesNoteInDB);
+
 
 //        ArrayList<BoardGame> dbGames = bgt.fetchAllBoardGames();
 //        Map<String, BoardGame> bgMap = markAPIvsDB(apiGames, dbGames);
@@ -216,9 +220,24 @@ public class BoardGameManager {
         xapi = new XMLApi(APIBoardGames.class, download);
         return (APIBoardGames) xapi.getAPIManager();
 
+
     }
 
-    private void getDBGamesNotInAPI(){
+    private void getDBGamesNotInAPI(ArrayList<BoardGame> gamesInAPI){
+        GameIdManager gim = GameIdManager.getInstance();
+        List<String> apiIdArray = Arrays.asList(gim.getIdListString().split(","));
+        ArrayList<String> dbIdArray = getDBGameIds();
+
+        // Deleting old games that are not in API, but in DB
+        Set<String> apiGameSet = new HashSet<String>(apiIdArray);
+        Set<String> deleteGameSet = new HashSet<>();
+        for (String id : dbIdArray) {
+            if (!apiGameSet.contains(id)) {
+                deleteGameById(id);
+            }
+        }
+
+
 
     }
 
@@ -236,10 +255,12 @@ public class BoardGameManager {
         String username = "truthd";
         deleteAllBoardGameData();
         setBoardGamesFromAPI(username);
-        saveAllBoardGameData();
+        saveAllBoardGameData(this.getBoardGames());
     }
 
-    private void saveAllBoardGameData() {
+
+
+    private void saveAllBoardGameData(ArrayList<BoardGame> listOfGamesToSave) {
         ImageService is = new ImageService();
         BoardGameTable bgt = new BoardGameTable(ctx);
         MechanicInGameTable migtCon = new MechanicInGameTable(ctx);
@@ -247,7 +268,7 @@ public class BoardGameManager {
         CategoryInGameTable cigtCon = new CategoryInGameTable(ctx);
         MechanicTable metCon = new MechanicTable(ctx);
 
-        for (BoardGame game : this.getBoardGames()) {
+        for (BoardGame game : listOfGamesToSave) {
             saveImage(is, game);
             bgt.insert(game);
         }
@@ -389,6 +410,11 @@ public class BoardGameManager {
         cigt.fetchTableCount(CategoryInGameHelper.getTableName());
         migt.fetchTableCount(MechanicInGameHelper.getTableName());
 
+
+        //TODO Need to create a statement to grab the games in the category or mechanic table that aren't listed in
+        // the in game helper tables.
+        cigt.deleteFromTableWhere(CategoryInGameHelper.getTableName(), "cg_bg_id = " + id);
+        migt.deleteFromTableWhere(MechanicInGameHelper.getTableName(), "mg_bg_id = " + id);
         bgt.delete(id);
 
         cigt.fetchTableCount(CategoryInGameHelper.getTableName());
@@ -403,17 +429,9 @@ public class BoardGameManager {
         if (request_to_delete_everything || getDBNumberOfGames() == 0) {
             syncDeep();
         } else {
-            syncShallow();
+            syncShallow(username);
         }
 
-         // Deleting old games that are not in API, but in DB
-        Set<String> apiGameSet = new HashSet<String>(apiIdArray);
-        Set<String> deleteGameSet = new HashSet<>();
-        for (String id : dbIdArray) {
-            if (!apiGameSet.contains(id)) {
-                deleteGameById(id);
-            }
-        }
 
         deleteGameById("1032");
 
