@@ -99,6 +99,15 @@ public class SQLController {
         return count;
     }
 
+//    public Cursor fetchRawQuery(String tableName, String[] selectionArgs) {
+//        open();
+//        String tableQuery = "SELECT * FROM " + tableName;
+//        Log.d("BGCM-SQL", "ATTEMPTING RAQ QUERY = " + tableQuery + " with args: " + selectionArgs.toString());
+//        Cursor cursor = database.rawQuery(tableQuery, selectionArgs);
+//        close();
+//        return cursor;
+//    }
+
     public Integer fetchTableCount(String tableName, String whereClause) {
         open();
         Integer count = 0;

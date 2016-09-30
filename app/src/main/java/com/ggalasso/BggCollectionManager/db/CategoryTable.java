@@ -163,4 +163,26 @@ public class CategoryTable extends SQLController {
         close();
         return results;
     }
+
+    public ArrayList<String> getOrphanedCategories() {
+        ArrayList<String> results = new ArrayList<>();
+        String categoryTable = CategoryHelper.getTableName();
+
+        open();
+        String query = "SELECT ca_id FROM " + categoryTable + " EXCEPT SELECT DISTINCT cg_ca_id FROM category_in_game;";
+        Log.d("BGCM-CAT", "Attempting to find orphaned categories");
+        Cursor cursor = database.rawQuery(query, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                results.add(cursor.getString(0));
+            }
+        }
+        Log.d("BGCM-CAT", "Number of orphaned categories: " + results.size());
+        close();
+
+        return results;
+    }
 }
+
+
+

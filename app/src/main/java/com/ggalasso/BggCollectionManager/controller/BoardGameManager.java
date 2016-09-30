@@ -11,6 +11,7 @@ import com.ggalasso.BggCollectionManager.db.CategoryInGameTable;
 import com.ggalasso.BggCollectionManager.db.CategoryTable;
 import com.ggalasso.BggCollectionManager.db.MechanicInGameTable;
 import com.ggalasso.BggCollectionManager.db.MechanicTable;
+import com.ggalasso.BggCollectionManager.db.Schema.CategoryHelper;
 import com.ggalasso.BggCollectionManager.db.Schema.CategoryInGameHelper;
 import com.ggalasso.BggCollectionManager.db.Schema.MechanicInGameHelper;
 import com.ggalasso.BggCollectionManager.model.APIBoardGames;
@@ -177,6 +178,18 @@ public class BoardGameManager {
         //Pass the list of new games to be saved to the DB and file system.
         saveAllBoardGameData(apiGamesNoteInDB);
 
+        ArrayList<String> dbGamesNotInAPI = getDBGamesNotInAPI();
+        for (String id: dbGamesNotInAPI) {
+            //Game id to be deleted
+            deleteGameById(id);
+        }
+
+        //Remove any catagories or mechanics if we deleted the only game associated with them
+        CategoryTable catCon = new CategoryTable(ctx);
+        ArrayList<String> orphanedCats = catCon.getOrphanedCategories();
+
+        MechanicTable metCon = new MechanicTable(ctx);
+        ArrayList<String> orphanedMecs = metCon.getOrphanedMechanics();
 
 //        ArrayList<BoardGame> dbGames = bgt.fetchAllBoardGames();
 //        Map<String, BoardGame> bgMap = markAPIvsDB(apiGames, dbGames);
@@ -223,22 +236,22 @@ public class BoardGameManager {
 
     }
 
-    private void getDBGamesNotInAPI(ArrayList<BoardGame> gamesInAPI){
+    private ArrayList<String> getDBGamesNotInAPI(){
         GameIdManager gim = GameIdManager.getInstance();
         List<String> apiIdArray = Arrays.asList(gim.getIdListString().split(","));
         ArrayList<String> dbIdArray = getDBGameIds();
-
-        // Deleting old games that are not in API, but in DB
+        //Find the list of id's that are not in the API but are in the DB
         Set<String> apiGameSet = new HashSet<String>(apiIdArray);
-        Set<String> deleteGameSet = new HashSet<>();
+        ArrayList<String> gamesNotInAPI = new ArrayList<String>();
+        Integer deletedCount = 0;
         for (String id : dbIdArray) {
             if (!apiGameSet.contains(id)) {
-                deleteGameById(id);
+                //Add the game id to the ArrayList so we can return it
+                gamesNotInAPI.add(deletedCount, id);
+                deletedCount++;
             }
         }
-
-
-
+        return gamesNotInAPI;
     }
 
     public int getDBNumberOfGames() {
@@ -402,14 +415,12 @@ public class BoardGameManager {
     }
 
     public void deleteGameById(String id) {
-        // Delete From
         BoardGameTable bgt = new BoardGameTable(ctx);
         CategoryInGameTable cigt = new CategoryInGameTable(ctx);
         MechanicInGameTable migt = new MechanicInGameTable(ctx);
 
         cigt.fetchTableCount(CategoryInGameHelper.getTableName());
         migt.fetchTableCount(MechanicInGameHelper.getTableName());
-
 
         //TODO Need to create a statement to grab the games in the category or mechanic table that aren't listed in
         // the in game helper tables.
@@ -433,12 +444,12 @@ public class BoardGameManager {
         }
 
 
-        deleteGameById("1032");
+        //deleteGameById("1032");
 
-        Log.d("BGCM-MA", "Found the following id's to retrieve details from the API: " + newGameIdString);
-        if (!newGameIdString.isEmpty()) {
-            setBoardGamesFromAPI(newGameIdString);
-        }
-//        syncBoardGameCollection(ctx);
+        //Log.d("BGCM-MA", "Found the following id's to retrieve details from the API: " + newGameIdString);
+        //if (!newGameIdString.isEmpty()) {
+        //setBoardGamesFromAPI(newGameIdString);
+        //}
+        //syncBoardGameCollection(ctx);
     }
 }

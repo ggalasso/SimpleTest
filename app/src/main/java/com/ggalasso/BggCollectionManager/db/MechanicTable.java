@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.util.Log;
 
 //import com.ggalasso.BggCollectionManager.db.Schema.CategoryHelper;
+import com.ggalasso.BggCollectionManager.db.Schema.CategoryHelper;
 import com.ggalasso.BggCollectionManager.db.Schema.MechanicHelper;
 import com.ggalasso.BggCollectionManager.db.Schema.MechanicInGameHelper;
 import com.ggalasso.BggCollectionManager.model.Link;
@@ -175,4 +176,25 @@ public class MechanicTable extends SQLController {
         close();
         return results;
     }
+
+    public ArrayList<String> getOrphanedMechanics() {
+        ArrayList<String> results = new ArrayList<>();
+        String mechanicTable = MechanicHelper.getTableName();
+
+        open();
+        String query = "SELECT me_id FROM " + mechanicTable + " EXCEPT SELECT DISTINCT mg_me_id FROM " +
+                "mechanics_in_game;";
+        Log.d("BGCM-MEC", "Attempting to find orphaned mechanics");
+        Cursor cursor = database.rawQuery(query, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                results.add(cursor.getString(0));
+            }
+        }
+        Log.d("BGCM-MEC", "Number of orphaned mechanics: " + results.size());
+        close();
+
+        return results;
+    }
+
 }
