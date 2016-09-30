@@ -174,9 +174,13 @@ public class BoardGameManager {
         ImageService is = new ImageService();
         BoardGameTable bgt = new BoardGameTable(ctx);
 
-        ArrayList<BoardGame> apiGamesNoteInDB = getAPIGamesNotInDB(username).getBoardGames();
-        //Pass the list of new games to be saved to the DB and file system.
-        saveAllBoardGameData(apiGamesNoteInDB);
+        String newGames = getListOfNewAPIGames(username);
+        //No new games
+        if (!newGames.isEmpty()) {
+            ArrayList<BoardGame> apiGamesNoteInDB = getAPIGamesNotInDB(username).getBoardGames();
+            //Pass the list of new games to be saved to the DB and file system.
+            saveAllBoardGameData(apiGamesNoteInDB);
+        }
 
         ArrayList<String> dbGamesNotInAPI = getDBGamesNotInAPI();
         for (String id: dbGamesNotInAPI) {
@@ -205,7 +209,7 @@ public class BoardGameManager {
         }
     }
 
-    private APIBoardGames getAPIGamesNotInDB(String username){
+    private String getListOfNewAPIGames(String username) {
         XMLApi xapi = new XMLApi(GameIdManager.class, "https://boardgamegeek.com/xmlapi2/collection?username=" + username + "&own=1");
         GameIdManager gim = (GameIdManager) xapi.getAPIManager();
         String newGameIdString = "";
@@ -228,16 +232,18 @@ public class BoardGameManager {
                 newGameIdString += "," + id;
             }
         }
+        return newGameIdString;
+    }
 
+    private APIBoardGames getAPIGamesNotInDB(String newGameIdString){
         String download = "https://boardgamegeek.com/xmlapi2/thing?id=" + newGameIdString + "&stats=1";
-        xapi = new XMLApi(APIBoardGames.class, download);
+        XMLApi xapi = new XMLApi(APIBoardGames.class, download);
         return (APIBoardGames) xapi.getAPIManager();
-
-
     }
 
     private ArrayList<String> getDBGamesNotInAPI(){
         GameIdManager gim = GameIdManager.getInstance();
+        //TODO: App is crashing here when trying to get the IdListString a second time on sync shallow
         List<String> apiIdArray = Arrays.asList(gim.getIdListString().split(","));
         ArrayList<String> dbIdArray = getDBGameIds();
         //Find the list of id's that are not in the API but are in the DB
@@ -264,8 +270,7 @@ public class BoardGameManager {
         return bgt.fetchAllGameIds();
     }
 
-    private void syncDeep() {
-        String username = "truthd";
+    private void syncDeep(String username) {
         deleteAllBoardGameData();
         setBoardGamesFromAPI(username);
         saveAllBoardGameData(this.getBoardGames());
@@ -438,14 +443,11 @@ public class BoardGameManager {
         GameIdManager gim = (GameIdManager) xapi.getAPIManager();
 
         if (request_to_delete_everything || getDBNumberOfGames() == 0) {
-            syncDeep();
+            syncDeep(username);
         } else {
             syncShallow(username);
         }
-
-
         //deleteGameById("1032");
-
         //Log.d("BGCM-MA", "Found the following id's to retrieve details from the API: " + newGameIdString);
         //if (!newGameIdString.isEmpty()) {
         //setBoardGamesFromAPI(newGameIdString);
