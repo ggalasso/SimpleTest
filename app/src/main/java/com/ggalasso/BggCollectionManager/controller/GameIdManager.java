@@ -23,11 +23,12 @@ public class GameIdManager {
     }
 
     public static GameIdManager getInstance() {
+        Log.i("INFO", "Checking for Game Id Manager");
         if (ourInstance == null) {
             synchronized (GameIdManager.class) {
                 if (ourInstance == null) {
                     ourInstance = new GameIdManager();
-
+                    Log.i("INFO", "New Game Id Manager initiated");
                 }
             }
         }

@@ -38,6 +38,7 @@ public class BoardGameManager {
     @ElementList(entry = "item", inline = true)
     private ArrayList<BoardGame> BoardGames;
     private Context ctx;
+    List<String> apiIdArray;
 
     //private BoardGameManager() { Log.i("BGCM-BGM", "Instantiated BoardGameManager"); }
 
@@ -214,7 +215,8 @@ public class BoardGameManager {
         GameIdManager gim = (GameIdManager) xapi.getAPIManager();
         String newGameIdString = "";
 
-        List<String> apiIdArray = Arrays.asList(gim.getIdListString().split(","));
+        //List<String> apiIdArray = Arrays.asList(gim.getIdListString().split(","));
+        apiIdArray = Arrays.asList(gim.getIdListString().split(","));
         ArrayList<String> dbIdArray = getDBGameIds();
 
         // Adding new games from API to DB
@@ -242,9 +244,9 @@ public class BoardGameManager {
     }
 
     private ArrayList<String> getDBGamesNotInAPI(){
-        GameIdManager gim = GameIdManager.getInstance();
-        //TODO: App is crashing here when trying to get the IdListString a second time on sync shallow
-        List<String> apiIdArray = Arrays.asList(gim.getIdListString().split(","));
+        //We were calling gim.getIdListString() again here, but it was failing because it gim was null due to simple
+        //directly accessing the constructor of gim rather than calling the getInstance method. So instead we saved a
+        //local copy of the apiIdList into the bgm.
         ArrayList<String> dbIdArray = getDBGameIds();
         //Find the list of id's that are not in the API but are in the DB
         Set<String> apiGameSet = new HashSet<String>(apiIdArray);
