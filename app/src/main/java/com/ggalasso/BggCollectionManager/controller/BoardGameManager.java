@@ -205,9 +205,12 @@ public class BoardGameManager {
         // Then Get the DB Games, combine them with the API Games from earlier in this code and set it to the
         // BoardGameManager Collection.
 
-        for (BoardGame bg : BoardGames) {
-            bg.setThumbnailPath(is.getImgStorageDir() + File.separator + is.getFileNameFromURL(bg.getThumbnailURL()));
-        }
+        //for (BoardGame bg : BoardGames) {
+        //    bg.setThumbnailPath(is.getImgStorageDir() + File.separator + is.getFileNameFromURL(bg.getThumbnailURL()));
+        //}
+
+        //Assume DB is all in sync, but probably need to do more work above this to ensure it's all correct at this call
+        setBoardGamesFromDB(ctx);
     }
 
     private String getListOfNewAPIGames(String username) {

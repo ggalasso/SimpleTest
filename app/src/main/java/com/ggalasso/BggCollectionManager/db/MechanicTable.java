@@ -180,10 +180,11 @@ public class MechanicTable extends SQLController {
     public ArrayList<String> getOrphanedMechanics() {
         ArrayList<String> results = new ArrayList<>();
         String mechanicTable = MechanicHelper.getTableName();
+        String mechanicInGameTable = MechanicInGameHelper.getTableName();
 
         open();
-        String query = "SELECT me_id FROM " + mechanicTable + " EXCEPT SELECT DISTINCT mg_me_id FROM " +
-                "mechanics_in_game;";
+        String query = "SELECT me_Id FROM " + mechanicTable + " EXCEPT SELECT DISTINCT mg_me_Id FROM " +
+                mechanicInGameTable + ";";
         Log.d("BGCM-MEC", "Attempting to find orphaned mechanics");
         Cursor cursor = database.rawQuery(query, null);
         if (cursor != null) {

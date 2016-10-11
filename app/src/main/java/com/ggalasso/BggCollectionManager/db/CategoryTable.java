@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.util.Log;
 
 import com.ggalasso.BggCollectionManager.db.Schema.CategoryHelper;
+import com.ggalasso.BggCollectionManager.db.Schema.CategoryInGameHelper;
 import com.ggalasso.BggCollectionManager.model.Link;
 import com.ggalasso.BggCollectionManager.model.UtilityConstants;
 
@@ -167,9 +168,11 @@ public class CategoryTable extends SQLController {
     public ArrayList<String> getOrphanedCategories() {
         ArrayList<String> results = new ArrayList<>();
         String categoryTable = CategoryHelper.getTableName();
+        String categoryInGameTable = CategoryInGameHelper.getTableName();
 
         open();
-        String query = "SELECT ca_id FROM " + categoryTable + " EXCEPT SELECT DISTINCT cg_ca_id FROM category_in_game;";
+        String query = "SELECT ca_Id FROM " + categoryTable + " EXCEPT SELECT DISTINCT cg_ca_Id FROM " +
+                categoryInGameTable + ";";
         Log.d("BGCM-CAT", "Attempting to find orphaned categories");
         Cursor cursor = database.rawQuery(query, null);
         if (cursor != null) {
