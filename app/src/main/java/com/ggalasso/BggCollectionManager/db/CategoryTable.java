@@ -25,7 +25,7 @@ public class CategoryTable extends SQLController {
         super(c);
     }
 
-    public void deleteAllRowsFromTable(){
+    public void deleteAllRowsFromTable() {
         deleteAllRowsFromTable(CategoryHelper.getTableName());
     }
 
@@ -36,7 +36,7 @@ public class CategoryTable extends SQLController {
 
         String insertSQL = getInsertSQL(categoryMap, categoryTable, columns);
 
-         super.insertToDatabase(insertSQL);
+        super.insertToDatabase(insertSQL);
         Log.d("BGCM-CT", "Bulk insert into " + categoryTable + "\nSQL statement: " + insertSQL);
 
         fetchTableCount(categoryTable);

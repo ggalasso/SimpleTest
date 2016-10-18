@@ -18,6 +18,7 @@ import com.ggalasso.BggCollectionManager.model.APIBoardGames;
 import com.ggalasso.BggCollectionManager.model.BoardGame;
 import com.ggalasso.BggCollectionManager.model.Link;
 
+import org.junit.experimental.categories.Category;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
@@ -115,6 +116,14 @@ public class BoardGameManager {
         return categoryLinks;
     }
 
+    public ArrayList<Link> getCategoryLinks(ArrayList<BoardGame> boardGames) {
+        ArrayList<Link> categoryLinks = new ArrayList<>();
+        for (BoardGame bg : boardGames) {
+            categoryLinks.addAll(bg.getCategoryLinks());
+        }
+        return categoryLinks;
+    }
+
     public ArrayList<Link> getMechanicLinks() {
         ArrayList<Link> mechanicLinks = new ArrayList<>();
         for (BoardGame bg : getBoardGames()) {
@@ -130,6 +139,34 @@ public class BoardGameManager {
         }
         return categoryMap;
     }
+
+    public void insertNewAPICategories(ArrayList<BoardGame> listOfGamesToSave) {
+        Map<String, String> categoryMap = new HashMap<>();
+        Map<String, String> newCatMap = new HashMap<>();
+        CategoryTable cat = new CategoryTable();
+        ArrayList<String> dbCategories = cat.fetchAllCategoryIds();
+
+        // Build categoryMap to get unique categories from API Games
+        for (Link link : getCategoryLinks(listOfGamesToSave)) {
+            categoryMap.put(link.getId(), link.getValue());
+        }
+
+        // Loop through the new categories and save any ones that are not in the database
+        for (Map.Entry<String, String> category : categoryMap.entrySet()) {
+            String catId = category.getKey();
+            String catVal = category.getValue();
+            Log.d("BGCM-BGM", "Id: " + catId + " Cat: " + catVal);
+            if (!dbCategories.contains(catId)) {
+                Log.d("BGCM-BGM", "Inserting new category with id:" + catId + " and val: " + catVal);
+                newCatMap.put(catId, catVal);
+            }
+        }
+
+        if (!newCatMap.isEmpty()) {
+            cat.syncCategories(newCatMap);
+        }
+    }
+
 
     public Map<String, String> getUniqueMechanics() {
         Map<String, String> mechanicMap = new HashMap<>();
@@ -178,13 +215,13 @@ public class BoardGameManager {
         String newGames = getListOfNewAPIGames(username);
         //No new games
         if (!newGames.isEmpty()) {
-            ArrayList<BoardGame> apiGamesNoteInDB = getAPIGamesNotInDB(username).getBoardGames();
+            ArrayList<BoardGame> apiGamesNoteInDB = getAPIGamesNotInDB(newGames).getBoardGames();
             //Pass the list of new games to be saved to the DB and file system.
             saveAllBoardGameData(apiGamesNoteInDB);
         }
 
         ArrayList<String> dbGamesNotInAPI = getDBGamesNotInAPI();
-        for (String id: dbGamesNotInAPI) {
+        for (String id : dbGamesNotInAPI) {
             //Game id to be deleted
             deleteGameById(id);
         }
@@ -240,13 +277,13 @@ public class BoardGameManager {
         return newGameIdString;
     }
 
-    private APIBoardGames getAPIGamesNotInDB(String newGameIdString){
+    private APIBoardGames getAPIGamesNotInDB(String newGameIdString) {
         String download = "https://boardgamegeek.com/xmlapi2/thing?id=" + newGameIdString + "&stats=1";
         XMLApi xapi = new XMLApi(APIBoardGames.class, download);
         return (APIBoardGames) xapi.getAPIManager();
     }
 
-    private ArrayList<String> getDBGamesNotInAPI(){
+    private ArrayList<String> getDBGamesNotInAPI() {
         //We were calling gim.getIdListString() again here, but it was failing because it gim was null due to simple
         //directly accessing the constructor of gim rather than calling the getInstance method. So instead we saved a
         //local copy of the apiIdList into the bgm.
@@ -282,12 +319,10 @@ public class BoardGameManager {
     }
 
 
-
     private void saveAllBoardGameData(ArrayList<BoardGame> listOfGamesToSave) {
         ImageService is = new ImageService();
         BoardGameTable bgt = new BoardGameTable(ctx);
         MechanicInGameTable migtCon = new MechanicInGameTable(ctx);
-        CategoryTable catCon = new CategoryTable(ctx);
         CategoryInGameTable cigtCon = new CategoryInGameTable(ctx);
         MechanicTable metCon = new MechanicTable(ctx);
 
@@ -295,9 +330,11 @@ public class BoardGameManager {
             saveImage(is, game);
             bgt.insert(game);
         }
-        Map<String, String> uniqueCategoriesMap = getUniqueCategories();
-        catCon.syncCategories(uniqueCategoriesMap);
 
+        insertNewAPICategories(listOfGamesToSave);
+
+        // TODO : Crashing on getAllBoardGameCategories because it is still null at this point
+        //        Might not need to populate yet, based on what we've done so far.
         Map<String, ArrayList<String>> categoriesInGame = getAllBoardGameCategories();
         cigtCon.insertAllCatergoriesInGame(categoriesInGame);
 

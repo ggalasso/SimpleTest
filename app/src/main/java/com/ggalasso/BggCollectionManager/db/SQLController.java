@@ -129,6 +129,7 @@ public class SQLController {
         open();
         dbHelper.dropTable(database, tableName);
         close();
+        String[] test = new String[9];
     }
 
     public void deleteAllRowsFromTable(String tableName) {
