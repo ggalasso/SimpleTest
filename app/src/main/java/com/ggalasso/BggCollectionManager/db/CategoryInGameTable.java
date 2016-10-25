@@ -31,7 +31,7 @@ public class CategoryInGameTable extends SQLController {
         deleteAllRowsFromTable(CategoryInGameHelper.getTableName());
     }
 
-    public void insertAllCatergoriesInGame(Map<String, ArrayList<String>> bgCatMap ) {
+    public void insertAllCatergoriesInGame(Map<String, ArrayList<String>> bgCatMap) {
         String categoryInGameTable = CategoryInGameHelper.getTableName();
 
         List<String> columns = Arrays.asList(CategoryInGameHelper.cg_bg_Id, CategoryInGameHelper.cg_ca_Id);

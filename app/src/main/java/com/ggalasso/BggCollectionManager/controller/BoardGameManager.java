@@ -141,7 +141,16 @@ public class BoardGameManager {
     }
 
     public void insertNewAPICategoriesInGame(ArrayList<BoardGame> listOfGamesToSave){
-
+        CategoryInGameTable cigt = new CategoryInGameTable();
+        ArrayList<String> cats = new ArrayList<>();
+        Map<String,ArrayList<String>> bgCatMap = new HashMap<>();
+        for (BoardGame game : listOfGamesToSave){
+            for (Link cat : game.getCategoryLinks()){
+                cats.add(cat.getId());
+            }
+            bgCatMap.put(game.getId(), cats);
+        }
+        cigt.insertAllCatergoriesInGame(bgCatMap);
     }
 
     public void insertNewAPIMechanics(ArrayList<BoardGame> listOfGamesToSave){
