@@ -198,7 +198,6 @@ public class BoardGameManager {
         }
     }
 
-
     public Map<String, String> getUniqueMechanics() {
         Map<String, String> mechanicMap = new HashMap<>();
         for (Link link : getMechanicLinks()) {
