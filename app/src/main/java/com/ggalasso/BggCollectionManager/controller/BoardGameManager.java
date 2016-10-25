@@ -376,9 +376,11 @@ public class BoardGameManager {
             bgt.insert(game);
         }
 
+        // TODO : Currently choking on the insertNewAPIMechanicsInGame... need to root cause it.
+        //        session Monday, 10/24/16)
         insertNewAPICategories(listOfGamesToSave);
-        insertNewAPICategoriesInGame(listOfGamesToSave);
         insertNewAPIMechanics(listOfGamesToSave);
+        insertNewAPICategoriesInGame(listOfGamesToSave);
         insertNewAPIMechanicsInGame(listOfGamesToSave);
     }
 
