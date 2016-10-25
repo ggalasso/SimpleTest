@@ -150,7 +150,7 @@ public class MechanicTable extends SQLController {
         super.close();
     }
 
-    public ArrayList<String> fetchAllGameIds() {
+    public ArrayList<String> fetchAllMechanicIds() {
         open();
         ArrayList<String> results = new ArrayList<String>();
         String[] columns = new String[]{
@@ -176,6 +176,8 @@ public class MechanicTable extends SQLController {
         close();
         return results;
     }
+
+
 
     public ArrayList<String> getOrphanedMechanics() {
         ArrayList<String> results = new ArrayList<>();

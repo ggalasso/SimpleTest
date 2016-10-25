@@ -109,11 +109,7 @@ public class BoardGameManager {
     }
 
     public ArrayList<Link> getCategoryLinks() {
-        ArrayList<Link> categoryLinks = new ArrayList<>();
-        for (BoardGame bg : getBoardGames()) {
-            categoryLinks.addAll(bg.getCategoryLinks());
-        }
-        return categoryLinks;
+        return getCategoryLinks(getBoardGames());
     }
 
     public ArrayList<Link> getCategoryLinks(ArrayList<BoardGame> boardGames) {
@@ -125,8 +121,12 @@ public class BoardGameManager {
     }
 
     public ArrayList<Link> getMechanicLinks() {
+        return getMechanicLinks(getBoardGames());
+    }
+
+    public ArrayList<Link> getMechanicLinks(ArrayList<BoardGame> boardGames) {
         ArrayList<Link> mechanicLinks = new ArrayList<>();
-        for (BoardGame bg : getBoardGames()) {
+        for (BoardGame bg : boardGames) {
             mechanicLinks.addAll(bg.getMechanicLinks());
         }
         return mechanicLinks;
@@ -138,6 +138,37 @@ public class BoardGameManager {
             categoryMap.put(link.getId(), link.getValue());
         }
         return categoryMap;
+    }
+
+    public void insertNewAPICategoriesInGame(ArrayList<BoardGame> listOfGamesToSave){
+
+    }
+
+    public void insertNewAPIMechanics(ArrayList<BoardGame> listOfGamesToSave){
+        Map<String, String> mechanicMap = new HashMap<>();
+        Map<String, String> newMechMap = new HashMap<>();
+        MechanicTable mech = new MechanicTable();
+        ArrayList<String> dbMechanics = mech.fetchAllMechanicIds();
+
+        // Build categoryMap to get unique categories from API Games
+        for (Link link : getMechanicLinks(listOfGamesToSave)) {
+            mechanicMap.put(link.getId(), link.getValue());
+        }
+
+        // Loop through the new categories and save any ones that are not in the database
+        for (Map.Entry<String, String> mechanic : mechanicMap.entrySet()) {
+            String mechId = mechanic.getKey();
+            String mechVal = mechanic.getValue();
+            Log.d("BGCM-BGM", "Id: " + mechId + " Mech: " + mechVal);
+            if (!dbMechanics.contains(mechId)) {
+                Log.d("BGCM-BGM", "Inserting new category with id:" + mechId + " and val: " + mechVal);
+                newMechMap.put(mechId, mechVal);
+            }
+        }
+
+        if (!newMechMap.isEmpty()) {
+            mech.syncMechanics(newMechMap);
+        }
     }
 
     public void insertNewAPICategories(ArrayList<BoardGame> listOfGamesToSave) {
@@ -318,7 +349,6 @@ public class BoardGameManager {
         saveAllBoardGameData(this.getBoardGames());
     }
 
-
     private void saveAllBoardGameData(ArrayList<BoardGame> listOfGamesToSave) {
         ImageService is = new ImageService();
         BoardGameTable bgt = new BoardGameTable(ctx);
@@ -332,6 +362,9 @@ public class BoardGameManager {
         }
 
         insertNewAPICategories(listOfGamesToSave);
+        insertNewAPICategoriesInGame(listOfGamesToSave);
+        insertNewAPIMechanics(listOfGamesToSave);
+//        insertNewAPIMechanicsInGame(listOfGamesToSave);
 
         // TODO : Crashing on getAllBoardGameCategories because it is still null at this point
         //        Might not need to populate yet, based on what we've done so far.
