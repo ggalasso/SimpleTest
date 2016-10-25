@@ -53,9 +53,9 @@ public class MainActivity extends ListActivity {
 
         //Main series of steps
         BoardGameManager bgm = BoardGameManager.getInstance();
-        bgm.setCtx(ctx);
+
         //bgm.destroyEverything(ctx);
-        bgm.loadBoardGameCollection(username);
+        bgm.loadBoardGameCollection(username, ctx);
 
         setListAdapter(new GameAdapter(this, R.layout.game_item, bgm.getBoardGames()));
 

@@ -38,8 +38,12 @@ public class BoardGameManager {
     private static volatile BoardGameManager ourInstance = null;
     @ElementList(entry = "item", inline = true)
     private ArrayList<BoardGame> BoardGames;
-    private Context ctx;
-    List<String> apiIdArray;
+    private List<String> apiIdArray;
+    private BoardGameTable bgt;
+    private CategoryTable catt;
+    private MechanicTable mecht;
+    private CategoryInGameTable cigt;
+    private MechanicInGameTable migt;
 
     //private BoardGameManager() { Log.i("BGCM-BGM", "Instantiated BoardGameManager"); }
 
@@ -57,6 +61,14 @@ public class BoardGameManager {
         return bgm;
     }
 
+    private void initializeTables(Context ctx){
+        bgt = new BoardGameTable(ctx);
+        catt = new CategoryTable(ctx);
+        mecht = new MechanicTable(ctx);
+        cigt = new CategoryInGameTable(ctx);
+        migt = new MechanicInGameTable(ctx);
+    }
+
     public BoardGame getBoardGameById(String id) {
         for (BoardGame game : getBoardGames()) {
             if (game.getId().equals(id)) {
@@ -66,28 +78,19 @@ public class BoardGameManager {
         return null;
     }
 
-    public Context getCtx() {
-        return ctx;
-    }
-
-    public void setCtx(Context ctx) {
-        this.ctx = ctx;
-    }
-
     public ArrayList<BoardGame> getBoardGames() {
         return BoardGames;
     }
 
-    public void setBoardGames(ArrayList<BoardGame> bgList) {
+    private void setBoardGames(ArrayList<BoardGame> bgList) {
         this.BoardGames = bgList;
     }
 
-    public void setBoardGamesFromDB(Context ctx) {
-        BoardGameTable bgt = new BoardGameTable(ctx);
+    private void setBoardGamesFromDB() {
         setBoardGames(bgt.fetchAllBoardGames());
     }
 
-    public void setBoardGamesFromAPI(String username) {
+    private void setBoardGamesFromAPI(String username) {
         XMLApi xapi = new XMLApi(GameIdManager.class, "https://boardgamegeek.com/xmlapi2/collection?username=" + username + "&own=1");
         GameIdManager gim = (GameIdManager) xapi.getAPIManager();
         String download2 = "https://boardgamegeek.com/xmlapi2/thing?id=" + gim.getIdListString() + "&stats=1";
@@ -108,11 +111,11 @@ public class BoardGameManager {
         return idList;
     }
 
-    public ArrayList<Link> getCategoryLinks() {
+    private ArrayList<Link> getCategoryLinks() {
         return getCategoryLinks(getBoardGames());
     }
 
-    public ArrayList<Link> getCategoryLinks(ArrayList<BoardGame> boardGames) {
+    private ArrayList<Link> getCategoryLinks(ArrayList<BoardGame> boardGames) {
         ArrayList<Link> categoryLinks = new ArrayList<>();
         for (BoardGame bg : boardGames) {
             categoryLinks.addAll(bg.getCategoryLinks());
@@ -120,11 +123,11 @@ public class BoardGameManager {
         return categoryLinks;
     }
 
-    public ArrayList<Link> getMechanicLinks() {
+    private ArrayList<Link> getMechanicLinks() {
         return getMechanicLinks(getBoardGames());
     }
 
-    public ArrayList<Link> getMechanicLinks(ArrayList<BoardGame> boardGames) {
+    private ArrayList<Link> getMechanicLinks(ArrayList<BoardGame> boardGames) {
         ArrayList<Link> mechanicLinks = new ArrayList<>();
         for (BoardGame bg : boardGames) {
             mechanicLinks.addAll(bg.getMechanicLinks());
@@ -140,7 +143,20 @@ public class BoardGameManager {
         return categoryMap;
     }
 
-    public void insertNewAPICategoriesInGame(ArrayList<BoardGame> listOfGamesToSave){
+    private void insertNewAPIMechanicsInGame(ArrayList<BoardGame> listOfGamesToSave){
+        MechanicInGameTable cigt = new MechanicInGameTable();
+        ArrayList<String> mechs = new ArrayList<>();
+        Map<String,ArrayList<String>> bgMechMap = new HashMap<>();
+        for (BoardGame game : listOfGamesToSave){
+            for (Link mech : game.getCategoryLinks()){
+                mechs.add(mech.getId());
+            }
+            bgMechMap.put(game.getId(), mechs);
+        }
+        cigt.insertAllMechanicsInGame(bgMechMap);
+    }
+
+    private void insertNewAPICategoriesInGame(ArrayList<BoardGame> listOfGamesToSave){
         CategoryInGameTable cigt = new CategoryInGameTable();
         ArrayList<String> cats = new ArrayList<>();
         Map<String,ArrayList<String>> bgCatMap = new HashMap<>();
@@ -153,7 +169,7 @@ public class BoardGameManager {
         cigt.insertAllCatergoriesInGame(bgCatMap);
     }
 
-    public void insertNewAPIMechanics(ArrayList<BoardGame> listOfGamesToSave){
+    private void insertNewAPIMechanics(ArrayList<BoardGame> listOfGamesToSave){
         Map<String, String> mechanicMap = new HashMap<>();
         Map<String, String> newMechMap = new HashMap<>();
         MechanicTable mech = new MechanicTable();
@@ -180,7 +196,7 @@ public class BoardGameManager {
         }
     }
 
-    public void insertNewAPICategories(ArrayList<BoardGame> listOfGamesToSave) {
+    private void insertNewAPICategories(ArrayList<BoardGame> listOfGamesToSave) {
         Map<String, String> categoryMap = new HashMap<>();
         Map<String, String> newCatMap = new HashMap<>();
         CategoryTable cat = new CategoryTable();
@@ -207,7 +223,7 @@ public class BoardGameManager {
         }
     }
 
-    public Map<String, String> getUniqueMechanics() {
+    private Map<String, String> getUniqueMechanics() {
         Map<String, String> mechanicMap = new HashMap<>();
         for (Link link : getMechanicLinks()) {
             mechanicMap.put(link.getId(), link.getValue());
@@ -215,7 +231,7 @@ public class BoardGameManager {
         return mechanicMap;
     }
 
-    public Map<String, ArrayList<String>> getAllBoardGameCategories() {
+    private Map<String, ArrayList<String>> getAllBoardGameCategories() {
         Map<String, ArrayList<String>> bg_categories = new HashMap<>();
 
         for (BoardGame bg : getBoardGames()) {
@@ -231,7 +247,7 @@ public class BoardGameManager {
         return bg_categories;
     }
 
-    public Map<String, ArrayList<String>> getAllBoardGameMechanics() {
+    private Map<String, ArrayList<String>> getAllBoardGameMechanics() {
         Map<String, ArrayList<String>> bg_mechanics = new HashMap<>();
 
         for (BoardGame bg : getBoardGames()) {
@@ -247,9 +263,8 @@ public class BoardGameManager {
         return bg_mechanics;
     }
 
-    public void syncShallow(String username) {
+    private void syncShallow(String username) {
         ImageService is = new ImageService();
-        BoardGameTable bgt = new BoardGameTable(ctx);
 
         String newGames = getListOfNewAPIGames(username);
         //No new games
@@ -266,11 +281,9 @@ public class BoardGameManager {
         }
 
         //Remove any catagories or mechanics if we deleted the only game associated with them
-        CategoryTable catCon = new CategoryTable(ctx);
-        ArrayList<String> orphanedCats = catCon.getOrphanedCategories();
+        ArrayList<String> orphanedCats = catt.getOrphanedCategories();
 
-        MechanicTable metCon = new MechanicTable(ctx);
-        ArrayList<String> orphanedMecs = metCon.getOrphanedMechanics();
+        ArrayList<String> orphanedMecs = mecht.getOrphanedMechanics();
 
 //        ArrayList<BoardGame> dbGames = bgt.fetchAllBoardGames();
 //        Map<String, BoardGame> bgMap = markAPIvsDB(apiGames, dbGames);
@@ -286,7 +299,7 @@ public class BoardGameManager {
         //}
 
         //Assume DB is all in sync, but probably need to do more work above this to ensure it's all correct at this call
-        setBoardGamesFromDB(ctx);
+        setBoardGamesFromDB();
     }
 
     private String getListOfNewAPIGames(String username) {
@@ -341,13 +354,11 @@ public class BoardGameManager {
         return gamesNotInAPI;
     }
 
-    public int getDBNumberOfGames() {
-        BoardGameTable bgt = new BoardGameTable(ctx);
+    private int getDBNumberOfGames() {
         return bgt.fetchBoardGameCount();
     }
 
-    public ArrayList<String> getDBGameIds() {
-        BoardGameTable bgt = new BoardGameTable(ctx);
+    private ArrayList<String> getDBGameIds() {
         return bgt.fetchAllGameIds();
     }
 
@@ -359,10 +370,6 @@ public class BoardGameManager {
 
     private void saveAllBoardGameData(ArrayList<BoardGame> listOfGamesToSave) {
         ImageService is = new ImageService();
-        BoardGameTable bgt = new BoardGameTable(ctx);
-        MechanicInGameTable migtCon = new MechanicInGameTable(ctx);
-        CategoryInGameTable cigtCon = new CategoryInGameTable(ctx);
-        MechanicTable metCon = new MechanicTable(ctx);
 
         for (BoardGame game : listOfGamesToSave) {
             saveImage(is, game);
@@ -372,18 +379,7 @@ public class BoardGameManager {
         insertNewAPICategories(listOfGamesToSave);
         insertNewAPICategoriesInGame(listOfGamesToSave);
         insertNewAPIMechanics(listOfGamesToSave);
-//        insertNewAPIMechanicsInGame(listOfGamesToSave);
-
-        // TODO : Crashing on getAllBoardGameCategories because it is still null at this point
-        //        Might not need to populate yet, based on what we've done so far.
-        Map<String, ArrayList<String>> categoriesInGame = getAllBoardGameCategories();
-        cigtCon.insertAllCatergoriesInGame(categoriesInGame);
-
-        Map<String, String> uniqueMechanicMap = getUniqueMechanics();
-        metCon.syncMechanics(uniqueMechanicMap);
-
-        Map<String, ArrayList<String>> mechanicsInGame = getAllBoardGameMechanics();
-        migtCon.insertAllMechanicsInGame(mechanicsInGame);
+        insertNewAPIMechanicsInGame(listOfGamesToSave);
     }
 
     private void deleteAllBoardGameData() {
@@ -397,18 +393,11 @@ public class BoardGameManager {
     }
 
     private void deleteAllGameDataFromTables() {
-        BoardGameTable bgt = new BoardGameTable(ctx);
-        CategoryTable catCon = new CategoryTable(ctx);
-        CategoryInGameTable cigtCon = new CategoryInGameTable(ctx);
-        MechanicTable metCon = new MechanicTable(ctx);
-        MechanicInGameTable migtCon = new MechanicInGameTable(ctx);
-
         bgt.deleteAllRowsFromTable();
-
-        cigtCon.deleteAllRowsFromTable();
-        migtCon.deleteAllRowsFromTable();
-        catCon.deleteAllRowsFromTable();
-        metCon.deleteAllRowsFromTable();
+        cigt.deleteAllRowsFromTable();
+        migt.deleteAllRowsFromTable();
+        catt.deleteAllRowsFromTable();
+        mecht.deleteAllRowsFromTable();
     }
 
     private void saveImage(ImageService is, BoardGame game) {
@@ -502,11 +491,7 @@ public class BoardGameManager {
         is.deleteImageDirectory();
     }
 
-    public void deleteGameById(String id) {
-        BoardGameTable bgt = new BoardGameTable(ctx);
-        CategoryInGameTable cigt = new CategoryInGameTable(ctx);
-        MechanicInGameTable migt = new MechanicInGameTable(ctx);
-
+    private void deleteGameById(String id) {
         cigt.fetchTableCount(CategoryInGameHelper.getTableName());
         migt.fetchTableCount(MechanicInGameHelper.getTableName());
 
@@ -520,7 +505,8 @@ public class BoardGameManager {
         migt.fetchTableCount(MechanicInGameHelper.getTableName());
     }
 
-    public void loadBoardGameCollection(String username) {
+    public void loadBoardGameCollection(String username, Context ctx) {
+        initializeTables(ctx);
         boolean request_to_delete_everything = false;
         XMLApi xapi = new XMLApi(GameIdManager.class, "https://boardgamegeek.com/xmlapi2/collection?username=" + username + "&own=1");
         GameIdManager gim = (GameIdManager) xapi.getAPIManager();
