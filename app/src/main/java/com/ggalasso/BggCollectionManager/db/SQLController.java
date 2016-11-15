@@ -143,7 +143,7 @@ public class SQLController {
         open();
         Integer numRowsDeleted = database.delete(tableName, whereClause, null);
         Log.d("BGCM-SQL", "Deleted rows from " + tableName + " WHERE " + whereClause + "\n\r Number of rows deleted: "
-                + numRowsDeleted );
+                + numRowsDeleted);
         close();
     }
 
@@ -188,6 +188,36 @@ public class SQLController {
         return csr;
     }
 
+    public void getAllDatabaseTableData(String tableName) {
+        open();
+        String query = "SELECT * FROM " + tableName + ";";
+        Cursor cur = database.rawQuery(query, null);
+        int columnCount = cur.getColumnCount();
+        int coltype = 0;
+        String results = "";
+        if (cur != null) {
+            while (cur.moveToNext()) {
+                for (int i = 0; i < columnCount; i++) {
+                    coltype = cur.getType(i);
+                    if (coltype == 0) {
+                        results += "NULL,";
+                    } else if (coltype == 1) {
+                        results += Integer.toString(cur.getInt(i)) + ",";
+                    } else if (coltype == 3) {
+                        results += cur.getString(i) + ",";
+                    } else {
+                        results += "NOEXIST,";
+                    }
+                }
+                results += "\n";
+            }
+            Log.d("BGCM-SQL", results);
+        } else {
+            Log.d("BGCM-SQL", "No data for table " + tableName);
+        }
+        close();
+    }
+
     public static <T> int genericPrimitiveListCounter(T[] list, T itemToCount) {
         int count = 0;
         if (itemToCount == null) {
@@ -202,16 +232,16 @@ public class SQLController {
 //        ArrayList<T> list = new ArrayList<>();
 //    }
 
-    public <T> ArrayList<String> getFieldsForObject(Class<T> foo){
+    public <T> ArrayList<String> getFieldsForObject(Class<T> foo) {
         ArrayList<String> list = new ArrayList<>();
         Field[] fields = foo.getDeclaredFields();
 
         try {
 
-            for (Field field: fields) {
+            for (Field field : fields) {
                 list.add(field.getName());
             }
-        }catch(Exception ex){
+        } catch (Exception ex) {
             return list;
         }
         return list;
@@ -219,10 +249,10 @@ public class SQLController {
 
     // This is working throw away code that will help when we get further along in our
     // research of generics
-    public <T> ArrayList<T> SelectAll(Class<T> foo){
+    public <T> ArrayList<T> SelectAll(Class<T> foo) {
         ArrayList<T> list = new ArrayList<>();
         Field[] fields = foo.getDeclaredFields();
-        Class cls[] = new Class[] {String.class, String.class, String.class};
+        Class cls[] = new Class[]{String.class, String.class, String.class};
 
         try {
             Constructor<?> constructor = foo.getConstructor(cls);//foo.getConstructor(foo);
@@ -233,21 +263,22 @@ public class SQLController {
                 String test = "";
             }
 
-            list.add((T) constructor.newInstance("TestName","5","Category"));
-            list.add((T) constructor.newInstance("TestName1","5","Category"));
+            list.add((T) constructor.newInstance("TestName", "5", "Category"));
+            list.add((T) constructor.newInstance("TestName1", "5", "Category"));
             //list.add(constructor);
 
-        }catch(Exception ex){
+        } catch (Exception ex) {
             return list;
         }
         return list;
     }
+
     // This is working throw away code that will help when we get further along in our
     // research of generics
-    public <T> ArrayList<T> usingGenericCanWeGetToTdotClass(Class<T> foo){
+    public <T> ArrayList<T> usingGenericCanWeGetToTdotClass(Class<T> foo) {
         ArrayList<T> list = new ArrayList<>();
         Field[] fields = foo.getDeclaredFields();
-        Class cls[] = new Class[] {String.class, String.class, String.class};
+        Class cls[] = new Class[]{String.class, String.class, String.class};
 
         try {
             Constructor<?> constructor = foo.getConstructor(cls);//foo.getConstructor(foo);
@@ -258,11 +289,11 @@ public class SQLController {
                 String test = "";
             }
 
-            list.add((T) constructor.newInstance("TestName","5","Category"));
-            list.add((T) constructor.newInstance("TestName1","5","Category"));
+            list.add((T) constructor.newInstance("TestName", "5", "Category"));
+            list.add((T) constructor.newInstance("TestName1", "5", "Category"));
             //list.add(constructor);
 
-        }catch(Exception ex){
+        } catch (Exception ex) {
             return list;
         }
         return list;

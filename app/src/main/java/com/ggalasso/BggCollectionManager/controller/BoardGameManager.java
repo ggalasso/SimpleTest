@@ -11,8 +11,10 @@ import com.ggalasso.BggCollectionManager.db.CategoryInGameTable;
 import com.ggalasso.BggCollectionManager.db.CategoryTable;
 import com.ggalasso.BggCollectionManager.db.MechanicInGameTable;
 import com.ggalasso.BggCollectionManager.db.MechanicTable;
+import com.ggalasso.BggCollectionManager.db.Schema.BoardGameHelper;
 import com.ggalasso.BggCollectionManager.db.Schema.CategoryHelper;
 import com.ggalasso.BggCollectionManager.db.Schema.CategoryInGameHelper;
+import com.ggalasso.BggCollectionManager.db.Schema.MechanicHelper;
 import com.ggalasso.BggCollectionManager.db.Schema.MechanicInGameHelper;
 import com.ggalasso.BggCollectionManager.model.APIBoardGames;
 import com.ggalasso.BggCollectionManager.model.BoardGame;
@@ -284,13 +286,8 @@ public class BoardGameManager {
 //        ArrayList<String> orphanedCats = catt.getOrphanedCategories();
 //        ArrayList<String> orphanedMecs = mecht.getOrphanedMechanics();
 
-        catt.getOrphanedCategories();
         catt.cleanOrphanedCategories();
-        catt.getOrphanedCategories();
-
-        mecht.getOrphanedMechanics();
         mecht.cleanOrphanedMechanics();
-        mecht.getOrphanedMechanics();
 //        ArrayList<BoardGame> dbGames = bgt.fetchAllBoardGames();
 //        Map<String, BoardGame> bgMap = markAPIvsDB(apiGames, dbGames);
 //        syncShallowIteratorComparison(bgMap, bgt);
@@ -522,6 +519,10 @@ public class BoardGameManager {
         if (request_to_delete_everything || getDBNumberOfGames() == 0) {
             syncDeep(username);
         } else {
+            catt.getAllDatabaseTableData(CategoryHelper.getTableName());
+            cigt.getAllDatabaseTableData(CategoryInGameHelper.getTableName());
+            mecht.getAllDatabaseTableData(MechanicHelper.getTableName());
+            migt.getAllDatabaseTableData(MechanicInGameHelper.getTableName());
             syncShallow(username);
         }
         //deleteGameById("1032");
