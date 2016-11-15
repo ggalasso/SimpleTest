@@ -102,7 +102,7 @@ public class DBhelper extends SQLiteOpenHelper {
     @Override
     public void onConfigure(SQLiteDatabase db) {
         super.onConfigure(db);
-        Log.d("BGCM-DBH","Set Foreign Key Constraint By onConfigure");
+        //Log.d("BGCM-DBH","Set Foreign Key Constraint By onConfigure");
         db.setForeignKeyConstraintsEnabled(true);
     }
 

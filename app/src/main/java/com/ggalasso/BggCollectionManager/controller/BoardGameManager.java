@@ -281,10 +281,16 @@ public class BoardGameManager {
         }
 
         //Remove any catagories or mechanics if we deleted the only game associated with them
-        ArrayList<String> orphanedCats = catt.getOrphanedCategories();
+//        ArrayList<String> orphanedCats = catt.getOrphanedCategories();
+//        ArrayList<String> orphanedMecs = mecht.getOrphanedMechanics();
 
-        ArrayList<String> orphanedMecs = mecht.getOrphanedMechanics();
+        catt.getOrphanedCategories();
+        catt.cleanOrphanedCategories();
+        catt.getOrphanedCategories();
 
+        mecht.getOrphanedMechanics();
+        mecht.cleanOrphanedMechanics();
+        mecht.getOrphanedMechanics();
 //        ArrayList<BoardGame> dbGames = bgt.fetchAllBoardGames();
 //        Map<String, BoardGame> bgMap = markAPIvsDB(apiGames, dbGames);
 //        syncShallowIteratorComparison(bgMap, bgt);

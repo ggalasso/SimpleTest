@@ -42,7 +42,7 @@ public class MechanicTable extends SQLController {
         fetchTableCount(mechanicTable);
     }
 
-    public void deleteAllRowsFromTable(){
+    public void deleteAllRowsFromTable() {
         deleteAllRowsFromTable(MechanicHelper.getTableName());
     }
 
@@ -177,6 +177,21 @@ public class MechanicTable extends SQLController {
         return results;
     }
 
+    public boolean cleanOrphanedMechanics() {
+        ArrayList<String> results = getOrphanedMechanics();
+        if (!(results.isEmpty())) {
+            String ids = "";
+            for (String id : results) {
+                ids += "'" + id + "',";
+            }
+            ids = ids.substring(0, ids.length() - 1);
+
+            String query = "me_Id IN (" + ids + ");";
+            deleteFromTableWhere(MechanicHelper.getTableName(), query);
+            return true;
+        }
+        return false;
+    }
 
 
     public ArrayList<String> getOrphanedMechanics() {
@@ -187,7 +202,6 @@ public class MechanicTable extends SQLController {
         open();
         String query = "SELECT me_Id FROM " + mechanicTable + " EXCEPT SELECT DISTINCT mg_me_Id FROM " +
                 mechanicInGameTable + ";";
-        Log.d("BGCM-MEC", "Attempting to find orphaned mechanics");
         Cursor cursor = database.rawQuery(query, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {

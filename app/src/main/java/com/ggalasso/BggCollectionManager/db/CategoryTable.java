@@ -165,6 +165,22 @@ public class CategoryTable extends SQLController {
         return results;
     }
 
+    public boolean cleanOrphanedCategories(){
+        ArrayList<String> results = getOrphanedCategories();
+        if (!(results.isEmpty())){
+            String ids = "";
+            for (String id : results ) {
+                ids += "'" + id + "',";
+            }
+            ids = ids.substring(0,ids.length() - 1);
+
+            String query = "ca_Id IN (" + ids + ");";
+            deleteFromTableWhere(CategoryHelper.getTableName(), query);
+            return true;
+        }
+        return false;
+    }
+
     public ArrayList<String> getOrphanedCategories() {
         ArrayList<String> results = new ArrayList<>();
         String categoryTable = CategoryHelper.getTableName();
@@ -173,7 +189,6 @@ public class CategoryTable extends SQLController {
         open();
         String query = "SELECT ca_Id FROM " + categoryTable + " EXCEPT SELECT DISTINCT cg_ca_Id FROM " +
                 categoryInGameTable + ";";
-        Log.d("BGCM-CAT", "Attempting to find orphaned categories");
         Cursor cursor = database.rawQuery(query, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
