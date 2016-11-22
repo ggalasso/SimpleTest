@@ -63,7 +63,7 @@ public class BoardGameManager {
         return bgm;
     }
 
-    private void initializeTables(Context ctx){
+    private void initializeTables(Context ctx) {
         bgt = new BoardGameTable(ctx);
         catt = new CategoryTable(ctx);
         mecht = new MechanicTable(ctx);
@@ -145,25 +145,25 @@ public class BoardGameManager {
         return categoryMap;
     }
 
-    private void insertNewAPIMechanicsInGame(ArrayList<BoardGame> listOfGamesToSave){
-        MechanicInGameTable cigt = new MechanicInGameTable();
-        ArrayList<String> mechs = new ArrayList<>();
-        Map<String,ArrayList<String>> bgMechMap = new HashMap<>();
-        for (BoardGame game : listOfGamesToSave){
-            for (Link mech : game.getCategoryLinks()){
+    private void insertNewAPIMechanicsInGame(ArrayList<BoardGame> listOfGamesToSave) {
+        MechanicInGameTable migt = new MechanicInGameTable();
+        Map<String, ArrayList<String>> bgMechMap = new HashMap<>();
+        for (BoardGame game : listOfGamesToSave) {
+            ArrayList<String> mechs = new ArrayList<>();
+            for (Link mech : game.getMechanicLinks()) {
                 mechs.add(mech.getId());
             }
             bgMechMap.put(game.getId(), mechs);
         }
-        cigt.insertAllMechanicsInGame(bgMechMap);
+        migt.insertAllMechanicsInGame(bgMechMap);
     }
 
-    private void insertNewAPICategoriesInGame(ArrayList<BoardGame> listOfGamesToSave){
+    private void insertNewAPICategoriesInGame(ArrayList<BoardGame> listOfGamesToSave) {
         CategoryInGameTable cigt = new CategoryInGameTable();
-        ArrayList<String> cats = new ArrayList<>();
-        Map<String,ArrayList<String>> bgCatMap = new HashMap<>();
-        for (BoardGame game : listOfGamesToSave){
-            for (Link cat : game.getCategoryLinks()){
+        Map<String, ArrayList<String>> bgCatMap = new HashMap<>();
+        for (BoardGame game : listOfGamesToSave) {
+            ArrayList<String> cats = new ArrayList<>();
+            for (Link cat : game.getCategoryLinks()) {
                 cats.add(cat.getId());
             }
             bgCatMap.put(game.getId(), cats);
@@ -171,7 +171,7 @@ public class BoardGameManager {
         cigt.insertAllCatergoriesInGame(bgCatMap);
     }
 
-    private void insertNewAPIMechanics(ArrayList<BoardGame> listOfGamesToSave){
+    private void insertNewAPIMechanics(ArrayList<BoardGame> listOfGamesToSave) {
         Map<String, String> mechanicMap = new HashMap<>();
         Map<String, String> newMechMap = new HashMap<>();
         MechanicTable mech = new MechanicTable();
@@ -519,11 +519,11 @@ public class BoardGameManager {
         if (request_to_delete_everything || getDBNumberOfGames() == 0) {
             syncDeep(username);
         } else {
+            syncShallow(username);
             catt.getAllDatabaseTableData(CategoryHelper.getTableName());
             cigt.getAllDatabaseTableData(CategoryInGameHelper.getTableName());
             mecht.getAllDatabaseTableData(MechanicHelper.getTableName());
             migt.getAllDatabaseTableData(MechanicInGameHelper.getTableName());
-            syncShallow(username);
         }
         //deleteGameById("1032");
         //Log.d("BGCM-MA", "Found the following id's to retrieve details from the API: " + newGameIdString);

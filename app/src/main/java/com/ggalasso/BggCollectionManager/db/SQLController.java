@@ -43,7 +43,6 @@ public class SQLController {
     }
 
     private SQLController openConnection() throws SQLException {
-        //TODO: Learn more about passing the context and whether we instantiate multiple DB Helpers and by default multiple Board Game Helpers.
         dbHelper = DBhelper.getInstance(context);
         database = dbHelper.getWritableDatabase();
         return this;
