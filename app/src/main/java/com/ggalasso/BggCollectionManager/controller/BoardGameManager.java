@@ -277,31 +277,15 @@ public class BoardGameManager {
         }
 
         ArrayList<String> dbGamesNotInAPI = getDBGamesNotInAPI();
-        for (String id : dbGamesNotInAPI) {
-            //Game id to be deleted
-            deleteGameById(id);
+        if (!(dbGamesNotInAPI.isEmpty())) {
+            for (String id : dbGamesNotInAPI) {
+                //Game id to be deleted
+                deleteGameById(id);
+            }
+
+            catt.cleanOrphanedCategories();
+            mecht.cleanOrphanedMechanics();
         }
-
-        //Remove any catagories or mechanics if we deleted the only game associated with them
-//        ArrayList<String> orphanedCats = catt.getOrphanedCategories();
-//        ArrayList<String> orphanedMecs = mecht.getOrphanedMechanics();
-
-        catt.cleanOrphanedCategories();
-        mecht.cleanOrphanedMechanics();
-//        ArrayList<BoardGame> dbGames = bgt.fetchAllBoardGames();
-//        Map<String, BoardGame> bgMap = markAPIvsDB(apiGames, dbGames);
-//        syncShallowIteratorComparison(bgMap, bgt);
-
-        // TODO: Get Db Games to find games that need to be deleted from the database, which are the ones not in the
-        // API Call.
-        // Then Get the DB Games, combine them with the API Games from earlier in this code and set it to the
-        // BoardGameManager Collection.
-
-        //for (BoardGame bg : BoardGames) {
-        //    bg.setThumbnailPath(is.getImgStorageDir() + File.separator + is.getFileNameFromURL(bg.getThumbnailURL()));
-        //}
-
-        //Assume DB is all in sync, but probably need to do more work above this to ensure it's all correct at this call
         setBoardGamesFromDB();
     }
 
