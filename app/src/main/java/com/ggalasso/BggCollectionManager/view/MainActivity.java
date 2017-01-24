@@ -12,7 +12,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ggalasso.BggCollectionManager.R;
@@ -63,57 +66,6 @@ public class MainActivity extends ListActivity {
 
     }
 
-
-//    @NonNull
-//    private void getBoardGameCollection(String username) {
-//        XMLApi xapi = new XMLApi(GameIdManager.class, "https://boardgamegeek.com/xmlapi2/collection?username=" + username + "&own=1");
-//        GameIdManager gim = (GameIdManager) xapi.getAPIManager();
-//        BoardGameManager bgm = BoardGameManager.getInstance();
-//
-//        bgm.setCtx(ctx);
-//        String newGameIdString = "";
-//        if (bgm.getDBNumberOfGames() > 0) {
-//            List<String> apiIdArray = Arrays.asList(gim.getIdListString().split(","));
-//            ArrayList<String> dbIdArray = bgm.getDBGameIds();
-//
-//            // Adding new games from API to DB
-//            Set<String> dbGameSet = new HashSet<String>(dbIdArray);
-//            Set<String> addGameSet = new HashSet<String>();
-//            for (String id : apiIdArray) {
-//                if (!dbGameSet.contains(id)) {
-//                    addGameSet.add(id);
-//                }
-//            }
-//            for (String id : addGameSet) {
-//                if (newGameIdString.isEmpty()) {
-//                    newGameIdString = id;
-//                } else {
-//                    newGameIdString += "," + id;
-//                }
-//            }
-//
-//            // Deleting old games that are not in API, but in DB
-//            Set<String> apiGameSet = new HashSet<String>(apiIdArray);
-//            Set<String> deleteGameSet = new HashSet<>();
-//            for (String id : dbIdArray) {
-//                if (!apiGameSet.contains(id)) {
-//                    bgm.deleteGameById(id);
-//                }
-//            }
-//
-//            bgm.deleteGameById("1032");
-//
-//            Log.d("BGCM-MA", "Found the following id's to retrieve details from the API: " + newGameIdString);
-//            if (!newGameIdString.isEmpty()) {
-//                bgm.setBoardGamesFromAPI(newGameIdString);
-//            }
-//        } else {
-//            bgm.setBoardGamesFromAPI(gim.getIdListString());
-//        }
-//
-//        bgm.syncBoardGameCollection(ctx);
-//    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -136,9 +88,7 @@ public class MainActivity extends ListActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
     class GameAdapter extends ArrayAdapter<BoardGame> {
-
 
         public GameAdapter(Context context, int resource, ArrayList<BoardGame> objects) {
             super(context, resource, objects);
@@ -176,6 +126,27 @@ public class MainActivity extends ListActivity {
                     //TODO: Generic image to display if thumbnail not available
                 }
             }
+
+            Button btn = (Button)view.findViewById(R.id.btnExpand);
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View btnview) {
+                    //TextView tone = (TextView) view.findViewById(R.id.textView2);
+                    View pview = (View) btnview.getParent();
+                    View topview = (View) pview.getParent();
+                    TextView tone = (TextView) topview.findViewById(R.id.textView2);
+                    LinearLayout la = (LinearLayout) topview.findViewById(R.id.laextend) ;
+                    if(la.getVisibility() == View.GONE) {
+                        la.setVisibility(View.VISIBLE);
+                    } else {
+                        la.setVisibility(View.GONE);
+                    }
+                    // TextView ttwo = (TextView) view.findViewById(R.id.textView3);
+
+                   tone.setText("Hellow");
+                   // ttwo.setText("World");
+                }
+            });
             return view;
         }
     }

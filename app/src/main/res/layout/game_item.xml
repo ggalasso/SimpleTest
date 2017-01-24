@@ -7,11 +7,13 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
 
         <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="60sp"
+            android:layout_height="60sp"
             android:id="@+id/gameImageView"
             android:contentDescription="@string/gameimage" />
 
@@ -67,11 +69,10 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="28dp"
-                android:weightSum="1">
+                android:weightSum="1"
+                android:layout_height="28sp">
 
                 <TextView
-                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/num_of_players"
@@ -79,7 +80,37 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="3dp"
                     android:layout_marginBottom="3dp"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:layout_width="200sp" />
+
+                <Button
+                    android:text="Expand"
+                    android:layout_width="60sp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btnExpand"
+                    android:layout_weight="0.52"
+                    android:visibility="visible"
+                    android:textAlignment="viewStart" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:id="@+id/laextend"
+                android:visibility="gone"
+                android:layout_height="28sp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/textView2"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView3"
+                    android:layout_weight="1"
+                    android:layout_width="60sp" />
             </LinearLayout>
 
         </LinearLayout>
