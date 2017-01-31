@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ggalasso.BggCollectionManager.R;
@@ -23,7 +22,6 @@ import com.ggalasso.BggCollectionManager.model.BoardGame;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 public class GameList extends AppCompatActivity {
 
@@ -45,7 +43,7 @@ public class GameList extends AppCompatActivity {
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        simpleExpandableListView gl = (ExpandableListView) findViewById(R.id.);
+        simpleExpandableListView = (ExpandableListView) findViewById(R.id.game_item);
 
         //gl.setListAdapter(new MainActivity.GameAdapter(this, R.layout.game_item, bgm.getBoardGames()));
     }
