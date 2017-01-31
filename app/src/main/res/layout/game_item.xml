@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true">
@@ -62,15 +63,24 @@
                     android:layout_marginTop="3dp"
                     android:layout_marginBottom="3dp"
                     android:layout_marginLeft="5dp"
-                    android:layout_weight=".4"
+                    android:layout_weight="0.14"
                     android:gravity="right" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    app:srcCompat="@android:drawable/ic_delete"
+                    android:id="@+id/imageButton"
+                    android:layout_weight="0.21" />
+
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:weightSum="1"
-                android:layout_height="28sp">
+                android:layout_height="28sp"
+                android:layout_weight="1">
 
                 <TextView
                     android:layout_height="wrap_content"
@@ -81,16 +91,22 @@
                     android:layout_marginTop="3dp"
                     android:layout_marginBottom="3dp"
                     android:textSize="14sp"
-                    android:layout_width="200sp" />
+                    android:layout_width="wrap_content" />
 
                 <Button
                     android:text="Expand"
-                    android:layout_width="60sp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/btnExpand"
-                    android:layout_weight="0.52"
                     android:visibility="visible"
                     android:textAlignment="viewStart" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_keyboard_arrow_right_black_24dp"
+                    android:id="@+id/imageView2"
+                    android:layout_weight="1" />
             </LinearLayout>
 
             <LinearLayout

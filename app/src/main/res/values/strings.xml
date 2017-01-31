@@ -12,5 +12,6 @@
     <string name="num_of_players">Num of Players</string>
     <string name="time_xx_xx">Time: xx-xx</string>
     <string name="gameimage">GameImage</string>
+    <string name="title_activity_game_list">GameList</string>
 
 </resources>

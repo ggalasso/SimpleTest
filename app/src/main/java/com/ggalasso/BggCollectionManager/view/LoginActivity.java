@@ -1,5 +1,6 @@
 package com.ggalasso.BggCollectionManager.view;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,7 +17,7 @@ import com.ggalasso.BggCollectionManager.R;
 /**
  * Created by ggalasso on 6/16/2016.
  */
-public class LoginActivity extends AppCompatActivity{
+public class LoginActivity extends AppCompatActivity {
     Button loginButton;
     EditText usernameTextBox;
 
