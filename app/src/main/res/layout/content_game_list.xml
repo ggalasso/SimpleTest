@@ -13,10 +13,16 @@
     tools:context="com.ggalasso.BggCollectionManager.view.GameList"
     tools:showIn="@layout/activity_game_list">
 
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/list2" />
+
     <ExpandableListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:id="@+id/game_item"/>
+
 </RelativeLayout>

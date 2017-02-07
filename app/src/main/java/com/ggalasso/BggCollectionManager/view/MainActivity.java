@@ -5,7 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+//import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -42,9 +42,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends ListActivity {
     Context ctx = this;
-    ListActivity la = new ListActivity();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
         bgm.loadBoardGameCollection(username, ctx);
 
-        la.setListAdapter(new GameAdapter(this, R.layout.game_item, bgm.getBoardGames()));
+        setListAdapter(new GameAdapter(this, R.layout.game_item, bgm.getBoardGames()));
 
         //Cleanup for testing
         //bgm.destroyEverything(ctx);

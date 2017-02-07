@@ -8,16 +8,20 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ggalasso.BggCollectionManager.R;
+import com.ggalasso.BggCollectionManager.controller.BoardGameManager;
 import com.ggalasso.BggCollectionManager.model.BoardGame;
 
 import java.io.File;
@@ -25,7 +29,8 @@ import java.util.ArrayList;
 
 public class GameList extends AppCompatActivity {
 
-    private ExpandableListView simpleExpandableListView;
+    Context ctx = this;
+    private ListView simpleListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,17 +40,34 @@ public class GameList extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        simpleExpandableListView = (ExpandableListView) findViewById(R.id.game_item);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        simpleListView = (ListView) findViewById(R.id.list2);
 
-        //gl.setListAdapter(new MainActivity.GameAdapter(this, R.layout.game_item, bgm.getBoardGames()));
+
+        String username = getIntent().getStringExtra("UserName");
+
+        Log.d("BGCM-MA", "Username = " + username);
+        setTitle("Collection for " + username);
+
+        //Main series of steps
+        BoardGameManager bgm = BoardGameManager.getInstance();
+
+        bgm.loadBoardGameCollection(username, ctx);
+
+        //setListAdapter(new MainActivity.GameAdapter(this, R.layout.game_item, bgm.getBoardGames()));
+        //ExpandableListAdapter listAdapter = new ExpandableListAdapter(this, R.layout.game_item,)
+        simpleListView.setAdapter(new GameAdapter(this, R.layout.game_item, bgm.getBoardGames()));
+        //simpleListView.
+
+            //    new GameList.GameAdapter(this, R.layout.game_item, bgm.getBoardGames()));
+        //setListAdapter(new GameList.GameAdapter(this, R.layout.game_item, bgm.getBoardGames()));
     }
 
     class GameAdapter extends ArrayAdapter<BoardGame> {
