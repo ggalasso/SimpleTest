@@ -10,11 +10,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -100,12 +102,34 @@ public class GameList extends AppCompatActivity {
                 }
             }
 
-            Button btn = (Button)view.findViewById(R.id.btnExpand);
-            btn.setOnClickListener(new View.OnClickListener() {
+
+            Button expand2 = (Button) view.findViewById(R.id.button2);
+            expand2.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View btnview) {
+                public void onClick(View expandView) {
                     //TextView tone = (TextView) view.findViewById(R.id.textView2);
-                    View pview = (View) btnview.getParent();
+                    View pview = (View) expandView.getParent();
+                    View topview = (View) pview.getParent();
+                    TextView tone = (TextView) topview.findViewById(R.id.textView2);
+                    LinearLayout la = (LinearLayout) topview.findViewById(R.id.laextend) ;
+                    if(la.getVisibility() == View.GONE) {
+                        la.setVisibility(View.VISIBLE);
+                    } else {
+                        la.setVisibility(View.GONE);
+                    }
+                    // TextView ttwo = (TextView) view.findViewById(R.id.textView3);
+
+                    tone.setText("Hellow");
+                    // ttwo.setText("World");
+                }
+            });
+
+            ImageView expand = (ImageView) view.findViewById(R.id.expandArrow);
+            expand.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View expandView) {
+                    //TextView tone = (TextView) view.findViewById(R.id.textView2);
+                    View pview = (View) expandView.getParent();
                     View topview = (View) pview.getParent();
                     TextView tone = (TextView) topview.findViewById(R.id.textView2);
                     LinearLayout la = (LinearLayout) topview.findViewById(R.id.laextend) ;

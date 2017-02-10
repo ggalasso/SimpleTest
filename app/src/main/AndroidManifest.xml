@@ -21,10 +21,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.MainActivity"
-            android:label="Main"
-            android:parentActivityName=".view.LoginActivity" />
-        <activity
             android:name=".view.GameList"
             android:label="@string/title_activity_game_list"
             android:parentActivityName=".view.LoginActivity"
