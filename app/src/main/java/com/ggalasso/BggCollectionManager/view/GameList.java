@@ -50,7 +50,6 @@ public class GameList extends AppCompatActivity {
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         simpleListView = (ListView) findViewById(R.id.list2);
 
-
         String username = getIntent().getStringExtra("UserName");
 
         Log.d("BGCM-MA", "Username = " + username);
@@ -58,16 +57,8 @@ public class GameList extends AppCompatActivity {
 
         //Main series of steps
         BoardGameManager bgm = BoardGameManager.getInstance();
-
         bgm.loadBoardGameCollection(username, ctx);
-
-        //setListAdapter(new MainActivity.GameAdapter(this, R.layout.game_item, bgm.getBoardGames()));
-        //ExpandableListAdapter listAdapter = new ExpandableListAdapter(this, R.layout.game_item,)
         simpleListView.setAdapter(new GameAdapter(this, R.layout.game_item, bgm.getBoardGames()));
-        //simpleListView.
-
-            //    new GameList.GameAdapter(this, R.layout.game_item, bgm.getBoardGames()));
-        //setListAdapter(new GameList.GameAdapter(this, R.layout.game_item, bgm.getBoardGames()));
     }
 
     class GameAdapter extends ArrayAdapter<BoardGame> {
