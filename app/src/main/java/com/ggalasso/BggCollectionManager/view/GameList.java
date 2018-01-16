@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -70,7 +71,8 @@ public class GameList extends AppCompatActivity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        @NonNull
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             View view;
             if (convertView == null) {
                 view = getLayoutInflater().inflate(R.layout.game_item, parent, false);
@@ -86,24 +88,31 @@ public class GameList extends AppCompatActivity {
             TextView gamePlayersView = (TextView) view.findViewById(R.id.gameNumPlayersText);
             ImageView thumbImg = (ImageView) view.findViewById(R.id.gameImageView);
 
-            gameTitleView.setText(bg.getPrimaryName());
-            gameTimeView.setText(bg.getMinMaxTimeToString());
-            gameRatingView.setText(bg.getRatingToString());
-            gamePlayersView.setText(bg.getMinMaxPlayersToString());
+            if (bg != null) {
+                gameTitleView.setText(bg.getPrimaryName());
+                gameTimeView.setText(bg.getMinMaxTimeToString());
+                gameRatingView.setText(bg.getRatingToString());
+                gamePlayersView.setText(bg.getMinMaxPlayersToString());
 
-            //http://stackoverflow.com/questions/4181774/show-image-view-from-file-path#answer-4182060
-            if (bg.getThumbnailPath() != null) {
-                File imgFile = new File(bg.getThumbnailPath());
-                if (imgFile.exists()) {
-                    Bitmap b = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                    thumbImg.setImageBitmap(b);
-                } else {
-                    //TODO: Generic image to display if thumbnail not available
+                if (bg.getThumbnailPath() != null) {
+                    File imgFile = new File(bg.getThumbnailPath());
+                    if (imgFile.exists()) {
+                        Bitmap b = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                        thumbImg.setImageBitmap(b);
+                    } else {
+                        //TODO: Generic image to display if thumbnail not available
+                    }
                 }
+            } else {
+                //TODO: No board game object was found, handle this somehow
             }
 
 
-            Button expand2 = (Button) view.findViewById(R.id.button2);
+            //http://stackoverflow.com/questions/4181774/show-image-view-from-file-path#answer-4182060
+
+
+
+ /*           Button expand2 = (Button) view.findViewById(R.id.button2);
             expand2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View expandView) {
@@ -144,6 +153,7 @@ public class GameList extends AppCompatActivity {
                     // ttwo.setText("World");
                 }
             });
+*/
             return view;
         }
     }

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clickable="true">
+    android:clickable="true"
+    android:focusable="true">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -86,21 +87,6 @@
                     android:layout_marginBottom="3dp"
                     android:textSize="14sp"
                     android:layout_width="wrap_content"
-                    android:layout_weight="0.41" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    app:srcCompat="@drawable/ic_keyboard_arrow_down_black_24dp"
-                    android:id="@+id/expandArrow"
-                    android:clickable="true"
-                    android:layout_weight="0.35" />
-
-                <Button
-                    android:text="Button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/button2"
                     android:layout_weight="0.41" />
 
             </LinearLayout>
