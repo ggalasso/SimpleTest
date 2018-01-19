@@ -31,7 +31,7 @@ public class CategoryInGameHelper {
         columns.add("FOREIGN KEY(cg_ca_Id) REFERENCES " + ca_table_name + "(" + ca_Id + ")");
         columns.add("CONSTRAINT cg_PK PRIMARY KEY (cg_bg_Id, cg_ca_Id)");
 
-        Log.i("BGCM-CIG", "Instantiated CategoryHelper");
+        Log.i("BGCM-CIG", "Instantiated CategoryInGameHelper");
     }
 
     public static CategoryInGameHelper getInstance() {

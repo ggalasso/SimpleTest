@@ -31,7 +31,7 @@ public class MechanicInGameHelper {
         columns.add("FOREIGN KEY(mg_me_Id) REFERENCES " + me_table_name + "(" + me_Id + ")");
         columns.add("CONSTRAINT mg_PK PRIMARY KEY (mg_bg_Id, mg_me_Id)");
 
-        Log.i("BGCM-MIG", "Instantiated MechanicHelper");
+        Log.i("BGCM-MIG", "Instantiated MechanicInGameHelper");
     }
 
     public static MechanicInGameHelper getInstance() {
