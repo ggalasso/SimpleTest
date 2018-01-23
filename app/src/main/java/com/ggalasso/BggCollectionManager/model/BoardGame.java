@@ -198,7 +198,7 @@ public class BoardGame {
     }
 
     public String getThumbnailURL() {
-        return "http:" + thumbnail;
+        return thumbnail;
     }
 
     public String getThumbnailPath() {
