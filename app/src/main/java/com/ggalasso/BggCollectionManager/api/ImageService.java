@@ -95,6 +95,9 @@ public class ImageService {
             Log.d("BGCM-IS", "File not found: " + e.getMessage());
         } catch (IOException e) {
             Log.d("BGCM-IS", "Error accessing file: " + e.getMessage());
+        } catch (NullPointerException np) {
+            // Added NullPointerException because of bad url, so could not download image, causing the image object to be mull
+            Log.d("BGCM-IS", "Image is null: " + np.getMessage());
         }
         return false;
     }

@@ -94,13 +94,13 @@ public class GameList extends AppCompatActivity {
                 gameRatingView.setText(bg.getRatingToString());
                 gamePlayersView.setText(bg.getMinMaxPlayersToString());
 
-                if (bg.getThumbnailPath() != null) {
+                if (bg.getThumbnailPath() != null || bg.getThumbnailPath() != "nofilepath") {
                     File imgFile = new File(bg.getThumbnailPath());
                     if (imgFile.exists()) {
                         Bitmap b = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                         thumbImg.setImageBitmap(b);
                     } else {
-                        //TODO: Generic image to display if thumbnail not available
+                        thumbImg.setImageResource(R.drawable.bgg_logo);
                     }
                 }
             } else {

@@ -382,9 +382,9 @@ public class BoardGameManager {
     }
 
     private void deleteAllGameDataFromTables() {
-        bgt.deleteAllRowsFromTable();
         cigt.deleteAllRowsFromTable();
         migt.deleteAllRowsFromTable();
+        bgt.deleteAllRowsFromTable();
         catt.deleteAllRowsFromTable();
         mecht.deleteAllRowsFromTable();
     }
@@ -393,6 +393,7 @@ public class BoardGameManager {
         if (is.getAndStoreImage(game.getThumbnailURL())) {
             game.setThumbnailPath(is.getImgStorageDir() + File.separator + game.getThumbnailURLFileName());
         } else {
+            // Todo: design this to be more elegant. Maybe give user an option to refresh image if not found.
             game.setThumbnailPath("nofilepath");
             Log.d("BGCM-BGM", "No file path for: " + game.getPrimaryName());
         }
@@ -496,6 +497,7 @@ public class BoardGameManager {
 
     public void loadBoardGameCollection(String username, Context ctx) {
         initializeTables(ctx);
+        // Todo: Convert request_to_delete_everything to user option
         boolean request_to_delete_everything = false;
         XMLApi xapi = new XMLApi(GameIdManager.class, "https://boardgamegeek.com/xmlapi2/collection?username=" + username + "&own=1");
         GameIdManager gim = (GameIdManager) xapi.getAPIManager();
