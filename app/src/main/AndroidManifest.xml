@@ -23,8 +23,7 @@
         <activity
             android:name=".view.GameList"
             android:label="@string/title_activity_game_list"
-            android:parentActivityName=".view.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:parentActivityName=".view.LoginActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ggalasso.BggCollectionManager.view.LoginActivity" />

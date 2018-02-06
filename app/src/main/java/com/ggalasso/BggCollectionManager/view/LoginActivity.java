@@ -17,7 +17,7 @@ import com.ggalasso.BggCollectionManager.R;
 /**
  * Created by ggalasso on 6/16/2016.
  */
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends Activity {
     Button loginButton;
     EditText usernameTextBox;
 

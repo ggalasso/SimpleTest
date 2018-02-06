@@ -1,27 +1,19 @@
 package com.ggalasso.BggCollectionManager.view;
 
+import android.app.ListActivity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ExpandableListAdapter;
-import android.widget.ExpandableListView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ggalasso.BggCollectionManager.R;
 import com.ggalasso.BggCollectionManager.controller.BoardGameManager;
@@ -30,19 +22,21 @@ import com.ggalasso.BggCollectionManager.model.BoardGame;
 import java.io.File;
 import java.util.ArrayList;
 
-public class GameList extends AppCompatActivity {
+public class GameList extends ListActivity {
+
 
     Context ctx = this;
-    private ListView simpleListView;
+    //private ListView simpleListView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_game_list);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -51,7 +45,7 @@ public class GameList extends AppCompatActivity {
 //            }
 //        });
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        simpleListView = (ListView) findViewById(R.id.list2);
+        //simpleListView = (ListView) findViewById(android.R.id.list);
 
         String username = getIntent().getStringExtra("UserName");
 
@@ -61,7 +55,18 @@ public class GameList extends AppCompatActivity {
         //Main series of steps
         BoardGameManager bgm = BoardGameManager.getInstance();
         bgm.loadBoardGameCollection(username, ctx);
-        simpleListView.setAdapter(new GameAdapter(this, R.layout.game_item, bgm.getBoardGames()));
+        //GameAdapter bgAdapter = new GameAdapter(this, R.layout.game_item, bgm.getBoardGames());
+        setListAdapter(new GameAdapter(this, R.layout.game_item, bgm.getBoardGames()));
+        //simpleListView.setAdapter(bgAdapter);
+
+    }
+
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        BoardGame bg = (BoardGame) getListAdapter().getItem(position);
+        Toast.makeText(this, "Clicked " + bg.getPrimaryName() + " (" + id + ")", Toast.LENGTH_LONG).show();
+        Log.d("BGCM-OH SHIT", "Successfully added " + bg.getId());
+
     }
 
     class GameAdapter extends ArrayAdapter<BoardGame> {
