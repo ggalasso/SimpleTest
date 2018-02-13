@@ -66,9 +66,10 @@ public class XMLApi<T> {
 
         @Override
         protected T doInBackground(String... params) {
+            // TODO : handle 202 if it exhausts all retries. Make sure app doesn't crash.
             Log.i("BGCM-XAPI", "REACHED doInBackground with class type: " + type);
             int conAttempts = 0;
-            int sleepSeconds = 1 * 1000;
+            int sleepSeconds = 2 * 1000;
             int maxAttempts = 5;
             T apiResponse = null;
             try {

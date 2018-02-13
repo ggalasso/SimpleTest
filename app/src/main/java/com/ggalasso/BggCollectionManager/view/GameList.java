@@ -44,7 +44,7 @@ public class GameList extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         BoardGame bg = (BoardGame) getListAdapter().getItem(position);
-        Toast.makeText(this, "Clicked " + bg.getPrimaryName() + " (" + id + ")", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Clicked " + bg.getThumbnailURL() + " (" + id + ")", Toast.LENGTH_LONG).show();
         Log.d("BGCM-GL:", "Successfully added " + bg.getId());
     }
 

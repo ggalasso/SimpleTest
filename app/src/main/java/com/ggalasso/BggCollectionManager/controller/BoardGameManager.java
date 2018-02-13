@@ -266,8 +266,6 @@ public class BoardGameManager {
     }
 
     private void syncShallow(String username) {
-        ImageService is = new ImageService();
-
         String newGames = getListOfNewAPIGames(username);
         //No new games
         if (!newGames.isEmpty()) {
