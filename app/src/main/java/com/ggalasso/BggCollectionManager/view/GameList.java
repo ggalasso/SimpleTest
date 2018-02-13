@@ -27,6 +27,7 @@ public class GameList extends ListActivity {
 
     Context ctx = this;
     //private ListView simpleListView;
+    // Change to layoutTS branch
 
 
     @Override
